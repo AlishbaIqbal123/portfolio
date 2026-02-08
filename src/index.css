@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* New Color Palette: 0D1321, 1D2D44, 3E5C76, 748CAB, F0EBD8 */
+    --oxford-blue: #0D1321;
+    --space-cadet: #1D2D44;
+    --paynes-gray: #3E5C76;
+    --shadow-blue: #748CAB;
+    --isabelline: #F0EBD8;
+
+    /* Dark Mode (Default) */
+    --background: var(--oxford-blue);
+    --background-secondary: var(--space-cadet);
+    --foreground: var(--isabelline);
+    --card: var(--space-cadet);
+    --card-foreground: var(--isabelline);
+    --primary: var(--shadow-blue);
+    --primary-foreground: var(--oxford-blue);
+    --secondary: var(--paynes-gray);
+    --secondary-foreground: var(--isabelline);
+    --muted: var(--paynes-gray);
+    --muted-foreground: #748CAB;
+    --accent: var(--shadow-blue);
+    --accent-foreground: var(--oxford-blue);
+    --border: var(--paynes-gray);
+    --input: var(--paynes-gray);
+    --ring: var(--shadow-blue);
+    --radius: 0.75rem;
+
+    /* Legacy colors removed/mapped to new palette */
+    --coral: var(--shadow-blue);
+    --coral-dark: var(--shadow-blue);
+  }
+
+  .light {
+    /* Light Mode - Warm Isabelline Background */
+    --background: var(--isabelline);
+    --background-secondary: #E5E1D3;
+    --foreground: var(--oxford-blue);
+    --card: #ffffff;
+    --card-foreground: var(--oxford-blue);
+    --primary: var(--space-cadet);
+    --primary-foreground: #ffffff;
+    --secondary: var(--shadow-blue);
+    --secondary-foreground: #ffffff;
+    --muted: #f3f4f6;
+    --muted-foreground: var(--paynes-gray);
+    --accent: var(--space-cadet);
+    --accent-foreground: #ffffff;
+    --border: #e5e7eb;
+    --input: #e5e7eb;
+    --ring: var(--space-cadet);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-[var(--background)] text-[var(--foreground)] antialiased;
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.5s ease, color 0.5s ease;
+    cursor: none;
+  }
+
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  [role="button"] {
+    cursor: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+  }
+
+  code,
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer components {
+  .text-gradient {
+    background: linear-gradient(135deg, var(--shadow-blue) 0%, #A0B2C6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-padding {
+    @apply py-24 md:py-32 lg:py-40;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto px-6 sm:px-8 lg:px-12;
+  }
+
+  .glass-effect {
+    background: rgba(13, 19, 33, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(116, 140, 171, 0.1);
+  }
+
+  .glass-effect-light {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(29, 45, 68, 0.1);
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--space-cadet);
+  border-radius: 5px;
+  border: 2px solid var(--background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--shadow-blue);
+}
+
+/* Selection Styling */
+::selection {
+  background: var(--shadow-blue);
+  color: var(--oxford-blue);
+}
+
+/* Custom cursor styles */
+.custom-cursor {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--shadow-blue);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, background 0.2s;
+}
+
+.cursor-ring {
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid var(--shadow-blue);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s, border-color 0.3s;
+}
