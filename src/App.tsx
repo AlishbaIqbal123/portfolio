@@ -5,6 +5,7 @@ import { CustomCursor } from '@/components/CustomCursor';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import Orb from '@/components/Orb/Orb';
+import { Analytics } from '@vercel/analytics/react';
 
 // Pages
 import { HomePage } from '@/pages/HomePage';
@@ -153,6 +154,7 @@ function App() {
             <AnimatedRoutes />
           </main>
           <Footer />
+          <Analytics />
         </div>
       </Router>
     </ThemeProvider>
