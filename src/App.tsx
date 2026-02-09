@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ThemeProvider, useTheme } from '@/hooks/useTheme';
+import { ThemeProvider } from '@/hooks/useTheme';
 import { CustomCursor } from '@/components/CustomCursor';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
