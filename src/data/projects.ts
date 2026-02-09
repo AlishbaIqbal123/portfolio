@@ -70,45 +70,5 @@ export const projectsData: Project[] = [
     githubUrl: "https://github.com/AlishbaIqbal123/mobile-apps",
     image: "/images/project-pos.jpg",
     featured: false
-  },
-  {
-    id: "cgpa-calculator",
-    title: "COMSATS CGPA Calculator",
-    description: "Mobile application implementing the specific COMSATS grading system logic. Helps students track their academic performance accurately based on credit hours and grades.",
-    tech: ["Flutter", "Dart", "Grading Logic"],
-    category: "mobile",
-    githubUrl: "https://github.com/AlishbaIqbal123/mobile-apps",
-    image: "/images/project-cgpa.jpg",
-    featured: false
-  },
-  {
-    id: "bmi-calculator",
-    title: "BMI Calculator App",
-    description: "Sleek Flutter application for health tracking. Features robust input validation, real-time BMI calculation, and result interpretation with health recommendations.",
-    tech: ["Flutter", "Dart", "UX Design"],
-    category: "mobile",
-    githubUrl: "https://github.com/AlishbaIqbal123/mobile-apps",
-    image: "/images/project-bmi.jpg",
-    featured: false
-  },
-  {
-    id: "quiz-application",
-    title: "Quiz Application",
-    description: "Designed using object-oriented programming principles. Implemented a modular structure for questions, scoring, and user interaction. High focus on code reusability and scalability.",
-    tech: ["C++", "OOP", "Modular Design"],
-    category: "desktop",
-    githubUrl: "https://github.com/AlishbaIqbal123/Quiz-Application",
-    image: "/images/project-quiz.jpg",
-    featured: false
-  },
-  {
-    id: "tic-tac-toe",
-    title: "Tic Tac Toe Game",
-    description: "Dual-implementation game. A console-based version in C++ focuses on pure logic and game state management, while the GUI version in Python emphasizes user interaction and visual feedback.",
-    tech: ["C++", "Python", "Game Logic", "GUI"],
-    category: "desktop",
-    githubUrl: "https://github.com/AlishbaIqbal123/TicTacToe-Console-",
-    image: "/images/project-tictactoe.png",
-    featured: false
   }
 ];

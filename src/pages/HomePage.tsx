@@ -63,7 +63,7 @@ export function HomePage() {
               <AnimatedText
                 text="IQBAL"
                 delay={0.5}
-                className="block text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-[#A0B2C6] leading-[0.8]"
+                className="block text-[var(--primary)] leading-[0.8]"
               />
             </div>
           </h1>

@@ -215,7 +215,7 @@ export function ProjectsPage() {
 
             <h1 className="text-6xl md:text-9xl font-black mb-8 tracking-tighter italic">
               Selected{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-[#A0B2C6]">
+              <span className="text-[var(--primary)]">
                 Projects
               </span>
             </h1>
@@ -291,7 +291,7 @@ export function ProjectsPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="mt-40 p-16 rounded-[4rem] bg-gradient-to-br from-[var(--background-secondary)] to-[var(--background)] text-[var(--foreground)] text-center shadow-2xl border border-[var(--primary)]/10 relative overflow-hidden group"
+            className="mt-40 p-16 rounded-[4rem] bg-[var(--card)]/40 text-[var(--foreground)] text-center shadow-2xl border border-[var(--primary)]/10 relative overflow-hidden group"
           >
             <div className="absolute top-0 right-0 w-[50rem] h-[50rem] bg-[var(--primary)]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
 

@@ -93,7 +93,7 @@ export function ContactPage() {
 
             <h1 className="text-7xl md:text-[10rem] font-black mb-10 tracking-tighter leading-[0.85] italic">
               Initiate{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-[#A0B2C6]">
+              <span className="text-[var(--primary)]">
                 Dialogue
               </span>
             </h1>
@@ -121,7 +121,7 @@ export function ContactPage() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                      className="group p-1 rounded-[2.5rem] bg-gradient-to-br from-white/10 to-transparent hover:from-[var(--primary)]/30 transition-all duration-500"
+                      className="group p-8 rounded-[2.5rem] bg-[var(--card)]/30 border border-[var(--primary)]/10 hover:border-[var(--primary)]/30 transition-all duration-500"
                     >
                       <div className="p-10 rounded-[2.4rem] bg-[var(--card)]/40 backdrop-blur-3xl border border-white/5 relative overflow-hidden">
                         <div className="flex items-center gap-8">
@@ -153,7 +153,7 @@ export function ContactPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.7 }}
-                className="group p-10 rounded-[3rem] bg-gradient-to-br from-[var(--space-cadet)] to-[var(--oxford-blue)] text-[var(--isabelline)] shadow-2xl relative overflow-hidden border border-white/5"
+                className="group p-10 rounded-[3rem] bg-[var(--card)]/50 text-[var(--foreground)] shadow-2xl relative overflow-hidden border border-[var(--primary)]/20"
               >
                 <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--primary)]/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
                 <div className="relative z-10">
@@ -195,7 +195,7 @@ export function ContactPage() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="p-1 rounded-[4rem] bg-gradient-to-br from-white/10 to-transparent"
+              className="p-10 rounded-[4rem] bg-[var(--card)]/50 border border-[var(--primary)]/20"
             >
               <div className="p-12 md:p-20 rounded-[3.8rem] bg-[var(--card)]/50 backdrop-blur-3xl border border-white/5 shadow-3xl">
                 <h2 className="text-5xl font-black mb-12 tracking-tighter italic">The Blueprint</h2>

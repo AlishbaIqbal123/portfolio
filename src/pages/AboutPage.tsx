@@ -40,7 +40,7 @@ export function AboutPage() {
 
             <h1 className="text-6xl md:text-9xl font-black mb-8 tracking-tighter italic leading-none">
               A Glimpse Into{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-[#A0B2C6]">
+              <span className="text-[var(--primary)]">
                 My World
               </span>
             </h1>
@@ -102,30 +102,28 @@ export function AboutPage() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="relative lg:sticky lg:top-48"
             >
-              <div className="p-1 w-full max-w-md mx-auto rounded-[3rem] bg-gradient-to-br from-white/10 to-transparent">
-                <div className="p-10 md:p-14 rounded-[2.8rem] bg-[var(--card)]/50 backdrop-blur-3xl border border-white/5 relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--primary)]/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
+              <div className="p-10 md:p-14 rounded-[3rem] bg-[var(--card)]/50 backdrop-blur-3xl border border-[var(--primary)]/20 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--primary)]/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
 
-                  <div className="relative z-10 text-center">
-                    <div className="w-40 h-40 mx-auto rounded-[2.5rem] bg-gradient-to-br from-[var(--primary)] to-[var(--space-cadet)] flex items-center justify-center mb-10 shadow-2xl group-hover:rotate-6 transition-transform duration-700">
-                      <span className="text-6xl font-black text-[var(--oxford-blue)]">AI</span>
-                    </div>
+                <div className="relative z-10 text-center">
+                  <div className="w-40 h-40 mx-auto rounded-[2.5rem] bg-gradient-to-br from-[var(--primary)] to-[var(--space-cadet)] flex items-center justify-center mb-10 shadow-2xl group-hover:rotate-6 transition-transform duration-700">
+                    <span className="text-6xl font-black text-[var(--oxford-blue)]">AI</span>
+                  </div>
 
-                    <h3 className="text-3xl font-black mb-2 tracking-tight">{personalData.name}</h3>
-                    <p className="text-[var(--muted-foreground)] font-bold mb-10 tracking-[0.1em] uppercase text-xs">
-                      Software Engineering Student
-                    </p>
+                  <h3 className="text-3xl font-black mb-2 tracking-tight">{personalData.name}</h3>
+                  <p className="text-[var(--muted-foreground)] font-bold mb-10 tracking-[0.1em] uppercase text-xs">
+                    Software Engineering Student
+                  </p>
 
-                    <div className="flex flex-wrap justify-center gap-3">
-                      {['TypeScript', 'React', 'Node.js', 'System Architecture'].map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-4 py-2 text-[10px] font-black rounded-xl bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20 uppercase tracking-widest"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
+                  <div className="flex flex-wrap justify-center gap-3">
+                    {['TypeScript', 'React', 'Node.js', 'System Architecture'].map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-4 py-2 text-[10px] font-black rounded-xl bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20 uppercase tracking-widest"
+                      >
+                        {tech}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -211,7 +209,7 @@ export function AboutPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative p-20 md:p-32 rounded-[4rem] bg-gradient-to-br from-[var(--background-secondary)] to-[var(--background)] text-[var(--foreground)] overflow-hidden shadow-2xl border border-[var(--primary)]/10"
+            className="relative p-20 md:p-32 rounded-[4rem] bg-[var(--card)]/40 text-[var(--foreground)] overflow-hidden shadow-2xl border border-[var(--primary)]/10"
           >
             <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-[var(--primary)]/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
 
@@ -224,8 +222,8 @@ export function AboutPage() {
               <cite className="text-[var(--primary)] font-black uppercase tracking-[0.3em] text-sm italic">Alishba Iqbal</cite>
             </div>
           </motion.div>
-        </div>
-      </section>
-    </div>
+        </div >
+      </section >
+    </div >
   );
 }

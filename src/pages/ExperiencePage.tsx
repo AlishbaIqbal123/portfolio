@@ -108,7 +108,7 @@ function TimelineCard({ item, index }: { item: ExperienceItem; index: number }) 
       className={`relative flex items-center gap-12 md:gap-24 ${isEven ? 'flex-row' : 'flex-row-reverse'} mb-24 last:mb-0`}
     >
       <div className={`flex-1 ${isEven ? 'text-right' : 'text-left'}`}>
-        <div className={`group p-1 rounded-[2.5rem] bg-gradient-to-br from-white/10 to-transparent transition-all duration-500 hover:from-[var(--primary)]/30`}>
+        <div className={`group p-8 rounded-[2.5rem] bg-[var(--card)]/30 border border-[var(--primary)]/10 transition-all duration-500 hover:border-[var(--primary)]/30`}>
           <div className="p-10 rounded-[2.4rem] bg-[var(--card)]/40 backdrop-blur-3xl border border-white/5 relative overflow-hidden h-full">
             <div className={`flex items-center gap-3 mb-6 ${isEven ? 'justify-end' : ''}`}>
               <span className={`px-4 py-1 text-[10px] font-black rounded-full uppercase tracking-widest ${item.type === 'internship' ? 'bg-[var(--primary)] text-[var(--oxford-blue)]' : 'bg-white/10 text-white'}`}>
@@ -221,7 +221,7 @@ export function ExperiencePage() {
 
             <h1 className="text-7xl md:text-[10rem] font-black mb-10 tracking-[-0.05em] leading-[0.85] italic">
               Professional{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-[#A0B2C6] block md:inline">
+              <span className="text-[var(--primary)] block md:inline">
                 Growth
               </span>
             </h1>
@@ -286,7 +286,7 @@ export function ExperiencePage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="mt-40 p-16 md:p-24 rounded-[4rem] bg-gradient-to-br from-[var(--background-secondary)] to-[var(--background)] text-center relative overflow-hidden shadow-2xl border border-[var(--primary)]/10 group"
+            className="mt-40 p-16 md:p-24 rounded-[4rem] bg-[var(--card)]/40 text-center relative overflow-hidden shadow-2xl border border-[var(--primary)]/10 group"
           >
             <div className="absolute top-0 right-0 w-[50rem] h-[50rem] bg-[var(--primary)]/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
 

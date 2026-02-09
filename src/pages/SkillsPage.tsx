@@ -99,7 +99,7 @@ export function SkillsPage() {
 
                         <h1 className="text-7xl md:text-[10rem] font-black mb-10 tracking-tighter leading-[0.85] italic">
                             Tech{' '}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-[#A0B2C6]">
+                            <span className="text-[var(--primary)]">
                                 Stack
                             </span>
                         </h1>
@@ -135,7 +135,7 @@ export function SkillsPage() {
                                                     key={item}
                                                     variants={itemVariants}
                                                     whileHover={{ y: -10, scale: 1.05 }}
-                                                    className="group p-1 rounded-[2rem] bg-gradient-to-br from-white/10 to-transparent hover:from-[var(--primary)]/30 transition-all duration-500"
+                                                    className="group p-8 rounded-[2rem] bg-[var(--card)]/30 border border-[var(--primary)]/10 hover:border-[var(--primary)]/30 transition-all duration-500"
                                                 >
                                                     <div className="p-8 rounded-[1.9rem] bg-[var(--card)]/40 backdrop-blur-3xl border border-white/5 flex flex-col items-center justify-center text-center h-full">
                                                         <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-[var(--primary)]/10 group-hover:text-[var(--primary)] transition-all duration-500 border border-white/10 group-hover:border-[var(--primary)]/50">
@@ -160,7 +160,7 @@ export function SkillsPage() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8 }}
-                        className="mt-40 p-16 md:p-24 rounded-[4rem] bg-gradient-to-br from-[var(--background-secondary)] to-[var(--background)] text-center relative overflow-hidden shadow-2xl border border-[var(--primary)]/10"
+                        className="mt-40 p-16 md:p-24 rounded-[4rem] bg-[var(--card)]/40 text-center relative overflow-hidden shadow-2xl border border-[var(--primary)]/10"
                     >
                         <div className="absolute top-0 right-0 w-[50rem] h-[50rem] bg-[var(--primary)]/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
                         <div className="relative z-10">

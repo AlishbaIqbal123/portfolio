@@ -101,10 +101,7 @@
 
 @layer components {
   .text-gradient {
-    background: linear-gradient(135deg, var(--shadow-blue) 0%, #A0B2C6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--shadow-blue);
   }
 
   .section-padding {

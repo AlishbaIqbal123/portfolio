@@ -4,7 +4,7 @@ import { ThemeProvider, useTheme } from '@/hooks/useTheme';
 import { CustomCursor } from '@/components/CustomCursor';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
-import Orb from '@/components/Orb/Orb';
+import ThreadsBackground from '@/components/ThreadsBackground/ThreadsBackground';
 
 // Pages
 import { HomePage } from '@/pages/HomePage';
@@ -119,23 +119,9 @@ function AnimatedRoutes() {
 }
 
 function GlobalBackground() {
-  const { isDark } = useTheme();
-
-  // New Palette: 0D1321 (Darkest), 748CAB (Accent)
-  // Hue for #748CAB is ~210
   return (
     <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none select-none">
-      <Orb
-        hue={210}
-        hoverIntensity={0.5}
-        rotateOnHover={true}
-        backgroundColor={isDark ? '#0D1321' : '#F0EBD8'}
-      />
-      {/* Dynamic Overlay for contrast and visual depth */}
-      <div className={`absolute inset-0 z-[1] transition-opacity duration-1000 ${isDark
-        ? 'bg-gradient-to-b from-transparent via-[var(--oxford-blue)]/20 to-[var(--oxford-blue)]/80 opacity-90'
-        : 'bg-white/10 opacity-40'
-        }`} />
+      <ThreadsBackground />
     </div>
   );
 }

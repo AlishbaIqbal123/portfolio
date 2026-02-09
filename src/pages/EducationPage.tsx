@@ -92,7 +92,7 @@ function EducationCard({ item, index }: { item: EducationItem; index: number }) 
       transition={{ duration: 0.8, delay: index * 0.1 }}
       className="group relative"
     >
-      <div className="p-1 rounded-[3rem] bg-gradient-to-br from-white/10 to-transparent hover:from-[var(--primary)]/20 transition-all duration-500">
+      <div className="p-8 rounded-[3rem] bg-[var(--card)]/30 border border-[var(--primary)]/10 hover:border-[var(--primary)]/20 transition-all duration-500">
         <div className="p-10 md:p-14 rounded-[2.8rem] bg-[var(--card)]/40 backdrop-blur-3xl border border-white/5 relative overflow-hidden h-full">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--primary)]/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
 
@@ -192,7 +192,7 @@ export function EducationPage() {
 
             <h1 className="text-7xl md:text-[10rem] font-black mb-10 tracking-tighter leading-[0.85] italic">
               Academic{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-[#A0B2C6]">
+              <span className="text-[var(--primary)]">
                 History
               </span>
             </h1>
@@ -209,7 +209,7 @@ export function EducationPage() {
             transition={{ duration: 1, delay: 0.3 }}
             className="mb-40"
           >
-            <div className="relative p-16 md:p-24 rounded-[4rem] bg-gradient-to-br from-[var(--background-secondary)] to-[var(--background)] text-[var(--foreground)] overflow-hidden shadow-2xl border border-[var(--primary)]/10">
+            <div className="relative p-16 md:p-24 rounded-[4rem] bg-[var(--card)]/40 text-[var(--foreground)] overflow-hidden shadow-2xl border border-[var(--primary)]/10">
               <div className="absolute top-0 right-0 w-[50rem] h-[50rem] bg-[var(--primary)]/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
 
               <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-16">
