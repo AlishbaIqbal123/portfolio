@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Mail, Phone, MapPin, Github, Linkedin, Loader2 } from 'lucide-react';
+import { Send, Mail, Phone, MapPin, Github, Linkedin, Loader2, MessageCircle } from 'lucide-react';
 import { personalData } from '@/data/personal';
 import { toast } from 'sonner';
 import { useTheme } from '@/hooks/useTheme';
@@ -23,6 +23,10 @@ export function ContactPage() {
     setFormData({ name: '', email: '', subject: '', message: '' });
     setLoading(false);
   };
+
+  const cleanPhone = personalData.phone.replace(/[^0-9]/g, '');
+  const waMessage = encodeURIComponent("Hi Alishba! I'm interested in collaborating on a project with you.");
+  const waLink = `https://wa.me/${cleanPhone}?text=${waMessage}`;
 
   const inputClass = `w-full h-12 bg-transparent border-b border-border px-1 text-sm outline-none focus:border-primary transition-colors placeholder:text-muted-foreground/40 ${
     isDark ? 'text-foreground' : 'text-foreground'
@@ -66,13 +70,14 @@ export function ContactPage() {
                 {[
                   { icon: Mail, label: 'Email', val: personalData.email, href: `mailto:${personalData.email}` },
                   { icon: Phone, label: 'Phone', val: personalData.phone, href: `tel:${personalData.phone}` },
+                  { icon: MessageCircle, label: 'WhatsApp', val: 'Chat Now', href: waLink, color: 'text-emerald-500' },
                   { icon: MapPin, label: 'Location', val: personalData.location, href: '#' }
-                ].map((item, i) => (
-                  <a key={i} href={item.href} className="flex items-start gap-4 group">
+                ].map((item: any, i) => (
+                  <a key={i} href={item.href} target={item.label === 'WhatsApp' ? "_blank" : undefined} rel={item.label === 'WhatsApp' ? "noopener noreferrer" : undefined} className="flex items-start gap-4 group">
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
                       isDark ? 'bg-primary/10' : 'bg-muted'
                     }`}>
-                      <item.icon className="w-4 h-4 text-primary" />
+                      <item.icon className={`w-4 h-4 ${item.color || 'text-primary'}`} />
                     </div>
                     <div>
                       <span className="text-xs text-muted-foreground block">{item.label}</span>
