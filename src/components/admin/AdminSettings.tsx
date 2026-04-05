@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Settings, User, Save, Loader2, Lock, Key, Activity } from 'lucide-react';
+import { Settings, User, Save, Loader2, Lock, Key, Activity, Rocket } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -69,13 +69,13 @@ export const AdminSettings = () => {
 
             <div className="grid lg:grid-cols-12 gap-6">
                 {/* Profile Form */}
-                <div className="lg:col-span-8">
+                <div className="lg:col-span-8 space-y-6">
                     <div className={`p-6 border rounded-lg ${
                         isDark ? 'border-border bg-card' : 'bg-white border-border shadow-sm'
                     }`}>
                         <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
                             <User className="w-4 h-4 text-primary" />
-                            <h3 className="text-sm font-bold text-foreground">Profile</h3>
+                            <h3 className="text-sm font-bold text-foreground">User Profile (Auth)</h3>
                         </div>
 
                         <form onSubmit={handleUpdateProfile} className="space-y-5">
@@ -101,28 +101,27 @@ export const AdminSettings = () => {
                                     />
                                 </div>
                             </div>
-
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-medium text-muted-foreground">Bio</label>
-                                <textarea 
-                                    rows={3} value={profile.bio}
-                                    onChange={e => setProfile({...profile, bio: e.target.value})}
-                                    className={`w-full rounded-lg border p-4 text-sm outline-none transition-colors ${
-                                        isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
-                                    }`}
-                                    placeholder="Tell your story..."
-                                />
-                            </div>
-
-                            <div className="flex justify-end pt-4 border-t border-border">
+                            <div className="flex justify-end pt-4">
                                 <button 
                                     type="submit" disabled={isSaving}
                                     className="px-6 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
                                 >
-                                    {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Save className="w-4 h-4" /> Save Profile</>}
+                                    {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Save className="w-4 h-4" /> Update Auth Metadata</>}
                                 </button>
                             </div>
                         </form>
+                    </div>
+
+                    {/* SITE CONFIGURATION */}
+                    <div className={`p-6 border rounded-lg ${
+                        isDark ? 'border-border bg-card' : 'bg-white border-border shadow-sm'
+                    }`}>
+                        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
+                            <Rocket className="w-4 h-4 text-primary" />
+                            <h3 className="text-sm font-bold text-foreground">Site Configuration</h3>
+                        </div>
+
+                        <SiteConfigForm isDark={isDark} />
                     </div>
                 </div>
 
@@ -170,5 +169,109 @@ export const AdminSettings = () => {
                 </div>
             </div>
         </div>
+    );
+};
+
+const SiteConfigForm = ({ isDark }: { isDark: boolean }) => {
+    const [loading, setLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
+    const [config, setConfig] = useState({
+        bio: '',
+        tagline: ''
+    });
+
+    useEffect(() => {
+        const fetchConfig = async () => {
+            const { data } = await supabase.from('admin_settings').select('*');
+            if (data) {
+                const bioItem = data.find(item => item.key === 'bio' || item.key === 'site_bio');
+                const taglineItem = data.find(item => item.key === 'tagline' || item.key === 'site_focus');
+                
+                setConfig({ 
+                    bio: bioItem?.value || '', 
+                    tagline: taglineItem?.value || '' 
+                });
+            }
+            setLoading(false);
+        };
+        fetchConfig();
+    }, []);
+
+    const handleSave = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSaving(true);
+        try {
+            // Use upsert to handle keys
+            const { error: error1 } = await supabase.from('admin_settings').upsert({ 
+                key: 'bio', 
+                value: config.bio,
+                updated_at: new Date().toISOString()
+            });
+            const { error: error2 } = await supabase.from('admin_settings').upsert({ 
+                key: 'tagline', 
+                value: config.tagline,
+                updated_at: new Date().toISOString()
+            });
+            
+            if (error1 || error2) throw (error1 || error2);
+            toast.success('Site configuration deployed successfully.');
+        } catch (error: any) {
+            toast.error('Deployment Error: ' + error.message);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    if (loading) return (
+        <div className="flex items-center gap-3 py-10 opacity-50">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span className="text-xs">Fetching configuration...</span>
+        </div>
+    );
+
+    return (
+        <form onSubmit={handleSave} className="space-y-6">
+            <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/60 italic">Domain Focus / Slogan</label>
+                    <span className="text-[8px] font-bold text-muted-foreground opacity-40">KEY: focus</span>
+                </div>
+                <input 
+                    type="text" value={config.tagline}
+                    onChange={e => setConfig({...config, tagline: e.target.value})}
+                    className={`w-full h-11 rounded-xl border border-border px-4 text-sm font-medium outline-none transition-all ${
+                        isDark ? 'bg-background focus:border-primary/50 focus:ring-4 focus:ring-primary/5' : 'bg-slate-50 focus:border-primary/30 focus:ring-4 focus:ring-primary/5'
+                    }`}
+                    placeholder="e.g. Full Stack Developer | Mobile Specialist"
+                />
+                <p className="text-[10px] text-muted-foreground opacity-60 leading-relaxed italic">
+                    This dynamic value updates the "Focus: Frontend" sections across your entire portfolio.
+                </p>
+            </div>
+
+            <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/60 italic">Core Narrative (Bio)</label>
+                    <span className="text-[8px] font-bold text-muted-foreground opacity-40">KEY: bio</span>
+                </div>
+                <textarea 
+                    rows={5} value={config.bio}
+                    onChange={e => setConfig({...config, bio: e.target.value})}
+                    className={`w-full rounded-xl border border-border p-4 text-sm font-medium outline-none transition-all ${
+                        isDark ? 'bg-background focus:border-primary/50 focus:ring-4 focus:ring-primary/5' : 'bg-slate-50 focus:border-primary/30 focus:ring-4 focus:ring-primary/5'
+                    }`}
+                    placeholder="Provide a high-fidelity summary of your professional journey..."
+                />
+            </div>
+
+            <div className="flex justify-end pt-4">
+                <button 
+                    type="submit" disabled={isSaving}
+                    className="h-11 px-8 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-3 bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-all shadow-[0_8px_20px_rgba(var(--primary-rgb),0.3)] hover:shadow-[0_12px_28px_rgba(var(--primary-rgb),0.4)] active:scale-95"
+                >
+                    {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Rocket className="w-4 h-4" /> Push Configuration</>}
+                </button>
+            </div>
+        </form>
     );
 };

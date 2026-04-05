@@ -25,17 +25,28 @@ const interests = [
 export function HomePage() {
   const { isDark } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [stats, setStats] = useState({ cgpa: '3.5+', projects: '12+', experience: '3+' });
+  const [stats, setStats] = useState({ cgpa: '3.5+', projects: '12+', experience: '3+', focus: 'Full Stack' });
+  const [personal, setPersonal] = useState<any>(staticPersonal);
 
   useEffect(() => {
     async function loadData() {
       try {
-        const [info, prjs, exps] = await Promise.all([getPersonalInfo(), getProjects(), getExperience()]);
+        const [info, prjs, exps, settings] = await Promise.all([
+          getPersonalInfo(), 
+          getProjects(), 
+          getExperience(),
+          supabase.from('admin_settings').select('*')
+        ]);
+
+        const focusVal = settings.data?.find(s => s.key === 'tagline' || s.key === 'site_focus')?.value || 'Full Stack';
+        
         if (info) {
+          setPersonal(info);
           setStats({
-            cgpa: (info as any).cgpa || '3.5+',
+            cgpa: (info as any).stats?.cgpa || (info as any).cgpa || '3.6+',
             projects: (prjs?.length || 12) + '+',
-            experience: (exps?.length || 3) + '+'
+            experience: (exps?.length || 3) + '+',
+            focus: focusVal
           });
         }
       } catch (err) { console.error(err); }
@@ -65,16 +76,15 @@ export function HomePage() {
                 className="space-y-8 order-2 lg:order-1"
               >
                 <div className="space-y-3">
-                  <p className="text-xs font-medium tracking-[0.2em] text-primary uppercase">Software Engineer</p>
+                  <p className="text-xs font-medium tracking-[0.2em] text-primary uppercase">{personal.title || 'Software Engineer'}</p>
                   <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9] text-foreground">
-                    Alishba<br/>
-                    <span className="text-primary">Iqbal</span>
+                    {personal.name?.split(' ')[0] || 'Alishba'}<br/>
+                    <span className="text-primary">{personal.name?.split(' ')[1] || 'Iqbal'}</span>
                   </h1>
                 </div>
 
                 <p className="text-lg text-muted-foreground leading-relaxed max-w-md">
-                  Building elegant digital experiences with modern engineering principles. 
-                  Passionate about <span className="text-primary font-medium">clean code</span> and thoughtful design.
+                  {personal.tagline || 'Building elegant digital experiences with modern engineering principles.'}
                 </p>
 
                 <div className="flex gap-4 items-center">
@@ -100,7 +110,7 @@ export function HomePage() {
                     <SafeImage 
                       src="/images/alishba_profile_original.jpg" 
                       className="w-full h-full object-cover" 
-                      alt="Alishba Iqbal" 
+                      alt={personal.name || "Alishba Iqbal"} 
                     />
                   </div>
                 </div>
@@ -147,7 +157,7 @@ export function HomePage() {
                     { label: 'CGPA', val: stats.cgpa },
                     { label: 'Projects', val: stats.projects },
                     { label: 'Experience', val: stats.experience },
-                    { label: 'Focus', val: 'Frontend' }
+                    { label: 'Focus', val: stats.focus }
                   ].map((s, i) => (
                     <div key={i} className="silk-card text-center py-8">
                       <span className="text-xs text-muted-foreground font-medium tracking-wider uppercase">{s.label}</span>
@@ -191,12 +201,12 @@ export function HomePage() {
               transition={{ duration: 0.8 }}
               className="text-center space-y-6 relative z-10"
             >
-              <p className="text-xs font-medium tracking-[0.3em] text-primary uppercase">Portfolio</p>
+              <p className="text-xs font-medium tracking-[0.3em] text-primary uppercase">{personal.title || 'Portfolio'}</p>
               <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight text-foreground leading-[0.85]">
-                Alishba<br/>Iqbal
+                {personal.name?.split(' ')[0] || 'Alishba'}<br/>{personal.name?.split(' ')[1] || 'Iqbal'}
               </h1>
               <p className="text-base text-muted-foreground max-w-md mx-auto">
-                Software Engineer · Building modern, performant web experiences
+                {personal.tagline || 'Software Engineer · Building modern, performant web experiences'}
               </p>
               
               <div className="flex flex-wrap justify-center gap-3 pt-4">

@@ -15,6 +15,7 @@ interface Education {
     school: string;
     degree: string;
     period: string;
+    cgpa?: string;
 }
 
 export const AdminEducation = () => {
@@ -145,8 +146,15 @@ export const AdminEducation = () => {
                                         <h3 className="text-base font-bold text-foreground">{edu.school}</h3>
                                     </div>
                                     <p className="text-sm text-muted-foreground">{edu.degree}</p>
-                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                        <Calendar className="w-3 h-3" /> {edu.period}
+                                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                        <div className="flex items-center gap-2">
+                                            <Calendar className="w-3 h-3" /> {edu.period}
+                                        </div>
+                                        {edu.cgpa && (
+                                            <div className="flex items-center gap-2 px-2 py-0.5 rounded-md bg-primary/10 text-primary font-bold">
+                                                CGPA: {edu.cgpa}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="flex gap-1.5">
@@ -227,16 +235,29 @@ export const AdminEducation = () => {
                                                 placeholder="e.g. BS Computer Science"
                                             />
                                         </div>
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-medium text-muted-foreground">Period</label>
-                                            <input 
-                                                type="text" value={editingEdu.period}
-                                                onChange={e => setEditingEdu({...editingEdu, period: e.target.value})}
-                                                className={`w-full h-10 rounded-lg border px-4 text-sm outline-none transition-colors ${
-                                                    isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
-                                                }`}
-                                                placeholder="e.g. 2023 - 2027"
-                                            />
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            <div className="space-y-1.5">
+                                                <label className="text-xs font-medium text-muted-foreground">Period</label>
+                                                <input 
+                                                    type="text" value={editingEdu.period}
+                                                    onChange={e => setEditingEdu({...editingEdu, period: e.target.value})}
+                                                    className={`w-full h-10 rounded-lg border px-4 text-sm outline-none transition-colors ${
+                                                        isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
+                                                    }`}
+                                                    placeholder="e.g. 2023 - 2027"
+                                                />
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <label className="text-xs font-medium text-muted-foreground">CGPA / Marks</label>
+                                                <input 
+                                                    type="text" value={editingEdu.cgpa || ''}
+                                                    onChange={e => setEditingEdu({...editingEdu, cgpa: e.target.value})}
+                                                    className={`w-full h-10 rounded-lg border px-4 text-sm outline-none transition-colors ${
+                                                        isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
+                                                    }`}
+                                                    placeholder="e.g. 3.8/4.0"
+                                                />
+                                            </div>
                                         </div>
 
                                         <div className="flex justify-end gap-3 pt-4 border-t border-border">
