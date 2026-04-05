@@ -241,14 +241,38 @@ export const ProjectDetailPage = () => {
                                 animate={{ opacity: 1, x: 0, scale: 1 }}
                                 exit={{ opacity: 0, x: -20, scale: 0.95 }}
                                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                                className="max-w-6xl max-h-[85vh] flex items-center justify-center select-none"
+                                className={`
+                                    flex items-center justify-center select-none relative
+                                    ${isMobile 
+                                        ? 'h-[90vh] aspect-[9/19] rounded-[3rem] border-[12px] border-card bg-card shadow-[0_0_100px_rgba(var(--primary-rgb),0.2)] overflow-hidden' 
+                                        : 'max-w-6xl max-h-[85vh]'
+                                    }
+                                `}
                                 onClick={(e) => e.stopPropagation()}
                             >
+                                {isMobile && (
+                                    <>
+                                        {/* Phone Notch/Island */}
+                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-8 bg-card rounded-b-3xl z-20 flex items-center justify-center gap-1.5 px-4">
+                                            <div className="w-8 h-2.5 bg-black/40 rounded-full" />
+                                            <div className="w-2.5 h-2.5 bg-black/40 rounded-full" />
+                                        </div>
+                                        
+                                        {/* Status Bar Indicators */}
+                                        <div className="absolute top-3 left-8 z-10 text-[10px] font-bold text-white/40 font-mono">9:41</div>
+                                        <div className="absolute top-3 right-8 z-10 flex gap-1 opacity-40 [&>div]:w-2 [&>div]:h-2 [&>div]:bg-white [&>div]:border [&>div]:border-white" />
+                                    </>
+                                )}
+
                                 <SafeImage 
                                     src={allProjectImages[selectedImgIndex]} 
-                                    className="w-full h-full object-contain shadow-2xl rounded-lg" 
+                                    className={`w-full h-full ${isMobile ? 'object-cover' : 'object-contain'} shadow-2xl`} 
                                     alt="Full view" 
                                 />
+
+                                {isMobile && (
+                                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-white/20 rounded-full z-20" />
+                                )}
                             </motion.div>
 
                             {/* Counter */}
