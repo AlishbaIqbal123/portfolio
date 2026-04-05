@@ -3,7 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Alishba Iqbal Portfolio</title>
+    <meta name="description" content="Sovereign Architect & Software Engineer. Portfolio of Alishba Iqbal, specializing in full-stack engineering, AI-powered systems, and high-status digital architecture." />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <title>Sovereign Architect | Alishba Iqbal</title>
+    <script>
+      // Aggressive cleanup of stale Service Workers that block development
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          if (registrations.length > 0) {
+            for (const registration of registrations) {
+              registration.unregister().then(() => {
+                console.log('[SW] Stale worker removed');
+              });
+            }
+            // One-time automatic discovery reload to bypass intercepted fetches
+            if (!sessionStorage.getItem('sw_cleanup_complete')) {
+              sessionStorage.setItem('sw_cleanup_complete', 'true');
+              window.location.reload();
+            }
+          }
+        });
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

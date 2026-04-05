@@ -3,145 +3,78 @@ import { motion, useSpring, useMotionValue } from 'framer-motion';
 
 export function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
-  const [isClicking, setIsClicking] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Mouse position without spring for instant feedback (e.g., dot)
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
 
-  // Smooth spring for the ring
-  const springConfig = { damping: 25, stiffness: 150, mass: 0.5 };
-  const ringX = useSpring(mouseX, springConfig);
-  const ringY = useSpring(mouseY, springConfig);
-
-  // Dot follows instantly but with a tiny spring for smoothness
-  const dotSpringConfig = { damping: 30, stiffness: 400, mass: 0.2 };
-  const dotX = useSpring(mouseX, dotSpringConfig);
-  const dotY = useSpring(mouseY, dotSpringConfig);
+  const springConfig = { damping: 25, stiffness: 700 };
+  const cursorXSpring = useSpring(cursorX, springConfig);
+  const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
-    // Check if device has mouse
     const hasMouse = window.matchMedia('(pointer: fine)').matches;
     if (!hasMouse) return;
 
-    setIsVisible(true);
-
     const moveCursor = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
+      if (!isVisible) setIsVisible(true);
     };
 
-    const handleMouseDown = () => setIsClicking(true);
-    const handleMouseUp = () => setIsClicking(false);
-
-    const handleMouseEnter = () => setIsHovering(true);
-    const handleMouseLeave = () => setIsHovering(false);
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const isInteractive = target.closest('a, button, input, textarea, [role="button"], .hoverable');
+      setIsHovering(!!isInteractive);
+    };
 
     window.addEventListener('mousemove', moveCursor);
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-
-    // Initial listener setup
-    const addListeners = () => {
-      const interactiveElements = document.querySelectorAll(
-        'a, button, input, textarea, select, [role="button"], .hoverable, label'
-      );
-
-      interactiveElements.forEach((el) => {
-        el.addEventListener('mouseenter', handleMouseEnter);
-        el.addEventListener('mouseleave', handleMouseLeave);
-      });
-      return interactiveElements; // return to remove listeners later if needed
-    };
-
-    let interactiveElements = addListeners();
-
-    // Re-attach listeners when DOM changes
-    const observer = new MutationObserver(() => {
-      // Clean up old listeners first (optional, but good practice if highly dynamic)
-      interactiveElements.forEach((el) => {
-        el.removeEventListener('mouseenter', handleMouseEnter);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-      });
-      interactiveElements = addListeners();
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener('mouseover', handleMouseOver);
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
-      observer.disconnect();
-      interactiveElements.forEach((el) => {
-        el.removeEventListener('mouseenter', handleMouseEnter);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-      });
+      window.removeEventListener('mouseover', handleMouseOver);
     };
-  }, [mouseX, mouseY]);
+  }, [isVisible]);
 
   if (!isVisible) return null;
 
   return (
-    <>
-      {/* Main Cursor Dot */}
-      <motion.div
-        className="fixed top-0 left-0 z-[9999] pointer-events-none rounded-full bg-[var(--coral-dark)] mix-blend-difference"
-        style={{
-          x: dotX,
-          y: dotY,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
-        animate={{
-          width: isHovering ? 8 : 8,
-          height: isHovering ? 8 : 8,
-          scale: isClicking ? 0.8 : 1,
-        }}
-        transition={{ duration: 0.15 }}
-      />
-
+    <div className="fixed inset-0 pointer-events-none z-[9999] opacity-0 lg:opacity-100">
       {/* Outer Ring */}
       <motion.div
-        className="fixed top-0 left-0 z-[9998] pointer-events-none rounded-full border border-[var(--coral-dark)] mix-blend-difference"
         style={{
-          x: ringX,
-          y: ringY,
+          x: cursorXSpring,
+          y: cursorYSpring,
           translateX: '-50%',
           translateY: '-50%',
         }}
         animate={{
-          width: isHovering ? 50 : 24,
-          height: isHovering ? 50 : 24,
-          opacity: isHovering ? 0.6 : 0.3,
-          borderColor: isClicking ? 'var(--coral)' : 'var(--coral-dark)',
-          scale: isClicking ? 0.9 : 1,
-          borderWidth: isHovering ? 2 : 1.5,
+          width: isHovering ? 48 : 24,
+          height: isHovering ? 48 : 24,
+          borderWidth: isHovering ? 1.5 : 1,
+          opacity: isHovering ? 0.8 : 0.4,
         }}
-        transition={{
-          type: "spring",
-          damping: 20,
-          stiffness: 300,
-          mass: 0.5
-        }}
+        transition={{ duration: 0.15, ease: "linear" }}
+        className="fixed rounded-full border border-primary shadow-[0_0_15px_rgba(0,35,102,0.1)]"
       />
 
-      {/* Optional: Subtle Glow/Trail for extra elegance */}
+      {/* Inner Dot */}
       <motion.div
-        className="fixed top-0 left-0 z-[9997] pointer-events-none rounded-full bg-[var(--coral)] blur-lg opacity-20"
         style={{
-          x: ringX,
-          y: ringY,
+          x: cursorX,
+          y: cursorY,
           translateX: '-50%',
           translateY: '-50%',
         }}
         animate={{
-          width: isHovering ? 80 : 0,
-          height: isHovering ? 80 : 0,
+          scale: isHovering ? 0.5 : 1,
+          backgroundColor: isHovering ? '#D4AF37' : '#002366',
+          opacity: isHovering ? 0.9 : 1,
         }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.2 }}
+        className="fixed w-2 h-2 rounded-full shadow-[0_0_10px_rgba(0,35,102,0.3)]"
       />
-    </>
+    </div>
   );
 }

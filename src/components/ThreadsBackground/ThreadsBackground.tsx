@@ -56,7 +56,8 @@ export default function ThreadsBackground() {
             draw(ctx: CanvasRenderingContext2D) {
                 ctx.beginPath();
 
-                for (let x = 0; x <= width; x += 10) {
+                // drastically reduce horizontal resolution for better performance (e.g., jump by 40 instead of 10)
+                for (let x = 0; x <= width + 40; x += 40) {
                     const y = this.y +
                         Math.sin(x / this.wavelength + time * this.speed + this.offset) * this.amplitude;
 
@@ -69,7 +70,7 @@ export default function ThreadsBackground() {
         }
 
         const threads: Thread[] = [];
-        const spacing = 15; // Space between threads
+        const spacing = 60; // Increased spacing drastically to reduce heavy canvas draw calls
 
         // Initialize threads
         for (let y = -50; y < height + 50; y += spacing) {

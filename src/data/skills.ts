@@ -10,30 +10,31 @@ export const skillCategories: SkillCategory[] = [
     id: "languages",
     title: "Programming Languages",
     icon: "Code2",
-    skills: ["C++", "Java", "Dart", "PHP", "SQL", "JavaScript", "TypeScript"]
+    skills: ["C++", "Python", "PHP", "JavaScript", "Dart", "Java"]
   },
   {
     id: "frameworks",
     title: "Frameworks & Libraries",
     icon: "Layers",
-    skills: ["Flutter", "React", "Laravel", "Tailwind CSS"]
+    skills: ["Express.js", "React.js", "Node.js", "Laravel", "Flutter"]
   },
   {
     id: "databases",
-    title: "Databases",
+    title: "Databases & Cloud",
     icon: "Database",
-    skills: ["MySQL", "SQL Server"]
+    skills: ["MySQL", "SQL Server", "PostgreSQL", "Firebase Firestore"]
   },
   {
     id: "tools",
     title: "Tools & Platforms",
     icon: "Wrench",
-    skills: ["Git", "GitHub", "VS Code", "Visual Studio"]
+    skills: ["Git", "GitHub", "Jira", "VS Code", "Android Studio"]
   },
   {
-    id: "core",
-    title: "Core Concepts",
+    id: "specialized",
+    title: "Specialized Development",
     icon: "Brain",
-    skills: ["Data Structures", "OOP", "Problem Solving", "System Design"]
+    skills: ["Android Development", "REST APIs", "Full-stack Development", "Stripe Integration", "AI Integration"]
   }
 ];
+

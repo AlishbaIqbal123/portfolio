@@ -1,179 +1,183 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    /* New Color Palette: 0D1321, 1D2D44, 3E5C76, 748CAB, F0EBD8 */
-    --oxford-blue: #0D1321;
-    --space-cadet: #1D2D44;
-    --paynes-gray: #3E5C76;
-    --shadow-blue: #748CAB;
-    --isabelline: #F0EBD8;
+/* ===========================================
+   LIGHT THEME: "Silk Editorial" 
+   Beige + Burgundy — Magazine, warm, elegant
+   =========================================== */
+:root {
+  --background: 34 30% 96%;
+  --foreground: 220 40% 13%;
+  --card: 34 25% 98%;
+  --card-foreground: 220 40% 13%;
+  --popover: 34 25% 98%;
+  --popover-foreground: 220 40% 13%;
+  --primary: 345 80% 28%;
+  --primary-foreground: 34 30% 96%;
+  --secondary: 34 15% 88%;
+  --secondary-foreground: 220 40% 13%;
+  --muted: 34 10% 92%;
+  --muted-foreground: 220 15% 45%;
+  --accent: 345 60% 35%;
+  --accent-foreground: 34 30% 96%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 34 15% 88%;
+  --input: 34 15% 88%;
+  --ring: 345 80% 28%;
+  --radius: 1.25rem;
+  
+  --font-silk: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
 
-    /* Dark Mode (Default) */
-    --background: var(--oxford-blue);
-    --background-secondary: var(--space-cadet);
-    --foreground: var(--isabelline);
-    --card: var(--space-cadet);
-    --card-foreground: var(--isabelline);
-    --primary: var(--shadow-blue);
-    --primary-foreground: var(--oxford-blue);
-    --secondary: var(--paynes-gray);
-    --secondary-foreground: var(--isabelline);
-    --muted: var(--paynes-gray);
-    --muted-foreground: #748CAB;
-    --accent: var(--shadow-blue);
-    --accent-foreground: var(--oxford-blue);
-    --border: var(--paynes-gray);
-    --input: var(--paynes-gray);
-    --ring: var(--shadow-blue);
-    --radius: 0.75rem;
+/* ===========================================
+   DARK THEME: "Midnight Architect"
+   Navy + Beige — Structured, powerful, sleek
+   =========================================== */
+.dark {
+  --background: 222 35% 9%;
+  --foreground: 34 25% 88%;
+  --card: 222 30% 12%;
+  --card-foreground: 34 25% 88%;
+  --popover: 222 30% 12%;
+  --popover-foreground: 34 25% 88%;
+  --primary: 34 40% 72%;
+  --primary-foreground: 222 35% 9%;
+  --secondary: 222 25% 16%;
+  --secondary-foreground: 34 25% 88%;
+  --muted: 222 20% 16%;
+  --muted-foreground: 222 10% 55%;
+  --accent: 34 50% 65%;
+  --accent-foreground: 222 35% 9%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 34 25% 88%;
+  --border: 222 20% 18%;
+  --input: 222 20% 18%;
+  --ring: 34 40% 72%;
+  --radius: 0.5rem;
 
-    /* Legacy colors removed/mapped to new palette */
-    --coral: var(--shadow-blue);
-    --coral-dark: var(--shadow-blue);
-  }
+  --font-silk: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
 
-  .light {
-    /* Light Mode - Warm Isabelline Background */
-    --background: var(--isabelline);
-    --background-secondary: #E5E1D3;
-    --foreground: var(--oxford-blue);
-    --card: #ffffff;
-    --card-foreground: var(--oxford-blue);
-    --primary: var(--space-cadet);
-    --primary-foreground: #ffffff;
-    --secondary: var(--shadow-blue);
-    --secondary-foreground: #ffffff;
-    --muted: #f3f4f6;
-    --muted-foreground: var(--paynes-gray);
-    --accent: var(--space-cadet);
-    --accent-foreground: #ffffff;
-    --border: #e5e7eb;
-    --input: #e5e7eb;
-    --ring: var(--space-cadet);
-  }
+/* ===========================================
+   ADMIN THEME: Clean Control Center
+   Independent from portfolio — Notion/Linear vibe
+   =========================================== */
+.admin-theme {
+  --background: 220 15% 97%;
+  --foreground: 220 20% 20%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 20% 20%;
+  --primary: 222 60% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 10% 94%;
+  --border: 220 10% 90%;
+  --radius: 0.75rem;
+  font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+.dark .admin-theme {
+  --background: 222 25% 10%;
+  --foreground: 220 10% 85%;
+  --card: 222 20% 14%;
+  --card-foreground: 220 10% 85%;
+  --primary: 222 60% 60%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 222 20% 18%;
+  --border: 222 15% 22%;
+  font-family: 'Inter', system-ui, sans-serif !important;
 }
 
 @layer base {
   * {
     @apply border-border;
   }
-
+  
   html {
+    -webkit-font-smoothing: antialiased;
     scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-[var(--background)] text-[var(--foreground)] antialiased;
-    font-family: 'Inter', sans-serif;
-    transition: background-color 0.5s ease, color 0.5s ease;
-    cursor: none;
+    @apply bg-background text-foreground transition-colors duration-500 overflow-x-hidden;
+    font-family: var(--font-body);
   }
 
-  a,
-  button,
-  input,
-  textarea,
-  select,
-  [role="button"] {
-    cursor: none;
+  /* Light mode typography: Editorial serif */
+  h1, h2, h3, .heading-silk {
+    font-family: var(--font-silk);
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-  }
-
-  code,
-  pre {
-    font-family: 'JetBrains Mono', monospace;
+  /* Dark mode typography: Geometric sans */
+  .dark h1, .dark h2, .dark h3, .heading-cyber {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
   }
 }
 
 @layer components {
-  .text-gradient {
-    color: var(--shadow-blue);
+  /* Soft Pinterest Card (Light) */
+  .silk-card {
+    @apply bg-card rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-border/50 p-8 transition-all duration-500 hover:shadow-[0_8px_40px_rgba(0,0,0,0.1)] hover:-translate-y-1 overflow-hidden;
   }
 
-  .section-padding {
-    @apply py-24 md:py-32 lg:py-40;
+  /* Architectural Block (Dark) */
+  .dark .architect-card,
+  .architect-card {
+    @apply bg-card border border-border p-8 transition-all duration-500 hover:border-primary/40 overflow-hidden;
+    border-radius: var(--radius);
   }
 
-  .container-custom {
-    @apply max-w-7xl mx-auto px-6 sm:px-8 lg:px-12;
+  /* Universal Button */
+  .imperial-btn {
+    @apply inline-flex items-center gap-3 px-8 py-3.5 bg-primary text-primary-foreground font-semibold text-xs uppercase tracking-[0.2em] transition-all duration-300 hover:opacity-90 active:scale-[0.98];
+    border-radius: var(--radius);
   }
 
-  .glass-effect {
-    background: rgba(13, 19, 33, 0.7);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(116, 140, 171, 0.1);
-  }
-
-  .glass-effect-light {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(29, 45, 68, 0.1);
+  .dark .imperial-btn {
+    @apply bg-primary text-primary-foreground border-0;
   }
 }
 
-/* Scrollbar Styling */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--background);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--space-cadet);
-  border-radius: 5px;
-  border: 2px solid var(--background);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--shadow-blue);
-}
-
-/* Selection Styling */
-::selection {
-  background: var(--shadow-blue);
-  color: var(--oxford-blue);
-}
-
-/* Custom cursor styles */
-.custom-cursor {
-  pointer-events: none;
+/* Subtle texture overlay */
+body::after {
+  content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  mix-blend-mode: difference;
+  inset: 0;
+  background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+  opacity: 0.02;
+  pointer-events: none;
+  z-index: 50;
 }
 
-.cursor-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--shadow-blue);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, background 0.2s;
+.dark body::after {
+  opacity: 0;
 }
 
-.cursor-ring {
-  width: 40px;
-  height: 40px;
-  border: 1.5px solid var(--shadow-blue);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s, border-color 0.3s;
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/20 hover:bg-primary/40 transition-colors;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-primary/10 rounded-full hover:bg-primary/20 transition-colors;
 }

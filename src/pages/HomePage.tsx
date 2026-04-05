@@ -1,220 +1,300 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Download, Code2, Sparkles, User, Briefcase } from 'lucide-react';
-import { personalData } from '@/data/personal';
-import MagicBento from '@/components/MagicBento/MagicBento';
+import { 
+    ArrowRight, Code2, Briefcase, Zap, 
+    Heart, Rocket, Shield, Layers, ShieldCheck, 
+    Terminal, Star, MapPin
+} from 'lucide-react';
+import { useTheme } from '@/hooks/useTheme';
+import { getPersonalInfo, getProjects, getExperience } from '@/lib/api';
+import { personalData as staticPersonal } from '@/data/personal';
+import { QuickAdmin } from '@/components/QuickAdmin';
+import { SafeImage } from '@/components/ui/SafeImage';
 
-// Animated text component
-function AnimatedText({ text, className = '', delay = 0 }: { text: string; className?: string; delay?: number }) {
-  return (
-    <motion.span
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className={className}
-    >
-      {text}
-    </motion.span>
-  );
-}
+/* ── Shared Data ── */
+const interests = [
+  { icon: Shield, title: 'Backend Systems', desc: 'Building reliable server-side logic and scalable cloud infrastructure.' },
+  { icon: Layers, title: 'UI Engineering', desc: 'Crafting beautiful, responsive interfaces that delight users.' },
+  { icon: Zap, title: 'AI & Automation', desc: 'Implementing smart solutions that streamline complex workflows.' },
+  { icon: ShieldCheck, title: 'Security', desc: 'Ensuring privacy, data integrity, and secure user experiences.' },
+  { icon: Heart, title: 'Accessible Design', desc: 'Building inclusive technology that empowers everyone.' },
+  { icon: Rocket, title: 'Innovation', desc: 'Pushing the boundaries of modern software engineering.' },
+];
 
 export function HomePage() {
+  const { isDark } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end start'],
-  });
+  const [stats, setStats] = useState({ cgpa: '3.5+', projects: '12+', experience: '3+' });
 
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [info, prjs, exps] = await Promise.all([getPersonalInfo(), getProjects(), getExperience()]);
+        if (info) {
+          setStats({
+            cgpa: (info as any).cgpa || '3.5+',
+            projects: (prjs?.length || 12) + '+',
+            experience: (exps?.length || 3) + '+'
+          });
+        }
+      } catch (err) { console.error(err); }
+    }
+    loadData();
+  }, []);
 
   return (
-    <div ref={containerRef} className="relative">
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Main Content */}
-        <motion.div
-          className="relative z-10 container-custom text-center"
-          style={{ y: textY, opacity }}
-        >
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex mb-8"
-          >
-            <div className="flex items-center gap-2 px-6 py-2 rounded-full bg-[var(--primary)]/10 border border-[var(--primary)]/30 backdrop-blur-md shadow-sm">
-              <Sparkles className="w-4 h-4 text-[var(--primary)]" />
-              <span className="text-sm font-bold text-[var(--primary)] uppercase tracking-widest">
-                Software Engineering Student
-              </span>
-            </div>
-          </motion.div>
+    <div ref={containerRef} className="relative bg-background overflow-x-hidden transition-colors duration-500">
+      
+      {/* ═══════════════════════════════════════════
+          LIGHT MODE: "Silk Editorial"
+          Horizontal layouts, magazine grids, warm tones
+          ═══════════════════════════════════════════ */}
+      {!isDark && (
+        <div className="flex flex-col">
 
-          {/* Main Heading */}
-          <h1 className="text-7xl md:text-9xl lg:text-[10rem] font-black mb-8 tracking-tighter italic">
-            <div className="overflow-hidden">
-              <AnimatedText text="ALISHBA" delay={0.3} className="block leading-[0.8]" />
-            </div>
-            <div className="overflow-hidden">
-              <AnimatedText
-                text="IQBAL"
-                delay={0.5}
-                className="block text-[var(--primary)] leading-[0.8]"
-              />
-            </div>
-          </h1>
-
-          {/* Tagline */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            className="text-xl md:text-2xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-14 font-medium"
-          >
-            A dedicated software engineer crafting refined digital experiences through elegant code and architectural precision.
-          </motion.p>
-
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.9 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-6"
-          >
-            <Link
-              to="/projects"
-              className="group relative px-10 py-5 bg-[var(--primary)] text-[var(--oxford-blue)] rounded-2xl font-black text-lg transition-all duration-300 hover:scale-105 shadow-xl shadow-[var(--primary)]/20"
-            >
-              <span className="relative z-10 flex items-center gap-3 uppercase tracking-wider">
-                Explore Work
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </Link>
-
-            <a
-              href="/cv/CV-Alishba.pdf"
-              download
-              className="group px-10 py-5 border-2 border-[var(--primary)]/30 text-[var(--primary)] rounded-2xl font-black text-lg bg-background/20 backdrop-blur-sm hover:bg-[var(--primary)] hover:text-[var(--oxford-blue)] transition-all duration-300 flex items-center gap-3 uppercase tracking-wider"
-            >
-              <Download className="w-5 h-5" />
-              Download CV
-            </a>
-          </motion.div>
-
-          {/* Stats Row */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.1 }}
-            className="flex flex-wrap justify-center gap-12 md:gap-24 mt-24"
-          >
-            {[
-              { value: personalData.stats.cgpa.split('/')[0], label: 'CGPA', suffix: `/${personalData.stats.cgpa.split('/')[1]}` },
-              { value: `${personalData.stats.projects}+`, label: 'Projects' },
-              { value: `${personalData.stats.internships}+`, label: 'Internships' },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
-                className="text-center"
+          {/* Hero — Editorial two-column with photo */}
+          <section className="pt-24 pb-16 px-6 md:px-16 lg:px-24">
+            <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+              
+              {/* Text side */}
+              <motion.div 
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7 }}
+                className="space-y-8 order-2 lg:order-1"
               >
-                <div className="text-5xl md:text-6xl font-black text-[var(--primary)] tracking-tighter">
-                  {stat.value}
-                  {stat.suffix && <span className="text-3xl opacity-50">{stat.suffix}</span>}
+                <div className="space-y-3">
+                  <p className="text-xs font-medium tracking-[0.2em] text-primary uppercase">Software Engineer</p>
+                  <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9] text-foreground">
+                    Alishba<br/>
+                    <span className="text-primary">Iqbal</span>
+                  </h1>
                 </div>
-                <div className="text-xs text-[var(--muted-foreground)] mt-2 uppercase tracking-[0.3em] font-black">
-                  {stat.label}
+
+                <p className="text-lg text-muted-foreground leading-relaxed max-w-md">
+                  Building elegant digital experiences with modern engineering principles. 
+                  Passionate about <span className="text-primary font-medium">clean code</span> and thoughtful design.
+                </p>
+
+                <div className="flex gap-4 items-center">
+                  <Link to="/projects" className="imperial-btn">
+                    View Projects <ArrowRight className="w-4 h-4" />
+                  </Link>
+                  <Link to="/contact" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                    Get in touch →
+                  </Link>
                 </div>
               </motion.div>
-            ))}
-          </motion.div>
-        </motion.div>
 
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10"
-        >
-          <div className="w-px h-24 bg-gradient-to-b from-[var(--primary)] to-transparent opacity-50 relative">
-            <motion.div
-              animate={{ top: ['0%', '80%', '0%'] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[var(--primary)] shadow-[0_0_10px_var(--primary)]"
-            />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Featured Services Section (Magic Bento) */}
-      <section className="section-padding relative overflow-hidden bg-[var(--oxford-blue)]/30 border-y border-white/5">
-        <div className="container-custom relative z-10">
-          <div className="text-center mb-24">
-            <h2 className="text-5xl md:text-7xl font-black mb-6 italic tracking-tighter">Professional Focus</h2>
-            <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto font-medium">
-              A precise breakdown of my core competencies and specialized areas in the software engineering landscape.
-            </p>
-          </div>
-          <MagicBento
-            glowColor="116, 140, 171"
-            enableBorderGlow={true}
-            enableStars={true}
-          />
-        </div>
-      </section>
-
-      {/* Quick Links Section */}
-      <section className="section-padding relative overflow-hidden">
-        <div className="container-custom relative z-10">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-7xl font-black mb-6 italic tracking-tighter">Navigate</h2>
-          </div>
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
-          >
-            {[
-              { title: 'About', desc: 'Expertise & Background', link: '/about', icon: <User className="w-8 h-8" /> },
-              { title: 'Skills', desc: 'Tech Stack & Arsenal', link: '/skills', icon: <Sparkles className="w-8 h-8" /> },
-              { title: 'Projects', desc: 'Impactful Engineering', link: '/projects', icon: <Code2 className="w-8 h-8" /> },
-              { title: 'Timeline', desc: 'Milestones & Growth', link: '/experience', icon: <Briefcase className="w-8 h-8" /> },
-            ].map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+              {/* Photo side */}
+              <motion.div 
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="order-1 lg:order-2"
               >
-                <Link
-                  to={item.link}
-                  className="group block p-10 rounded-[2.5rem] bg-[var(--card)]/30 border border-white/5 backdrop-blur-md hover:border-[var(--primary)] hover:bg-[var(--card)]/50 transition-all duration-500 h-full relative overflow-hidden"
-                >
-                  <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ArrowRight className="w-6 h-6 text-[var(--primary)] -rotate-45" />
+                <div className="relative">
+                  <div className="absolute inset-0 bg-primary/5 rounded-3xl -rotate-3 transition-transform hover:rotate-0 duration-700" />
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-3xl shadow-xl">
+                    <SafeImage 
+                      src="/images/alishba_profile_original.jpg" 
+                      className="w-full h-full object-cover" 
+                      alt="Alishba Iqbal" 
+                    />
                   </div>
-
-                  <div className="mb-8 text-[var(--primary)] group-hover:scale-110 transition-transform duration-500">{item.icon}</div>
-                  <h3 className="text-3xl font-black mb-3 group-hover:text-[var(--primary)] transition-colors italic tracking-tight">
-                    {item.title}
-                  </h3>
-                  <p className="text-[var(--muted-foreground)] font-medium text-sm">{item.desc}</p>
-                </Link>
+                </div>
               </motion.div>
-            ))}
-          </motion.div>
+            </div>
+          </section>
+
+          {/* Insights — Horizontal scrolling cards */}
+          <section className="py-16 bg-muted/30 border-y border-border/50">
+            <div className="px-6 md:px-16 lg:px-24 mb-10 flex justify-between items-end max-w-6xl mx-auto">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Insights</h2>
+                <p className="text-sm text-muted-foreground mt-1">Technical perspectives & design thinking</p>
+              </div>
+              <Link to="/tips" className="text-sm font-medium text-primary hover:underline">View all →</Link>
+            </div>
+            
+            <div className="flex overflow-x-auto gap-5 px-6 md:px-16 lg:px-24 pb-6 no-scrollbar snap-x">
+              {[
+                { t: 'Clean Architecture', c: 'Maintain strict boundaries between layers for scalable systems.' },
+                { t: 'Visual Hierarchy', c: 'Guide users naturally through contrast, spacing, and typography.' },
+                { t: 'Performance First', c: 'Optimize for speed — every millisecond matters to users.' },
+                { t: 'Accessible Design', c: 'Build inclusive interfaces that work for everyone.' },
+              ].map((item, i) => (
+                <div key={i} className="min-w-[280px] md:min-w-[340px] silk-card snap-center">
+                  <span className="text-xs text-primary font-medium">0{i+1}</span>
+                  <h3 className="text-xl font-bold tracking-tight mt-2 mb-3 text-foreground">{item.t}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.c}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Stats — Flex row, clean cards */}
+          <section className="py-20 px-6 md:px-16 lg:px-24">
+            <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-3xl font-bold tracking-tight text-foreground">At a Glance</h2>
+                  <p className="text-sm text-muted-foreground mt-1">Key numbers from my journey</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { label: 'CGPA', val: stats.cgpa },
+                    { label: 'Projects', val: stats.projects },
+                    { label: 'Experience', val: stats.experience },
+                    { label: 'Focus', val: 'Frontend' }
+                  ].map((s, i) => (
+                    <div key={i} className="silk-card text-center py-8">
+                      <span className="text-xs text-muted-foreground font-medium tracking-wider uppercase">{s.label}</span>
+                      <div className="text-3xl font-bold text-primary mt-2">{s.val}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Quote card */}
+              <div className="flex flex-col justify-between p-10 bg-primary text-primary-foreground rounded-3xl shadow-lg">
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-bold tracking-tight leading-snug">
+                    "Excellence is not a goal — it's a standard."
+                  </h3>
+                  <p className="text-sm opacity-80 leading-relaxed">
+                    Committed to building technology that empowers people and drives meaningful innovation.
+                  </p>
+                </div>
+                <Link to="/experience" className="flex items-center gap-2 text-sm font-medium pt-6 mt-6 border-t border-primary-foreground/20">
+                  View Experience <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {/* ═══════════════════════════════════════════
+          DARK MODE: "Midnight Architect"
+          Vertical/column layouts, grid blocks, navy tones
+          ═══════════════════════════════════════════ */}
+      {isDark && (
+        <div className="flex flex-col min-h-screen">
+          
+          {/* Hero — Full-screen, centered, minimal */}
+          <section className="min-h-screen flex flex-col items-center justify-center px-6 relative">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center space-y-6 relative z-10"
+            >
+              <p className="text-xs font-medium tracking-[0.3em] text-primary uppercase">Portfolio</p>
+              <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight text-foreground leading-[0.85]">
+                Alishba<br/>Iqbal
+              </h1>
+              <p className="text-base text-muted-foreground max-w-md mx-auto">
+                Software Engineer · Building modern, performant web experiences
+              </p>
+              
+              <div className="flex flex-wrap justify-center gap-3 pt-4">
+                {[
+                  { to: '/projects', label: 'Projects' },
+                  { to: '/experience', label: 'Experience' },
+                  { to: '/skills', label: 'Skills' },
+                ].map((nav, i) => (
+                  <Link key={i} to={nav.to} className="imperial-btn text-xs">
+                    {nav.label}
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Subtle background glow */}
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]" />
+          </section>
+
+          {/* Interests — Vertical grid, architectural cards */}
+          <section className="py-24 px-6 md:px-16 lg:px-24">
+            <div className="max-w-6xl mx-auto space-y-12">
+              <div className="flex items-center gap-6">
+                <h2 className="text-3xl font-bold tracking-tight text-foreground">Focus Areas</h2>
+                <div className="h-px flex-1 bg-border" />
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {interests.map((item, idx) => (
+                  <motion.div 
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.08 }}
+                    className="architect-card group"
+                  >
+                    <item.icon className="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform" />
+                    <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">{item.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Stats — Stacked column, dark blocks */}
+          <section className="py-24 px-6 md:px-16 lg:px-24 bg-card/50">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex items-center gap-6 mb-12">
+                <Terminal className="w-5 h-5 text-primary" />
+                <h2 className="text-3xl font-bold tracking-tight text-foreground">Statistics</h2>
+              </div>
+              
+              <div className="grid sm:grid-cols-3 gap-4">
+                {[
+                  { label: 'CGPA', val: stats.cgpa },
+                  { label: 'Projects', val: stats.projects },
+                  { label: 'Experience', val: stats.experience }
+                ].map((s, i) => (
+                  <div key={i} className="architect-card p-10 text-center group hover:bg-primary/5">
+                    <span className="text-xs text-muted-foreground font-medium tracking-wider uppercase block mb-4">{s.label}</span>
+                    <div className="text-5xl font-bold text-primary">{s.val}</div>
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      whileInView={{ width: "100%" }}
+                      transition={{ duration: 1.5, delay: i * 0.2 }}
+                      className="h-0.5 bg-primary/30 mt-6 mx-auto max-w-[80px]" 
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {/* CTA — Shared but styled differently via CSS */}
+      <section className="py-16 px-6 md:px-16 lg:px-24">
+        <div className={`max-w-4xl mx-auto p-10 md:p-16 text-center transition-all duration-500 ${
+          isDark ? 'architect-card' : 'silk-card'
+        }`}>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-foreground">Let's Collaborate</h2>
+          <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
+            I'm always open to new opportunities and creative partnerships. Let's build something great together.
+          </p>
+          <a href="mailto:contact@alishbaiqbal.com" className="imperial-btn">
+            Send Message <ArrowRight className="w-4 h-4" />
+          </a>
         </div>
       </section>
+
+      <QuickAdmin tab="settings" />
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}} />
     </div>
   );
 }

@@ -31,7 +31,7 @@ function SplashCursor({
     SPLAT_FORCE = 6000,
     SHADING = true,
     COLOR_UPDATE_SPEED = 10,
-    BACK_COLOR = { r: 0.5, g: 0, b: 0 },
+    BACK_COLOR = { r: 0.05, g: 0.06, b: 0.1 },
     TRANSPARENT = true
 }: SplashCursorProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -909,11 +909,13 @@ function SplashCursor({
         }
 
         function generateColor() {
-            let c = HSVtoRGB(Math.random(), 1.0, 1.0);
-            c.r *= 0.15;
-            c.g *= 0.15;
-            c.b *= 0.15;
-            return c;
+            // Alternating between Royal Blue and Gold
+            const isBlue = Math.random() > 0.5;
+            if (isBlue) {
+                return { r: 0 / 255 * 2.0, g: 35 / 255 * 2.0, b: 102 / 255 * 2.0 }; // Royal Blue Boosted
+            } else {
+                return { r: 212 / 255 * 3.0, g: 175 / 255 * 3.0, b: 55 / 255 * 3.0 }; // Golden Shine Boosted
+            }
         }
 
         function HSVtoRGB(h: number, s: number, v: number) {

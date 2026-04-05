@@ -1,177 +1,162 @@
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { personalData } from '@/data/personal';
-import { Code2, Cpu, Wrench, Sparkles } from 'lucide-react';
+import { Code2, Cpu, Wrench, Rocket, Atom, Star } from 'lucide-react';
 import {
     SiCplusplus, SiJavascript, SiTypescript, SiDart, SiPhp, SiReact,
     SiFlutter, SiLaravel, SiTailwindcss, SiNodedotjs, SiMysql,
     SiGit, SiGithub, SiPostman, SiFigma, SiVercel, SiNetlify
 } from 'react-icons/si';
 import { FaJava, FaDatabase, FaCode, FaDraftingCompass, FaBrain, FaLightbulb, FaLaptopCode } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { QuickAdmin } from '@/components/QuickAdmin';
+import { getSkillCategories } from '@/lib/api';
+import { useTheme } from '@/hooks/useTheme';
 
-const icons = {
+const icons: Record<string, any> = {
     languages: Code2,
     technologies: Cpu,
     tools: Wrench,
+    frameworks: Rocket,
+    databases: FaDatabase,
 };
 
 const skillIcons: Record<string, any> = {
-    // Languages
-    'C++': SiCplusplus,
-    'Java': FaJava,
-    'Dart': SiDart,
-    'PHP': SiPhp,
-    'SQL': FaDatabase,
-    'JavaScript': SiJavascript,
-    'TypeScript': SiTypescript,
-
-    // Frameworks & Libraries
-    'React': SiReact,
-    'Flutter': SiFlutter,
-    'Laravel': SiLaravel,
-    'Tailwind CSS': SiTailwindcss,
-    'Node.js': SiNodedotjs,
-
-    // Databases
-    'MySQL': SiMysql,
-    'SQL Server': FaDatabase,
-
-    // Tools
-    'Git': SiGit,
-    'GitHub': SiGithub,
-    'VS Code': FaCode,
-    'Visual Studio': FaLaptopCode,
-    'Postman': SiPostman,
-    'Figma': SiFigma,
-    'Vercel': SiVercel,
-    'Netlify': SiNetlify,
-
-    // Core Concepts
-    'Data Structures': FaCode,
-    'OOP': FaDraftingCompass,
-    'Problem Solving': FaLightbulb,
+    'C++': SiCplusplus, 'Java': FaJava, 'Dart': SiDart, 'PHP': SiPhp, 'SQL': FaDatabase,
+    'JavaScript': SiJavascript, 'TypeScript': SiTypescript, 'React': SiReact,
+    'Flutter': SiFlutter, 'Laravel': SiLaravel, 'Tailwind CSS': SiTailwindcss,
+    'Node.js': SiNodedotjs, 'MySQL': SiMysql, 'SQL Server': FaDatabase,
+    'Git': SiGit, 'GitHub': SiGithub, 'VS Code': FaCode, 'Visual Studio': FaLaptopCode,
+    'Postman': SiPostman, 'Figma': SiFigma, 'Vercel': SiVercel, 'Netlify': SiNetlify,
+    'Data Structures': SiCplusplus, 'OOP': FaDraftingCompass, 'Problem Solving': FaLightbulb,
     'System Design': FaBrain,
 };
 
 export function SkillsPage() {
-    const { skills } = personalData;
+    const { isDark } = useTheme();
+    const [skillsData, setSkillsData] = useState<any[]>([]);
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-            },
-        },
-    };
+    useEffect(() => {
+        async function loadData() {
+            try {
+                const data = await getSkillCategories();
+                if (data && data.length > 0) {
+                    setSkillsData(data);
+                } else {
+                    setSkillsData(Object.entries(personalData.skills).map(([title, skills], index) => ({
+                        id: title, title, skills, order_index: index
+                    })));
+                }
+            } catch (err) { console.error(err); }
+        }
+        loadData();
+    }, []);
 
-    const itemVariants = {
+    const cardVariants: Variants = {
         hidden: { opacity: 0, y: 20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.5 },
-        },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
     };
 
     return (
-        <div className="relative min-h-screen overflow-hidden">
-            <section className="section-padding pt-32 lg:pt-48 pb-40">
-                <div className="container-custom">
-                    {/* Header */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
-                        className="text-center mb-40"
-                    >
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                            className="inline-flex mb-8"
-                        >
-                            <div className="flex items-center gap-2 px-6 py-2 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] text-sm font-black uppercase tracking-[0.2em] border border-[var(--primary)]/20 shadow-sm backdrop-blur-md">
-                                <Sparkles className="w-4 h-4" />
-                                Technical Arsenal
-                            </div>
-                        </motion.div>
+        <div className="relative min-h-screen bg-background transition-colors duration-500">
+            
+            {/* Header */}
+            <section className="pt-24 pb-8 px-6 md:px-16 lg:px-24">
+              <div className="max-w-6xl mx-auto">
+                {!isDark ? (
+                  <div className="space-y-3">
+                    <p className="text-xs font-medium tracking-[0.2em] text-primary uppercase">Expertise</p>
+                    <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">Skills</h1>
+                    <p className="text-muted-foreground max-w-lg">
+                      A diverse toolkit spanning front-end, back-end, and design systems.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-xs font-medium tracking-[0.3em] text-primary uppercase mb-3">Technical Core</p>
+                    <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground">Skills</h1>
+                    <p className="text-muted-foreground mt-3 max-w-md mx-auto">
+                      Technologies and tools I work with on a daily basis.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </section>
 
-                        <h1 className="text-7xl md:text-[10rem] font-black mb-10 tracking-tighter leading-[0.85] italic">
-                            Tech{' '}
-                            <span className="text-[var(--primary)]">
-                                Stack
-                            </span>
-                        </h1>
-
-                        <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto font-medium leading-relaxed">
-                            A comprehensive curation of the tools, languages, and technologies I leverage to build scalable digital solutions.
-                        </p>
-                    </motion.div>
-
-                    <motion.div
-                        variants={containerVariants}
-                        initial="hidden"
-                        animate="visible"
-                        className="grid gap-20"
-                    >
-                        {Object.entries(skills).map(([category, items]) => {
-                            const Icon = icons[category as keyof typeof icons] || Sparkles;
-                            return (
-                                <div key={category} className="space-y-12">
-                                    <div className="flex items-center gap-8">
-                                        <div className="flex items-center gap-4 text-[var(--primary)]">
-                                            {Icon && <Icon className="w-8 h-8" />}
-                                            <h2 className="text-4xl font-black italic tracking-tight uppercase">{category}</h2>
-                                        </div>
-                                        <div className="h-px flex-1 bg-gradient-to-r from-[var(--primary)]/30 to-transparent" />
+            {/* Skills Grid */}
+            <section className="py-12 px-6 md:px-16 lg:px-24">
+                <div className="max-w-6xl mx-auto space-y-16">
+                    {skillsData.map((category) => {
+                        const Icon = icons[category.title.toLowerCase()] || Atom;
+                        return (
+                            <motion.div 
+                              key={category.id} 
+                              initial="hidden" 
+                              whileInView="visible" 
+                              viewport={{ once: true }} 
+                              variants={cardVariants} 
+                              className="space-y-6"
+                            >
+                                {/* Category Header */}
+                                <div className="flex items-center gap-4">
+                                    <div className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all ${
+                                      isDark ? 'bg-primary/10 text-primary' : 'bg-primary text-primary-foreground'
+                                    }`}>
+                                        <Icon className="w-5 h-5" />
                                     </div>
-
-                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                                        {items.map((item) => {
-                                            const SubIcon = skillIcons[item] || Sparkles;
-                                            return (
-                                                <motion.div
-                                                    key={item}
-                                                    variants={itemVariants}
-                                                    whileHover={{ y: -10, scale: 1.05 }}
-                                                    className="group p-8 rounded-[2rem] bg-[var(--card)]/30 border border-[var(--primary)]/10 hover:border-[var(--primary)]/30 transition-all duration-500"
-                                                >
-                                                    <div className="p-8 rounded-[1.9rem] bg-[var(--card)]/40 backdrop-blur-3xl border border-white/5 flex flex-col items-center justify-center text-center h-full">
-                                                        <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-[var(--primary)]/10 group-hover:text-[var(--primary)] transition-all duration-500 border border-white/10 group-hover:border-[var(--primary)]/50">
-                                                            <SubIcon className="w-6 h-6" />
-                                                        </div>
-                                                        <span className="text-sm font-black uppercase tracking-widest text-[var(--foreground)] group-hover:text-[var(--primary)] transition-colors">
-                                                            {item}
-                                                        </span>
-                                                    </div>
-                                                </motion.div>
-                                            );
-                                        })}
-                                    </div>
+                                    <h2 className="text-2xl font-bold tracking-tight text-foreground">{category.title}</h2>
                                 </div>
-                            );
-                        })}
-                    </motion.div>
 
-                    {/* Proficiency Narrative */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                        className="mt-40 p-16 md:p-24 rounded-[4rem] bg-[var(--card)]/40 text-center relative overflow-hidden shadow-2xl border border-[var(--primary)]/10"
-                    >
-                        <div className="absolute top-0 right-0 w-[50rem] h-[50rem] bg-[var(--primary)]/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
-                        <div className="relative z-10">
-                            <h2 className="text-5xl md:text-7xl font-black mb-8 italic tracking-tighter text-[var(--foreground)]">Philosophy of Growth</h2>
-                            <p className="text-[var(--foreground)]/60 text-xl font-medium leading-relaxed max-w-3xl mx-auto italic">
-                                "I believe that a tech stack is more than just a list of tools; it's a dynamic ecosystem of problem-solving instruments. I am constantly expanding this arsenal to stay at the cutting edge of engineering innovation."
-                            </p>
-                        </div>
-                    </motion.div>
+                                {/* Skill Items — Light: horizontal wrap, Dark: dense grid */}
+                                {!isDark ? (
+                                  <div className="flex flex-wrap gap-3">
+                                    {category.skills.map((item: string) => {
+                                      const SubIcon = skillIcons[item] || Star;
+                                      return (
+                                        <motion.div
+                                          key={item} 
+                                          whileHover={{ y: -3 }}
+                                          className="silk-card flex items-center gap-3 px-5 py-3"
+                                        >
+                                          <SubIcon className="w-5 h-5 text-primary" />
+                                          <span className="text-sm font-medium text-foreground">{item}</span>
+                                        </motion.div>
+                                      );
+                                    })}
+                                  </div>
+                                ) : (
+                                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                                    {category.skills.map((item: string) => {
+                                      const SubIcon = skillIcons[item] || Star;
+                                      return (
+                                        <motion.div
+                                          key={item}
+                                          whileHover={{ y: -3 }}
+                                          className="architect-card flex flex-col items-center justify-center text-center gap-3 p-6"
+                                        >
+                                          <SubIcon className="w-6 h-6 text-primary" />
+                                          <span className="text-xs font-medium text-muted-foreground">{item}</span>
+                                        </motion.div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                            </motion.div>
+                        );
+                    })}
                 </div>
             </section>
+
+            {/* Quote */}
+            <section className="py-16 px-6 md:px-16 lg:px-24">
+              <div className={`max-w-4xl mx-auto p-10 md:p-16 text-center ${isDark ? 'architect-card' : 'silk-card'}`}>
+                <blockquote className="text-2xl md:text-3xl font-bold tracking-tight text-foreground mb-4">
+                  "Good architecture is the foundation of great software."
+                </blockquote>
+                <p className="text-sm text-muted-foreground">— Always learning, always building</p>
+              </div>
+            </section>
+
+            <QuickAdmin tab="skills" />
         </div>
     );
 }

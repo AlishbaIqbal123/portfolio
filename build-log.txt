@@ -1,0 +1,33 @@
+﻿src/components/admin/AdminEducation.tsx(12,5): error TS6133: 'Calendar' is declared but its value is never read.
+src/components/admin/AdminEducation.tsx(16,5): error TS6133: 'Sparkles' is declared but its value is never read.
+src/components/admin/AdminExperience.tsx(12,5): error TS6133: 'Calendar' is declared but its value is never read.
+src/components/admin/AdminExperience.tsx(16,5): error TS6133: 'Sparkles' is declared but its value is never read.
+src/components/Footer.tsx(3,49): error TS6133: 'Sparkles' is declared but its value is never read.
+src/pages/AboutPage.tsx(3,88): error TS6133: 'Sparkles' is declared but its value is never read.
+src/pages/EducationPage.tsx(2,105): error TS6133: 'Zap' is declared but its value is never read.
+src/pages/ExperiencePage.tsx(3,21): error TS6133: 'Calendar' is declared but its value is never read.
+src/pages/ExperiencePage.tsx(3,53): error TS6133: 'Award' is declared but its value is never read.
+src/pages/ExperiencePage.tsx(3,71): error TS6133: 'Code2' is declared but its value is never read.
+src/pages/ExperiencePage.tsx(3,78): error TS6133: 'Sparkles' is declared but its value is never read.
+src/pages/ExperiencePage.tsx(229,18): error TS2304: Cannot find name 'ShieldCheck'.
+src/pages/HomePage.tsx(4,10): error TS6133: 'ArrowRight' is declared but its value is never read.
+src/pages/HomePage.tsx(4,22): error TS6133: 'Download' is declared but its value is never read.
+src/pages/HomePage.tsx(33,9): error TS6133: 'opacityHero' is declared but its value is never read.
+src/pages/LoginPage.tsx(3,18): error TS6133: 'AnimatePresence' is declared but its value is never read.
+src/pages/LoginPage.tsx(6,55): error TS6133: 'Zap' is declared but its value is never read.
+src/pages/ProjectDetailPage.tsx(4,48): error TS6133: 'Maximize2' is declared but its value is never read.
+src/pages/ProjectsPage.tsx(4,18): error TS6133: 'ExternalLink' is declared but its value is never read.
+src/pages/SkillsPage.tsx(1,18): error TS6133: 'AnimatePresence' is declared but its value is never read.
+src/pages/SkillsPage.tsx(143,52): error TS6133: 'catIdx' is declared but its value is never read.
+src/pages/SkillsPage.tsx(170,77): error TS6133: 'idx' is declared but its value is never read.
+src/pages/SkillsPage.tsx(175,53): error TS2322: Type '{ hidden: { opacity: number; scale: number; rotate: number; }; visible: { opacity: number; scale: number; rotate: number; transition: { type: string; stiffness: number; damping: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; scale: number; rotate: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; scale: number; rotate: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; scale: number; rotate: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues$1 | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType | undefined'.

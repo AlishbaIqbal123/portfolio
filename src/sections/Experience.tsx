@@ -10,9 +10,9 @@ const typeIcons = {
 };
 
 const typeColors = {
-  work: 'bg-[#e1bb80]',
-  education: 'bg-[#7b6b43]',
-  simulation: 'bg-[#806443]',
+  work: 'bg-[var(--primary)]',
+  education: 'bg-[var(--accent)]',
+  simulation: 'bg-emerald-500',
 };
 
 function TimelineItem({
@@ -47,7 +47,7 @@ function TimelineItem({
         <motion.div
           whileHover={{ y: -4 }}
           transition={{ duration: 0.3 }}
-          className="p-6 rounded-xl bg-gradient-to-br from-[#806443]/20 to-[#685634]/10 border border-[#7b6b43]/50 hover:border-[#e1bb80]/50 transition-all duration-300"
+          className="p-6 rounded-xl bg-card/60 backdrop-blur-md border-2 border-foreground/5 hover:border-[var(--primary)]/50 transition-all duration-300 shadow-xl"
         >
           {/* Date Badge */}
           <div
@@ -55,22 +55,22 @@ function TimelineItem({
               isLeft ? 'md:justify-end' : 'justify-start'
             }`}
           >
-            <Calendar className="w-4 h-4 text-[#e1bb80]" />
-            <span className="text-[#e1bb80] text-sm font-medium">
+            <Calendar className="w-4 h-4 text-[var(--primary)]" />
+            <span className="text-[var(--primary)] text-sm font-black uppercase tracking-widest italic">
               {item.date}
             </span>
           </div>
 
           {/* Title */}
-          <h3 className="text-xl font-bold text-white font-['Playfair_Display'] mb-1">
+          <h3 className="text-2xl font-black text-foreground drop-shadow-sm uppercase tracking-tighter italic mb-1">
             {item.title}
           </h3>
 
           {/* Organization */}
-          <p className="text-[#e1bb80] font-medium mb-3">
+          <p className="text-[var(--primary)] font-black uppercase tracking-widest text-[11px] mb-3 italic">
             {item.organization}
             {item.location && (
-              <span className="text-white/50"> • {item.location}</span>
+              <span className="text-foreground/30"> • {item.location}</span>
             )}
           </p>
 
@@ -83,10 +83,10 @@ function TimelineItem({
             {item.description.map((desc, i) => (
               <li
                 key={i}
-                className="text-white/60 text-sm leading-relaxed flex items-start gap-2"
+                className="text-foreground/50 text-[11px] font-black uppercase tracking-widest leading-relaxed flex items-start gap-3 italic"
               >
                 <span
-                  className={`w-1.5 h-1.5 rounded-full bg-[#e1bb80] mt-2 flex-shrink-0 ${
+                  className={`w-2 h-2 rounded-full bg-[var(--primary)] mt-1.5 flex-shrink-0 shadow-sm ${
                     isLeft ? 'md:order-last' : ''
                   }`}
                 />
@@ -104,9 +104,9 @@ function TimelineItem({
           initial={{ scale: 0 }}
           animate={isInView ? { scale: 1 } : {}}
           transition={{ duration: 0.4, delay: index * 0.15 + 0.2 }}
-          className={`w-12 h-12 rounded-full ${typeColors[item.type]} flex items-center justify-center z-10 shadow-lg shadow-[#e1bb80]/20`}
+          className={`w-12 h-12 rounded-full ${typeColors[item.type]} flex items-center justify-center z-10 shadow-lg border-2 border-background`}
         >
-          <Icon className="w-5 h-5 text-[#352208]" />
+          <Icon className="w-5 h-5 text-[hsl(var(--primary-foreground))]" />
         </motion.div>
 
         {/* Connector Line */}
@@ -135,10 +135,10 @@ export function Experience() {
     <section
       id="experience"
       ref={sectionRef}
-      className="section-padding bg-[#352208] relative overflow-hidden"
+      className="section-padding bg-background relative overflow-hidden"
     >
       {/* Background Decoration */}
-      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#7b6b43]/30 to-transparent" />
+      <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-foreground/5 to-transparent" />
 
       <div className="container-custom relative z-10">
         {/* Section Header */}
@@ -150,20 +150,19 @@ export function Experience() {
         >
           {/* Section Label */}
           <div className="flex items-center justify-center gap-4 mb-4">
-            <div className="h-px w-12 bg-[#e1bb80]" />
-            <span className="text-[#e1bb80] text-sm font-medium tracking-wider uppercase">
+            <div className="h-1 w-12 bg-[var(--primary)] rounded-full" />
+            <span className="text-[var(--primary)] text-[11px] font-black tracking-[0.4em] uppercase italic">
               Journey
             </span>
-            <div className="h-px w-12 bg-[#e1bb80]" />
+            <div className="h-1 w-12 bg-[var(--primary)] rounded-full" />
           </div>
 
           {/* Heading */}
-          <h2 className="text-4xl md:text-5xl font-bold text-white font-['Playfair_Display'] mb-4">
-            Experience & <span className="text-[#e1bb80]">Education</span>
+          <h2 className="text-5xl md:text-7xl font-black text-foreground drop-shadow-sm uppercase italic tracking-tighter mb-4">
+            Experience & <span className="text-[var(--primary)] stroke-text">Education</span>
           </h2>
 
-          {/* Description */}
-          <p className="text-white/60 max-w-2xl mx-auto">
+          <p className="text-foreground/50 max-w-2xl mx-auto font-black uppercase tracking-widest text-[11px] italic">
             My professional journey through internships, virtual simulations, and academic achievements.
           </p>
         </motion.div>
