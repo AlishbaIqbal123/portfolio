@@ -58,7 +58,7 @@ function ProjectCard({
                 </a>
              )}
              <Link 
-                to={`/project/${project.id}`} 
+                to={`/projects/${project.id}`} 
                 className="w-12 h-12 bg-primary/20 backdrop-blur-md text-white border border-white/20 flex items-center justify-center rounded-full hover:scale-110 transition-transform"
              >
                 <Layout className="w-5 h-5" />
@@ -72,7 +72,7 @@ function ProjectCard({
              <span className="text-[10px] font-black tracking-widest text-primary/60 uppercase italic">{project.category}</span>
              {project.featured && <span className="text-[8px] font-black px-2 py-1 bg-primary/10 text-primary border border-primary/20 uppercase tracking-widest">FEATURED</span>}
           </div>
-          <Link to={`/project/${project.id}`}>
+          <Link to={`/projects/${project.id}`}>
             <h3 className={`text-2xl md:text-3xl font-black uppercase text-foreground leading-none transition-colors hover:text-primary ${!isDark ? 'heading-silk' : 'heading-cyber'}`}>
               {project.title}
             </h3>
