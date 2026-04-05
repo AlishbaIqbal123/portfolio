@@ -54,12 +54,12 @@ export function AboutPage() {
                 <p className="text-lg text-muted-foreground leading-relaxed">{bio}</p>
                 <div className="flex items-center gap-6 pt-2">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">{personal.cgpa || '3.64'}</div>
+                    <div className="text-2xl font-bold text-primary">{personal.stats?.cgpa || personal.cgpa || '3.64'}</div>
                     <p className="text-xs text-muted-foreground mt-1">CGPA</p>
                   </div>
                   <div className="w-px h-10 bg-border" />
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">{personal.location || 'Faisalabad'}</div>
+                    <div className="text-2xl font-bold text-primary">{personal.location || 'Pakistan'}</div>
                     <p className="text-xs text-muted-foreground mt-1">Location</p>
                   </div>
                 </div>
@@ -120,11 +120,11 @@ export function AboutPage() {
                 <div className="lg:col-span-4 grid grid-cols-2 gap-4">
                   <div className="architect-card text-center py-8">
                     <div className="text-xs text-muted-foreground mb-2">CGPA</div>
-                    <div className="text-3xl font-bold text-primary">{personal.cgpa || '3.64'}</div>
+                    <div className="text-3xl font-bold text-primary">{personal.stats?.cgpa || personal.cgpa || '3.64'}</div>
                   </div>
                   <div className="architect-card text-center py-8">
                     <div className="text-xs text-muted-foreground mb-2">Location</div>
-                    <div className="text-lg font-bold text-primary">{personal.location || 'FSD'}</div>
+                    <div className="text-lg font-bold text-primary">{personal.location || 'Pk'}</div>
                   </div>
                 </div>
               </div>

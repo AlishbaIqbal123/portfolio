@@ -55,7 +55,7 @@ export function EducationPage() {
              institution: edu.institution || edu.school || '',
              location: edu.location || '',
              date: edu.date || edu.period || '',
-             grade: edu.grade || '',
+             grade: edu.grade || edu.cgpa || '',
              description: Array.isArray(edu.description) ? edu.description : typeof edu.description === 'string' ? edu.description.split('\n').filter(Boolean) : [],
           }));
           setEduLocal(normalized);
@@ -119,7 +119,7 @@ export function EducationPage() {
                   <span className={`text-xs font-medium px-3 py-1 shrink-0 ${
                     isDark ? 'bg-primary/10 text-primary rounded-md' : 'bg-primary/5 text-primary rounded-full border border-primary/10'
                   }`}>
-                    {item.grade}
+                    {typeof item.grade === 'string' && item.grade.includes('.') ? `CGPA: ${item.grade}` : item.grade}
                   </span>
                 )}
               </div>

@@ -6,6 +6,7 @@ import {
     Heart, Rocket, Shield, Layers, ShieldCheck, 
     Terminal, Star, MapPin
 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/hooks/useTheme';
 import { getPersonalInfo, getProjects, getExperience } from '@/lib/api';
 import { personalData as staticPersonal } from '@/data/personal';
@@ -38,7 +39,7 @@ export function HomePage() {
           supabase.from('admin_settings').select('*')
         ]);
 
-        const focusVal = settings.data?.find(s => s.key === 'tagline' || s.key === 'site_focus')?.value || 'Full Stack';
+        const focusVal = settings.data?.find((s: any) => s.key === 'tagline' || s.key === 'site_focus')?.value || 'Full Stack';
         
         if (info) {
           setPersonal(info);

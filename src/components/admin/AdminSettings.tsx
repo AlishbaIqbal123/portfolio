@@ -176,21 +176,24 @@ const SiteConfigForm = ({ isDark }: { isDark: boolean }) => {
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [config, setConfig] = useState({
+        name: '',
         bio: '',
-        tagline: ''
+        tagline: '',
+        location: '',
+        cgpa: ''
     });
 
     useEffect(() => {
         const fetchConfig = async () => {
             const { data } = await supabase.from('admin_settings').select('*');
             if (data) {
-                const bioItem = data.find(item => item.key === 'bio' || item.key === 'site_bio');
-                const taglineItem = data.find(item => item.key === 'tagline' || item.key === 'site_focus');
+                const name = data.find((s: any) => s.key === 'name')?.value || '';
+                const bio = data.find((s: any) => s.key === 'bio' || s.key === 'site_bio')?.value || '';
+                const tagline = data.find((s: any) => s.key === 'tagline' || s.key === 'site_focus')?.value || '';
+                const location = data.find((s: any) => s.key === 'location')?.value || '';
+                const cgpa = data.find((s: any) => s.key === 'cgpa')?.value || '';
                 
-                setConfig({ 
-                    bio: bioItem?.value || '', 
-                    tagline: taglineItem?.value || '' 
-                });
+                setConfig({ name, bio, tagline, location, cgpa });
             }
             setLoading(false);
         };
@@ -201,19 +204,24 @@ const SiteConfigForm = ({ isDark }: { isDark: boolean }) => {
         e.preventDefault();
         setIsSaving(true);
         try {
-            // Use upsert to handle keys
-            const { error: error1 } = await supabase.from('admin_settings').upsert({ 
-                key: 'bio', 
-                value: config.bio,
-                updated_at: new Date().toISOString()
-            });
-            const { error: error2 } = await supabase.from('admin_settings').upsert({ 
-                key: 'tagline', 
-                value: config.tagline,
-                updated_at: new Date().toISOString()
-            });
+            // Upsert all keys
+            const updates = [
+                { key: 'name', value: config.name },
+                { key: 'bio', value: config.bio },
+                { key: 'tagline', value: config.tagline },
+                { key: 'location', value: config.location },
+                { key: 'cgpa', value: config.cgpa },
+                { key: 'updated_at', value: new Date().toISOString() } // This key doesn't exist as primary, but we'll use individual updated_ats
+            ];
+
+            for (const item of updates.filter(u => u.key !== 'updated_at')) {
+                await supabase.from('admin_settings').upsert({ 
+                    key: item.key, 
+                    value: item.value,
+                    updated_at: new Date().toISOString()
+                });
+            }
             
-            if (error1 || error2) throw (error1 || error2);
             toast.success('Site configuration deployed successfully.');
         } catch (error: any) {
             toast.error('Deployment Error: ' + error.message);
@@ -231,22 +239,54 @@ const SiteConfigForm = ({ isDark }: { isDark: boolean }) => {
 
     return (
         <form onSubmit={handleSave} className="space-y-6">
-            <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/60 italic">Domain Focus / Slogan</label>
-                    <span className="text-[8px] font-bold text-muted-foreground opacity-40">KEY: focus</span>
+            <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/60 italic">Display Name</label>
+                    <input 
+                        type="text" value={config.name}
+                        onChange={e => setConfig({...config, name: e.target.value})}
+                        className={`w-full h-11 rounded-xl border border-border px-4 text-sm font-medium outline-none transition-all ${
+                            isDark ? 'bg-background focus:border-primary/50' : 'bg-slate-50 focus:border-primary/30'
+                        }`}
+                        placeholder="e.g. Alishba Iqbal"
+                    />
                 </div>
-                <input 
-                    type="text" value={config.tagline}
-                    onChange={e => setConfig({...config, tagline: e.target.value})}
-                    className={`w-full h-11 rounded-xl border border-border px-4 text-sm font-medium outline-none transition-all ${
-                        isDark ? 'bg-background focus:border-primary/50 focus:ring-4 focus:ring-primary/5' : 'bg-slate-50 focus:border-primary/30 focus:ring-4 focus:ring-primary/5'
-                    }`}
-                    placeholder="e.g. Full Stack Developer | Mobile Specialist"
-                />
-                <p className="text-[10px] text-muted-foreground opacity-60 leading-relaxed italic">
-                    This dynamic value updates the "Focus: Frontend" sections across your entire portfolio.
-                </p>
+                <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/60 italic">Domain Focus / Slogan</label>
+                    <input 
+                        type="text" value={config.tagline}
+                        onChange={e => setConfig({...config, tagline: e.target.value})}
+                        className={`w-full h-11 rounded-xl border border-border px-4 text-sm font-medium outline-none transition-all ${
+                            isDark ? 'bg-background focus:border-primary/50' : 'bg-slate-50 focus:border-primary/30'
+                        }`}
+                        placeholder="e.g. Full Stack Developer"
+                    />
+                </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/60 italic">Location</label>
+                    <input 
+                        type="text" value={config.location}
+                        onChange={e => setConfig({...config, location: e.target.value})}
+                        className={`w-full h-11 rounded-xl border border-border px-4 text-sm font-medium outline-none transition-all ${
+                            isDark ? 'bg-background focus:border-primary/50' : 'bg-slate-50 focus:border-primary/30'
+                        }`}
+                        placeholder="e.g. Faisalabad, Pakistan"
+                    />
+                </div>
+                <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/60 italic">Global CGPA / Stats</label>
+                    <input 
+                        type="text" value={config.cgpa}
+                        onChange={e => setConfig({...config, cgpa: e.target.value})}
+                        className={`w-full h-11 rounded-xl border border-border px-4 text-sm font-medium outline-none transition-all ${
+                            isDark ? 'bg-background focus:border-primary/50' : 'bg-slate-50 focus:border-primary/30'
+                        }`}
+                        placeholder="e.g. 3.64 / 4.00"
+                    />
+                </div>
             </div>
 
             <div className="space-y-2">
