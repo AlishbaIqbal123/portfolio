@@ -82,7 +82,7 @@ function AppLayout() {
   const isDemo = location.pathname.includes('/projects/') && location.pathname !== '/projects';
 
   return (
-    <div className={`min-h-screen bg-[var(--background)] text-[var(--foreground)] transition-colors duration-1000 relative selection:bg-primary selection:text-primary-foreground ${isAdmin ? 'admin-theme' : ''}`}>
+    <div className={`min-h-screen bg-transparent text-[var(--foreground)] transition-colors duration-1000 relative selection:bg-primary selection:text-primary-foreground ${isAdmin ? 'admin-theme' : ''}`}>
       <CustomCursor />
       
       {!isAdmin && <GadgetBackground />}

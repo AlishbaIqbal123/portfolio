@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { getPersonalInfo } from '@/lib/api';
 import { personalData } from '@/data/personal';
 
 function CountUp({
@@ -44,14 +45,19 @@ function CountUp({
   );
 }
 
-const stats = [
-  { label: 'CGPA', value: 3.67, suffix: '/4.00', isDecimal: true },
-  { label: 'Projects', value: 10, suffix: '+' },
-  { label: 'Internships', value: 2, suffix: '+' },
-];
-
 export function About() {
+  const [data, setData] = useState<any>(null);
   const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    getPersonalInfo().then(setData);
+  }, []);
+
+  const stats = [
+    { label: 'CGPA', value: parseFloat(data?.stats?.cgpa || '3.67'), suffix: '', isDecimal: true },
+    { label: 'Projects', value: parseInt(data?.stats?.projects || '10'), suffix: '+' },
+    { label: 'Internships', value: parseInt(data?.stats?.internships || '2'), suffix: '+' },
+  ];
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
 
   return (
@@ -90,9 +96,8 @@ export function About() {
             </h2>
 
             {/* Bio Paragraphs */}
-            <div className="space-y-4 text-white/70 leading-relaxed">
-              <p>{personalData.bio.paragraph1}</p>
-              <p>{personalData.bio.paragraph2}</p>
+            <div className="space-y-4 text-white/70 leading-relaxed max-w-xl">
+              <p>{data?.bio || personalData.bio.paragraph1}</p>
             </div>
 
             {/* Stats */}
@@ -112,7 +117,7 @@ export function About() {
                 >
                   <div className="text-3xl md:text-4xl font-bold text-[#e1bb80] font-['Playfair_Display']">
                     {stat.isDecimal ? (
-                      <span>3.67{stat.suffix}</span>
+                      <span>{data?.stats?.cgpa || '3.67'}</span>
                     ) : (
                       <CountUp end={stat.value} suffix={stat.suffix} />
                     )}

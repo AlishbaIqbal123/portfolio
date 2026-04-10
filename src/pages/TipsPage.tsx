@@ -120,15 +120,19 @@ export function TipsPage() {
                     ) : filteredTips.length > 0 ? (
                         !isDark ? (
                             /* Light: List-style cards */
-                            <div className="space-y-4">
+                            <motion.div 
+                              layout 
+                              className="space-y-4"
+                            >
                                 {filteredTips.map((tip, index) => (
                                     <motion.div
                                         key={tip.id}
                                         layout
-                                        initial={{ opacity: 0, y: 10 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.03 }}
+                                        initial={{ opacity: 0, x: -30, filter: 'blur(8px)' }}
+                                        whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                                        transition={{ delay: index * 0.05, duration: 0.6 }}
                                         viewport={{ once: true }}
+                                        whileHover={{ x: 10, transition: { duration: 0.2 } }}
                                         onClick={() => navigate(`/tips/${tip.id}`)}
                                         className="silk-card cursor-pointer group flex items-center gap-6"
                                     >
@@ -149,18 +153,27 @@ export function TipsPage() {
                                         <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0" />
                                     </motion.div>
                                 ))}
-                            </div>
+                            </motion.div>
                         ) : (
                             /* Dark: Grid cards */
-                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <motion.div 
+                              layout
+                              className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+                            >
                                 {filteredTips.map((tip, index) => (
                                     <motion.div
                                         key={tip.id}
                                         layout
-                                        initial={{ opacity: 0, y: 10 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.03 }}
+                                        initial={{ opacity: 0, y: 40, skewY: 2 }}
+                                        whileInView={{ opacity: 1, y: 0, skewY: 0 }}
+                                        transition={{ 
+                                          type: "spring",
+                                          damping: 30,
+                                          stiffness: 200,
+                                          delay: index * 0.04 
+                                        }}
                                         viewport={{ once: true }}
+                                        whileHover={{ y: -5, transition: { duration: 0.2 } }}
                                         onClick={() => navigate(`/tips/${tip.id}`)}
                                         className="architect-card cursor-pointer group flex flex-col"
                                     >
@@ -183,7 +196,7 @@ export function TipsPage() {
                                         </div>
                                     </motion.div>
                                 ))}
-                            </div>
+                            </motion.div>
                         )
                     ) : (
                         <div className="py-24 text-center">

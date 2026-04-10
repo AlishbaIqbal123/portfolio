@@ -20,7 +20,11 @@ import {
     Radiation,
     Rocket,
     Check,
-    Zap
+    Zap,
+    Bell,
+    Heart,
+    Eye,
+    EyeOff
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -31,12 +35,16 @@ import { AdminEducation } from '@/components/admin/AdminEducation';
 import { AdminExperience } from '@/components/admin/AdminExperience';
 import { AdminSkills } from '@/components/admin/AdminSkills';
 import { AdminSettings } from '@/components/admin/AdminSettings';
+import { AdminThemeProvider, useAdminTheme } from '@/hooks/useAdminTheme';
+import '@/admin-themes.css';
 
-export const AdminPage = () => {
+const AdminContent = () => {
+    const { theme, toggleTheme: toggleAdminTheme } = useAdminTheme();
     const location = useLocation();
     const { isDark, toggleTheme } = useTheme();
     const [activeTab, setActiveTab] = useState((location.state as any)?.activeTab || 'overview');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [showUI, setShowUI] = useState(true);
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -60,9 +68,10 @@ export const AdminPage = () => {
     const currentTabTitle = tabs.find(t => t.id === activeTab)?.name || 'Admin';
 
     return (
-        <div className={`admin-theme min-h-screen transition-colors duration-500 font-sans pb-10 pt-20 px-4 md:px-8 ${isDark ? 'bg-slate-950 text-slate-200' : 'bg-slate-50 text-slate-900'}`}>
-            
-            <div className="max-w-[1700px] mx-auto flex flex-col lg:flex-row gap-6 relative z-10">
+        <div className={`admin-page-container min-h-screen transition-all duration-500 pb-10 pt-20 px-4 md:px-8 theme-${theme}`}>
+            {/* Background elements for Doraemon */}
+            {/* MOVED CHARACTER LAYER TO THE VERY BOTTOM FOR HIGHEST Z-INDEX BUT WITH TRANSPARENCY */}
+            <div className={`max-w-[1700px] mx-auto flex ${theme === 'barbie' ? 'flex-col lg:px-12 gap-8' : 'flex-col lg:flex-row gap-6'} relative z-10`}>
                 
                 {/* SIDEBAR TRIGGER */}
                 <button 
@@ -77,12 +86,21 @@ export const AdminPage = () => {
 
                 {/* PRODUCTIVITY SIDEBAR */}
                 <aside className={`
-                    fixed inset-0 z-[100] lg:relative lg:z-0 lg:block transition-all duration-300
+                    z-[100] lg:block transition-all duration-700
                     ${isSidebarOpen ? "block" : "hidden"}
-                    w-full lg:w-[280px] ${isDark ? 'bg-slate-950/95 lg:bg-transparent' : 'bg-slate-50/95 lg:bg-transparent'} p-4 lg:p-0
+                    ${theme === 'barbie' ? 'fixed top-0 left-0 w-full' : 'fixed inset-0 lg:relative lg:z-0 w-full lg:w-[280px] p-4 lg:p-0 mt-2'}
+                    ${!showUI ? 'opacity-0 -translate-y-10 pointer-events-none' : 'opacity-100 translate-y-0'}
                 `}>
-                    <div className={`border p-6 lg:sticky lg:top-28 h-fit flex flex-col lg:max-h-[calc(100vh-8rem)] shadow-sm transition-all rounded-3xl ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'}`}>
-                        <div className="mb-8 border-b pb-6 border-slate-800/10">
+                    <motion.div 
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={`admin-sidebar overflow-hidden transition-all duration-500 ${
+                            theme === 'barbie' 
+                            ? 'p-2 md:px-8 flex flex-row items-center overflow-x-auto hide-scrollbar justify-between w-full' 
+                            : 'p-6 lg:sticky lg:top-28 h-fit flex flex-col lg:max-h-[calc(100vh-8rem)] rounded-[2rem] border shadow-sm backdrop-blur-xl'
+                        } ${theme !== 'barbie' && isDark ? 'bg-slate-950/80 border-slate-800' : (theme !== 'barbie' && !isDark ? 'bg-white/80 border-slate-200' : '')}`}
+                    >
+                        <div className={`${theme === 'barbie' ? 'hidden' : 'mb-8 border-b pb-6 border-slate-800/10'}`}>
                             <div className="flex items-center gap-4">
                                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-600'}`}>
                                     <Command className="w-5 h-5" />
@@ -94,47 +112,90 @@ export const AdminPage = () => {
                             </div>
                         </div>
 
-                        <div className="space-y-1 overflow-y-auto flex-1 mb-8">
-                            {tabs.map(tab => (
-                                <button
+                        <div className={`${theme === 'barbie' ? 'flex flex-row items-center space-x-2 px-4' : 'space-y-1 overflow-y-auto flex-1 mb-8'}`}>
+                            {tabs.map((tab, idx) => (
+                                <motion.button
                                     key={tab.id}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: idx * 0.05 }}
                                     onClick={() => {
                                         setActiveTab(tab.id);
                                         setIsSidebarOpen(false);
                                     }}
-                                    className={`flex items-center gap-3 px-4 py-3 transition-all w-full text-left rounded-xl text-sm font-medium ${
+                                    className={`flex items-center gap-3 px-4 py-3 transition-all rounded-xl text-sm font-medium whitespace-nowrap ${
                                         activeTab === tab.id 
-                                        ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' 
+                                        ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105' 
                                         : isDark
-                                          ? 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
-                                          : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
-                                    }`}
+                                          ? 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
+                                          : 'text-slate-500 hover:bg-slate-100/50 hover:text-slate-900'
+                                    } ${theme === 'doraemon' ? 'hover:bg-sky-100 w-full text-left' : 'hover:bg-pink-100 px-6'}`}
                                 >
-                                    <tab.icon className="w-4 h-4" />
+                                    <tab.icon className={`w-4 h-4 ${activeTab === tab.id && theme === 'barbie' ? 'animate-pulse' : ''}`} />
                                     {tab.name}
-                                </button>
+                                </motion.button>
                             ))}
                         </div>
                         
                         <button
                             onClick={handleLogout}
-                            className={`flex items-center justify-center gap-3 py-3 rounded-xl border transition-all text-sm font-semibold ${isDark ? 'border-slate-800 text-slate-400 hover:bg-red-950/20 hover:text-red-400' : 'border-slate-200 text-slate-500 hover:bg-red-50 hover:text-red-600'}`}
+                            className={`flex items-center justify-center gap-3 py-3 rounded-xl border transition-all text-sm font-semibold hover:scale-105 active:scale-95 ${
+                                theme === 'barbie' 
+                                ? 'px-6 ml-4 bg-transparent text-[#800020] border-[#800020]' 
+                                : 'mt-auto ' + (isDark ? 'border-slate-800 text-slate-400 hover:bg-red-950/20 hover:text-red-400' : 'border-slate-200 text-slate-500 hover:bg-red-50 hover:text-red-600')
+                            }`}
                         >
                             <Lock className="w-4 h-4" />
-                            Log out
+                            {theme === 'barbie' ? '' : 'Log out'}
                         </button>
-                    </div>
+                    </motion.div>
                 </aside>
 
                 {/* OPERATIONAL HUB */}
-                <main className="flex-1 min-w-0">
-                    <div className={`border p-8 md:p-12 min-h-[80vh] relative overflow-hidden shadow-sm transition-all rounded-3xl ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'}`}>
+                <main className={`flex-1 min-w-0 transition-all duration-700 relative z-10 ${theme === 'doraemon' ? 'p-4' : 'p-0'} ${!showUI ? 'opacity-10' : 'opacity-100'}`}>
+                    <div className={`admin-card border relative overflow-hidden shadow-sm transition-all ${
+                        theme === 'doraemon' 
+                        ? 'p-8 md:p-12 border-[#0096D9] border-t-[20px] rounded-[4rem]' 
+                        : 'p-10 md:p-16 border-pink-100 rounded-[3rem]'
+                    } ${isDark ? 'bg-slate-900/80' : 'bg-white'}`}>
+                        {/* THE GLOBAL ZEN TOGGLE - ALWAYS VISIBLE */}
+                        <div className="fixed top-24 right-10 z-[200] flex gap-4">
+                            <button 
+                                onClick={() => setShowUI(!showUI)}
+                                className={`p-4 rounded-2xl border-2 transition-all shadow-xl hover:scale-110 active:scale-95 ${
+                                    theme === 'barbie' 
+                                    ? 'bg-pink-500 text-white border-pink-400 shadow-pink-200' 
+                                    : 'bg-sky-500 text-white border-sky-400 shadow-sky-200'
+                                }`}
+                                title={showUI ? "Enter Zen Mode" : "Exit Zen Mode"}
+                            >
+                                {showUI ? <Eye className="w-6 h-6" /> : <EyeOff className="w-6 h-6" />}
+                            </button>
+                        </div>
                         
-                        <div className={`mb-12 flex flex-col md:flex-row items-center justify-between border-b pb-8 gap-6 ${isDark ? 'border-slate-800' : 'border-slate-100'}`}>
+                        <div className={`mb-12 flex flex-col md:flex-row items-center justify-between border-b pb-8 gap-6 relative ${
+                            theme === 'doraemon' ? 'border-[#0096D9] border-b-4' : 'border-pink-50'
+                        }`}>
                             <div className="flex items-center gap-4">
-                                <span className={`text-2xl font-bold tracking-tight ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{currentTabTitle}</span>
+                                <span className={`text-3xl font-black tracking-tighter uppercase ${
+                                    theme === 'doraemon' ? 'text-[#0096D9]' : 'text-pink-600'
+                                }`}>
+                                    {theme === 'doraemon' && "Gadget "}
+                                    {currentTabTitle}
+                                    {theme === 'barbie' && " ✨"}
+                                </span>
                             </div>
-                            <div className="flex items-center gap-4">
+
+                            {/* Floating Characters Removed for Cleanest UI */}
+
+                            <div className="flex items-center gap-4 relative z-10">
+                                <button 
+                                    onClick={toggleAdminTheme}
+                                    className={`flex items-center gap-3 px-4 h-10 border rounded-xl text-xs font-bold transition-all hover:scale-105 active:scale-95 ${theme === 'doraemon' ? 'bg-sky-500 border-sky-400 text-white shadow-[0_4px_0_#0369a1]' : 'bg-pink-500 border-pink-400 text-white shadow-[0_4px_0_#9d174d]'}`}
+                                >
+                                    {theme === 'doraemon' ? <Bell className="w-4 h-4 fill-yellow-400 text-yellow-400" /> : <Heart className="w-4 h-4 fill-white text-white" />}
+                                    {theme === 'doraemon' ? "Doraemon" : "Princess Barbie"}
+                                </button>
                                 <button 
                                     onClick={toggleTheme}
                                     className={`flex items-center gap-3 px-4 h-10 border rounded-xl text-xs font-semibold transition-all hover:scale-105 active:scale-95 ${isDark ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-white border-slate-200 text-slate-700 shadow-sm'}`}
@@ -166,6 +227,14 @@ export const AdminPage = () => {
                 </main>
             </div>
         </div>
+    );
+};
+
+export const AdminPage = () => {
+    return (
+        <AdminThemeProvider>
+            <AdminContent />
+        </AdminThemeProvider>
     );
 };
 

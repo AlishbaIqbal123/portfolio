@@ -15,90 +15,69 @@ interface Tip {
     fetched_at: string;
 }
 
-/* ── Category-specific inspiration images from Unsplash ── */
-const categoryImages: Record<string, string> = {
-    'core': 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=500&fit=crop',
-    'frontend': 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&h=500&fit=crop',
-    'backend': 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=500&fit=crop',
-    'design': 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=500&fit=crop',
-    'devops': 'https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=800&h=500&fit=crop',
-    'testing': 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=500&fit=crop',
-    'default': 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=500&fit=crop',
-};
-
 /* ── Friendly tips / details based on category ── */
 const friendlyDetails: Record<string, { heading: string; points: string[]; emoji: string }> = {
-    'core': {
-        heading: '💡 Why This Matters',
-        emoji: '🧱',
+    'software engineering': {
+        heading: '🏗️ Engineering Wisdom',
+        emoji: '🔧',
         points: [
-            'Strong fundamentals make debugging 10x faster — you\'ll spend less time guessing and more time building.',
-            'Modular code is like building with LEGO — you can swap parts without breaking everything.',
-            'Every large project you admire started with clean, well-structured foundations.',
+            'Clean code is not about perfection, but about being kind to the next person who reads it (most likely you).',
+            'Automated testing is the insurance policy for your future productivity.',
+            'Design patterns are vocabularies that help engineers communicate complex ideas efficiently.',
         ]
     },
     'frontend': {
-        heading: '🎨 Making It Click',
+        heading: '🎨 Interface Excellence',
         emoji: '✨',
         points: [
-            'Great UI isn\'t about flashy effects — it\'s about making users feel confident and comfortable.',
-            'Micro-interactions (like button animations) make apps feel alive and responsive.',
-            'Accessibility isn\'t optional — building for everyone means building better for everyone.',
+            'Visual stability isn\'t just about aesthetics — it\'s about user trust and accessibility.',
+            'Responsive design is the standard. If it doesn\'t work on a phone, it doesn\'t truly exist.',
+            'Performance is a feature. Every millisecond saved is a friction point removed.',
         ]
     },
     'backend': {
-        heading: '⚙️ Behind the Scenes',
+        heading: '⚙️ Scalable Logic',
         emoji: '🔧',
         points: [
-            'A well-designed API is like a good conversation — clear, predictable, and easy to follow.',
-            'Security isn\'t just about passwords — it\'s about thinking like an attacker to protect your users.',
-            'Caching is your best friend — it turns slow apps into fast ones without rewriting everything.',
+            'A predictable API is a joy to integrate. Always prioritize consistency over cleverness.',
+            'Statelessness allows your system to scale horizontally with minimal friction.',
+            'Observability is better than debugging. Log the right data before you need it.',
+        ]
+    },
+    'architecture': {
+        heading: '📐 Structural Purity',
+        emoji: '🏛️',
+        points: [
+            'Architecture is about making the important decisions now so you can make smaller ones later.',
+            'Loose coupling and high cohesion are the twin pillars of a resilient system.',
+            'Good architecture handles requirements that haven\'t been written yet.',
+        ]
+    },
+    'database': {
+        heading: '💾 Data Integrity',
+        emoji: '🗄️',
+        points: [
+            'Data is the ultimate source of truth. Protecting it is your most important job.',
+            'Indexes are like library catalogs — they make finding things fast, but they take up space.',
+            'Normalization reduces redundancy; Denormalization increases performance. Choose wisely.',
         ]
     },
     'default': {
-        heading: '✨ The Bigger Picture',
+        heading: '✨ Pro Tips',
         emoji: '🌟',
         points: [
-            'Every line of code you write is a step toward mastery — consistency beats perfection.',
-            'The best developers aren\'t those who know everything — they\'re the ones who never stop learning.',
-            'Building projects is the fastest way to learn — reading alone won\'t make you a great coder.',
+            'The best tool is the one you know how to use well, but the best dev is the one who keeps learning new ones.',
+            'Don\'t just fix the bug — understand why it happened to prevent an entire class of errors.',
+            'Write code as if you\'re writing a letter to your future self.',
         ]
     }
 };
 
-/* ── Inspirational quotes by category ── */
 const inspirationalQuotes: Record<string, { quote: string; by: string }> = {
-    'core': { quote: 'First, solve the problem. Then, write the code.', by: 'John Johnson' },
     'frontend': { quote: 'Design is not just what it looks like. Design is how it works.', by: 'Steve Jobs' },
     'backend': { quote: 'The best code is no code at all. Every new line is a potential bug.', by: 'Jeff Atwood' },
+    'software engineering': { quote: 'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.', by: 'Martin Fowler' },
     'default': { quote: 'Simplicity is the soul of efficiency.', by: 'Austin Freeman' },
-};
-
-const fallbacks: Record<string, Tip> = {
-    'fallback_1': {
-        id: 'fallback_1',
-        title: 'Modular Architecture',
-        content: 'Implementing modular separation within your codebase ensures maintainability, testability, and scalability as your project grows.',
-        category: 'Core',
-        author: 'Alishba Iqbal',
-        fetched_at: new Date().toISOString()
-    },
-    'fallback_2': {
-        id: 'fallback_2',
-        title: 'Modern UI Patterns',
-        content: 'Using glassmorphism, motion-based interactions, and thoughtful micro-animations creates engaging interfaces that users love.',
-        category: 'Frontend',
-        author: 'Alishba Iqbal',
-        fetched_at: new Date().toISOString()
-    },
-    'fallback_3': {
-        id: 'fallback_3',
-        title: 'Real-Time Sync',
-        content: 'Real-time synchronization with row-level security enables instant state updates across all connected clients securely.',
-        category: 'Backend',
-        author: 'Alishba Iqbal',
-        fetched_at: new Date().toISOString()
-    }
 };
 
 export const TipDetailPage = () => {
@@ -109,12 +88,6 @@ export const TipDetailPage = () => {
 
     useEffect(() => {
         const fetchTip = async () => {
-            if (id?.startsWith('fallback_')) {
-                setTip(fallbacks[id] || null);
-                setLoading(false);
-                return;
-            }
-
             const { data } = await supabase
                 .from('coding_tips')
                 .select('*')
@@ -122,7 +95,6 @@ export const TipDetailPage = () => {
                 .single();
                 
             if (data) setTip(data);
-            else if (id && fallbacks[id]) setTip(fallbacks[id]);
             setLoading(false);
         };
         fetchTip();
@@ -137,16 +109,41 @@ export const TipDetailPage = () => {
     if (!tip) return (
         <div className="min-h-screen flex items-center justify-center bg-background">
             <div className="text-center">
-                <h1 className="text-3xl font-bold text-foreground mb-2">Tip Not Found</h1>
-                <Link to="/tips" className="text-sm text-primary hover:underline">Back to tips</Link>
+                <h1 className="text-3xl font-bold text-foreground mb-2 italic">Observation Vault Empty</h1>
+                <Link to="/tips" className="text-sm text-primary hover:underline uppercase tracking-widest font-black">Re-establish Connection</Link>
             </div>
         </div>
     );
 
-    const catKey = tip.category.toLowerCase();
-    const heroImage = categoryImages[catKey] || categoryImages['default'];
+    const catKey = (tip.category || '').toLowerCase();
     const friendly = friendlyDetails[catKey] || friendlyDetails['default'];
     const quote = inspirationalQuotes[catKey] || inspirationalQuotes['default'];
+
+    // Generate a unique, relevant image using Unsplash keywords + the tip ID as a seed/sig
+    const imageKeywords = `${catKey.replace(' ', ',')},technology,code,minimal`;
+    const heroImage = `https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1200&auto=format&fit=crop&sig=${tip.id}`;
+    
+    // More curated dynamic imagery based on category if sig isn't enough variety
+    const getDynamicImage = () => {
+        const techPool = [
+            '1517694712202-14dd9538aa97', // Laptop code
+            '1555066931-4365d14bab8c', // Screen code
+            '1587620962725-abab7fe55159', // Programmer
+            '1516321318423-f06f85e504b3', // Modern office
+            '1550751827-4bd374c3f58b', // Cyber
+            '1488590528505-98d2b5aba04b', // Apple gear
+            '1504639725597-78f6ec6b5383', // Coding abstract
+            '1531297484001-80022131f5a1', // Future tech
+            '1551033406-611cf9a28f67', // Debugging
+            '1519389950473-47ba0277781c'  // Collaboration
+        ];
+        // Use hash of tipping.id to pick from pool
+        const idNum = tip.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        const imageId = techPool[idNum % techPool.length];
+        return `https://images.unsplash.com/photo-${imageId}?q=80&w=1200&auto=format&fit=crop`;
+    };
+
+    const finalImage = getDynamicImage();
 
     return (
         <div className="min-h-screen bg-background transition-colors duration-500">
@@ -154,34 +151,38 @@ export const TipDetailPage = () => {
                 <div className="max-w-4xl mx-auto space-y-6">
                     
                     {/* Back link */}
-                    <Link to="/tips" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                        <ArrowLeft className="w-4 h-4" /> Back to tips
+                    <Link to="/tips" className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors font-black uppercase tracking-widest italic">
+                        <ArrowLeft className="w-4 h-4" /> {"System.Exit(0) -> Back"}
                     </Link>
 
                     {/* ── Hero Image ── */}
                     <motion.div 
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className={`overflow-hidden ${isDark ? 'rounded-xl' : 'rounded-3xl'}`}
+                        className={`overflow-hidden border border-border/50 group ${isDark ? 'rounded-xl' : 'rounded-3xl shadow-2xl'}`}
                     >
                         <div className="relative aspect-[16/7] overflow-hidden">
                             <SafeImage 
-                                src={heroImage} 
+                                src={finalImage} 
                                 alt={tip.title}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                             />
                             <div className={`absolute inset-0 ${
                                 isDark 
-                                    ? 'bg-gradient-to-t from-background via-background/40 to-transparent' 
-                                    : 'bg-gradient-to-t from-background via-background/30 to-transparent'
+                                    ? 'bg-gradient-to-t from-background via-background/60 to-transparent' 
+                                    : 'bg-gradient-to-t from-background via-background/40 to-transparent'
                             }`} />
-                            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                                <span className={`text-[10px] font-medium uppercase tracking-wider px-3 py-1 mb-3 inline-block ${
-                                    isDark ? 'bg-primary/20 text-primary rounded-md backdrop-blur-sm' : 'bg-white/80 text-primary rounded-full backdrop-blur-sm'
-                                }`}>
+                            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+                                <motion.span 
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    className={`text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1.5 mb-4 inline-block italic ${
+                                        isDark ? 'bg-primary/20 text-primary rounded-md backdrop-blur-sm border border-primary/20' : 'bg-primary text-white rounded shadow-lg'
+                                    }`}
+                                >
                                     {tip.category}
-                                </span>
-                                <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-foreground">{tip.title}</h1>
+                                </motion.span>
+                                <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground uppercase italic leading-none">{tip.title}</h1>
                             </div>
                         </div>
                     </motion.div>
@@ -191,100 +192,104 @@ export const TipDetailPage = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.1 }}
-                        className="flex items-center gap-4 text-xs text-muted-foreground"
+                        className="flex flex-wrap items-center gap-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground italic opacity-60"
                     >
-                        <span className="flex items-center gap-1.5">
-                            <User className="w-3.5 h-3.5" />
+                        <span className="flex items-center gap-2">
+                            <User className="w-3.5 h-3.5 text-primary" />
                             {tip.author || 'Alishba Iqbal'}
                         </span>
-                        <span className="w-1 h-1 rounded-full bg-border" />
-                        <span className="flex items-center gap-1.5">
-                            <Calendar className="w-3.5 h-3.5" />
+                        <span className="flex items-center gap-2">
+                            <Calendar className="w-3.5 h-3.5 text-primary" />
                             {new Date(tip.fetched_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                         </span>
-                        <span className="w-1 h-1 rounded-full bg-border" />
-                        <span className="flex items-center gap-1.5">
-                            <BookOpen className="w-3.5 h-3.5" />
+                        <span className="flex items-center gap-2">
+                            <BookOpen className="w-3.5 h-3.5 text-primary" />
                             3 min read
                         </span>
                     </motion.div>
 
                     {/* ── Main Content Card ── */}
-                    <motion.article
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.15 }}
-                        className={isDark ? 'architect-card' : 'silk-card'}
-                    >
-                        <div className="flex items-center gap-2 mb-4">
-                            <Sparkles className="w-5 h-5 text-primary" />
-                            <h2 className="text-lg font-bold text-foreground">The Insight</h2>
-                        </div>
-                        <p className="text-base md:text-lg leading-relaxed text-foreground/85 mb-6">{tip.content}</p>
-                        
-                        {/* Expanded description */}
-                        <div className={`p-5 ${
-                            isDark ? 'bg-card rounded-lg border border-border' : 'bg-muted/30 rounded-2xl'
-                        }`}>
-                            <p className="text-sm leading-relaxed text-muted-foreground">
-                                This insight touches on a key aspect of {tip.category.toLowerCase()} development that many developers overlook early in their careers. 
-                                Understanding and applying this principle consistently will set your work apart and help you build more reliable, 
-                                maintainable software. The difference between good and great code often comes down to these foundational practices.
+                    <div className="grid lg:grid-cols-12 gap-6 items-start">
+                        <motion.article
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.15 }}
+                            className={`lg:col-span-8 ${isDark ? 'architect-card' : 'silk-card'}`}
+                        >
+                            <div className="flex items-center gap-3 mb-6">
+                                <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+                                <h2 className="text-xs font-black uppercase tracking-[0.4em] text-foreground">The Insight</h2>
+                            </div>
+                            <p className="text-lg md:text-xl font-bold leading-snug text-foreground/90 mb-8 italic">
+                                "{tip.content}"
                             </p>
-                        </div>
-                    </motion.article>
+                            
+                            <div className={`p-6 border-l-4 border-primary ${
+                                isDark ? 'bg-card/50 rounded-r-lg' : 'bg-muted/30 rounded-r-2xl'
+                            }`}>
+                                <h4 className="text-[10px] font-black uppercase text-primary mb-2 italic">Detailed Analysis</h4>
+                                <p className="text-xs leading-relaxed text-muted-foreground font-medium">
+                                    Deep engineering cycles reveal that {tip.category} standards often dictate the lifespan of a deployment. 
+                                    By prioritizing this specific insight, you are opting for structural longevity over temporary velocity. 
+                                    High-end development is a marathon of consistency, not a sprint of hacks.
+                                </p>
+                            </div>
+                        </motion.article>
 
-                    {/* ── Friendly Zone: Why This Matters ── */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.25 }}
-                        className={isDark ? 'architect-card' : 'silk-card'}
-                    >
-                        <div className="flex items-center gap-2 mb-5">
-                            <Heart className="w-5 h-5 text-primary" />
-                            <h2 className="text-lg font-bold text-foreground">{friendly.heading}</h2>
-                        </div>
-                        <div className="space-y-3">
-                            {friendly.points.map((point, idx) => (
-                                <div key={idx} className="flex items-start gap-3">
-                                    <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                                    <p className="text-sm leading-relaxed text-muted-foreground">{point}</p>
+                        <div className="lg:col-span-4 space-y-6">
+                            {/* ── Why This Matters ── */}
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.25 }}
+                                className={isDark ? 'architect-card' : 'silk-card'}
+                            >
+                                <div className="flex items-center gap-2 mb-6">
+                                    <Heart className="w-4 h-4 text-primary" />
+                                    <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest">{friendly.heading}</h2>
                                 </div>
-                            ))}
-                        </div>
-                    </motion.div>
+                                <div className="space-y-4">
+                                    {friendly.points.map((point, idx) => (
+                                        <div key={idx} className="flex items-start gap-3 group">
+                                            <CheckCircle2 className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
+                                            <p className="text-[10px] leading-relaxed font-bold text-muted-foreground/80 uppercase tracking-tight">{point}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </motion.div>
 
-                    {/* ── Inspirational Quote ── */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.35 }}
-                        className={`relative overflow-hidden ${isDark ? 'architect-card' : 'silk-card'}`}
-                    >
-                        <div className="absolute top-4 right-4 opacity-5">
-                            <Quote className="w-24 h-24 text-primary" />
+                            {/* ── Inspirational Quote ── */}
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.35 }}
+                                className={`relative overflow-hidden p-6 border-2 border-primary/10 ${isDark ? 'architect-card' : 'silk-card'}`}
+                            >
+                                <div className="absolute -top-2 -right-2 opacity-5">
+                                    <Quote className="w-16 h-16 text-primary" />
+                                </div>
+                                <div className="relative z-10">
+                                    <blockquote className="text-sm font-black italic tracking-tight text-foreground leading-tight mb-4">
+                                        "{quote.quote}"
+                                    </blockquote>
+                                    <p className="text-[9px] font-black uppercase tracking-widest text-primary">— {quote.by}</p>
+                                </div>
+                            </motion.div>
                         </div>
-                        <div className="relative z-10 text-center py-4">
-                            <blockquote className="text-xl md:text-2xl font-bold tracking-tight text-foreground leading-snug mb-3">
-                                "{quote.quote}"
-                            </blockquote>
-                            <p className="text-sm text-muted-foreground">— {quote.by}</p>
-                        </div>
-                    </motion.div>
+                    </div>
 
                     {/* ── Browse More Tips ── */}
                     <motion.div
-                        initial={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.45 }}
-                        className={`p-8 text-center ${isDark ? 'architect-card' : 'silk-card'}`}
+                        className={`p-10 text-center border-dashed border-2 border-border/50 ${isDark ? 'architect-card' : 'silk-card'}`}
                     >
-                        <Lightbulb className="w-8 h-8 text-primary mx-auto mb-3 opacity-50" />
-                        <h3 className="text-lg font-bold text-foreground mb-1">Explore More</h3>
-                        <p className="text-sm text-muted-foreground mb-5">Discover more insights, best practices, and development tips.</p>
-                        <Link to="/tips" className="imperial-btn text-xs">
-                            Browse All Tips
+                        <Lightbulb className="w-10 h-10 text-primary mx-auto mb-4 opacity-20" />
+                        <h3 className="text-sm font-black text-foreground mb-1 uppercase tracking-widest">Knowledge Pipeline</h3>
+                        <p className="text-[10px] text-muted-foreground mb-6 uppercase italic font-black">Syncing the next generation of engineering thoughts.</p>
+                        <Link to="/tips" className="imperial-btn text-[10px]">
+                            CONTINUE EXPLORING
                         </Link>
                     </motion.div>
                 </div>

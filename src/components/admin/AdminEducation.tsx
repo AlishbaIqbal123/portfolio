@@ -14,7 +14,7 @@ interface Education {
     id: string;
     school: string;
     degree: string;
-    period: string;
+    duration: string;
     cgpa?: string;
 }
 
@@ -118,7 +118,7 @@ export const AdminEducation = () => {
                     </div>
                 </div>
                 <button 
-                    onClick={() => setEditingEdu({ school: '', degree: '', period: '' })}
+                    onClick={() => setEditingEdu({ school: '', degree: '', duration: '' })}
                     className={`px-5 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors ${
                         isDark ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-primary text-white hover:bg-primary/90'
                     }`}
@@ -148,7 +148,7 @@ export const AdminEducation = () => {
                                     <p className="text-sm text-muted-foreground">{edu.degree}</p>
                                     <div className="flex items-center gap-4 text-xs text-muted-foreground">
                                         <div className="flex items-center gap-2">
-                                            <Calendar className="w-3 h-3" /> {edu.period}
+                                            <Calendar className="w-3 h-3" /> {edu.duration}
                                         </div>
                                         {edu.cgpa && (
                                             <div className="flex items-center gap-2 px-2 py-0.5 rounded-md bg-primary/10 text-primary font-bold">
@@ -237,10 +237,10 @@ export const AdminEducation = () => {
                                         </div>
                                         <div className="grid md:grid-cols-2 gap-4">
                                             <div className="space-y-1.5">
-                                                <label className="text-xs font-medium text-muted-foreground">Period</label>
+                                                <label className="text-xs font-medium text-muted-foreground">Duration</label>
                                                 <input 
-                                                    type="text" value={editingEdu.period}
-                                                    onChange={e => setEditingEdu({...editingEdu, period: e.target.value})}
+                                                    type="text" value={editingEdu.duration}
+                                                    onChange={e => setEditingEdu({...editingEdu, duration: e.target.value})}
                                                     className={`w-full h-10 rounded-lg border px-4 text-sm outline-none transition-colors ${
                                                         isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
                                                     }`}

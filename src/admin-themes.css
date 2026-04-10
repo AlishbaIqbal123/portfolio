@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Dancing+Script:wght@400..700&display=swap');
+
+/* --- DORAEMON THEME: "Gadget Glass" --- */
+.theme-doraemon {
+  --admin-primary: #0096D9;
+  --admin-secondary: #FDC901;
+  --admin-bg: #E0F2FE;
+  --admin-glass-bg: rgba(255, 255, 255, 0.7);
+  --admin-font: 'Quicksand', sans-serif;
+  
+  --primary: 201 100% 43%;
+  --primary-foreground: 0 0% 100%;
+  --background: 204 100% 95%;
+  --card: 0 0% 100%;
+  --border: 201 100% 70%;
+  --radius: 3rem;
+}
+
+.theme-doraemon.admin-page-container {
+  background: url('/images/characters/doraemon_bg.png') no-repeat center center fixed;
+  background-size: cover;
+  font-family: var(--admin-font) !important;
+  position: relative;
+}
+
+.theme-doraemon.admin-page-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(224, 242, 254, 0.4); /* light blue tint */
+    z-index: -1;
+}
+
+.theme-doraemon .admin-sidebar {
+  background: #0096D9 !important;
+  border-right: 12px solid #FDC901;
+  border-radius: 0 4rem 4rem 0 !important;
+  box-shadow: 10px 0 0 rgba(0, 0, 0, 0.1);
+}
+
+.theme-doraemon .admin-sidebar button {
+  color: white !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 900 !important;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-doraemon .admin-card {
+  background: white !important;
+  border: 4px solid #0096D9;
+  border-radius: 0 0 4rem 4rem !important;
+  box-shadow: 8px 8px 0 #FDC901;
+}
+
+/* --- STRONG FEMININE BARBIE THEME: "Power Silk & Burgundy" --- */
+.theme-barbie {
+  --admin-primary: #800020; /* Deep Burgundy */
+  --admin-secondary: #D4AF37; /* Champagne Gold */
+  --admin-bg: #FFFFFF; /* High-Fashion Silk White */
+  --admin-font: 'Playfair Display', serif;
+
+  --primary: 345 100% 25%;
+  --primary-foreground: 0 0% 100%;
+  --background: 0 0% 100%;
+  --card: 0 0% 100%;
+  --border: 345 100% 90%;
+  --radius: 0.5rem;
+}
+
+.theme-barbie.admin-page-container {
+  background: url('/images/characters/custom_user_bg_2.png') no-repeat center center fixed !important;
+  background-size: cover !important;
+  font-family: var(--admin-font) !important;
+}
+
+.theme-barbie.admin-page-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.85) !important; /* Lighter overlay to ensure light styled overall */
+    backdrop-filter: blur(8px) !important;
+    z-index: -1;
+}
+
+.theme-doraemon.admin-page-container {
+  background: url('/images/characters/og_doraemon_bg.png') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.theme-doraemon.admin-page-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 77, 118, 0.2); 
+    z-index: -1;
+}
+
+.theme-barbie .admin-sidebar {
+  background: rgba(255, 255, 255, 0.45) !important; /* Perfect Glass Blend */
+  backdrop-filter: blur(20px) !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.1) !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Barbie Component Overrides */
+.theme-barbie .admin-sidebar button {
+  color: #111111 !important; 
+  font-family: var(--admin-font);
+  font-size: 0.85rem !important;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 800 !important;
+  border: 1px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent !important;
+}
+
+.theme-barbie .admin-sidebar button:hover {
+    background: rgba(128, 0, 32, 0.05) !important;
+    border: 1px solid #800020;
+    transform: translateY(-2px);
+}
+
+.theme-barbie .admin-sidebar button[class*="bg-primary"] {
+    background: #800020 !important;
+    color: white !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 10px 20px rgba(128, 0, 32, 0.2) !important;
+}
+
+/* Card Overhaul for Barbie */
+.theme-barbie .admin-card {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 2rem !important;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.08) !important;
+  padding: 3rem !important;
+}
+
+/* Project & Skills List Items */
+.theme-barbie .grid > div,
+.theme-barbie .space-y-6 > .grid > div {
+    background: white !important;
+    border: 1px solid #000 !important;
+    border-radius: 1rem !important;
+    padding: 1.5rem !important;
+    transition: all 0.4s ease;
+    box-shadow: 0 0 0 rgba(0,0,0,0) !important;
+}
+
+.theme-barbie .grid > div:hover {
+    transform: scale(1.02) rotate(1deg);
+    box-shadow: 15px 15px 0 #800020 !important;
+    border-color: #800020 !important;
+}
+
+/* Typography Overrides */
+.theme-barbie h2, .theme-barbie h3 {
+    font-family: 'Playfair Display', serif !important;
+    color: #000 !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 900 !important;
+    font-style: italic;
+}
+
+/* Tags & Badges */
+.theme-barbie span[class*="rounded"] {
+    background: #000 !important;
+    color: #fff !important;
+    border-radius: 0 !important;
+    padding: 0.2rem 0.8rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 1px;
+    border: none !important;
+}
+
+/* Form Controls */
+.theme-barbie input, .theme-barbie textarea, .theme-barbie select {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border: 1px solid #ccc !important;
+    border-radius: 0.5rem !important;
+    padding: 0.8rem 1rem !important;
+    font-family: var(--admin-font);
+    font-weight: 600 !important;
+    color: #000 !important;
+    transition: all 0.3s;
+}
+
+.theme-barbie input:focus {
+    background: white !important;
+    border-color: #800020 !important;
+    box-shadow: 0 0 0 4px rgba(128, 0, 32, 0.1) !important;
+}
+
+/* Buttons */
+.theme-barbie button[class*="bg-primary"] {
+    background: #000 !important;
+    color: #fff !important;
+    border-radius: 0 !important;
+    font-weight: 900 !important;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none !important;
+    box-shadow: 5px 5px 0 #800020 !important;
+}
+
+.theme-barbie button:hover[class*="bg-primary"] {
+    transform: translate(-3px, -3px);
+    box-shadow: 10px 10px 0 #800020 !important;
+}
+
+/* Character Visibility */
+.theme-barbie .character-img {
+    filter: drop-shadow(0 0 40px rgba(128, 0, 32, 0.3));
+}
+
+.theme-doraemon .character-img {
+    filter: drop-shadow(0 0 30px rgba(0, 150, 217, 0.8));
+}
+

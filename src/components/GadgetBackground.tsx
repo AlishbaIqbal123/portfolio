@@ -1,6 +1,8 @@
-import { Silk } from './effects/Silk';
+import React from 'react';
 import { useTheme } from '@/hooks/useTheme';
 import { motion } from 'framer-motion';
+import { ColorBends } from './effects/ColorBends';
+import { Silk } from './effects/Silk';
 
 export const GadgetBackground: React.FC = () => {
   const { isDark } = useTheme();
@@ -8,32 +10,34 @@ export const GadgetBackground: React.FC = () => {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden bg-background transition-all duration-1000">
       
-      {/* 🏛️ LIGHT: ARCHITECTURAL BLUEPRINT GRID & SILK */}
+      {/* 🏛️ LIGHT: ARCHITECTURAL MAROON DEPTH */}
       {!isDark && (
-        <div className="absolute inset-0">
-          <Silk color="#3B82F6" speed={0.2} noiseIntensity={0.3} className="opacity-[0.04]" />
+        <div className="absolute inset-0 bg-[#F4F1EE]">
+          {/* Static Atmospheric Depth - Removed moving Bends */}
+          <div className="absolute inset-0 opacity-10 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+          
           
           {/* Industrial Drafting Hatching (Subtle Stripes) */}
           <div 
             className="absolute inset-0 opacity-[0.03]" 
             style={{
-              backgroundImage: `repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 0, transparent 50%)`,
+              backgroundImage: `repeating-linear-gradient(45deg, #4a0715 0, #4a0715 1px, transparent 0, transparent 50%)`,
               backgroundSize: '10px 10px',
             }}
           />
 
-          {/* Blueprint Grid Layers */}
+          {/* Blueprint Grid Layers (Maroon Tinted) */}
           <div 
-            className="absolute inset-0 opacity-[0.02]" 
+            className="absolute inset-0 opacity-[0.08]" 
             style={{
-              backgroundImage: `linear-gradient(to right, #000 2px, transparent 2px), linear-gradient(to bottom, #000 2px, transparent 2px)`,
+              backgroundImage: `linear-gradient(to right, #4a0715 2px, transparent 2px), linear-gradient(to bottom, #4a0715 2px, transparent 2px)`,
               backgroundSize: '80px 80px',
             }}
           />
           <div 
-            className="absolute inset-0 opacity-[0.01]" 
+            className="absolute inset-0 opacity-[0.04]" 
             style={{
-              backgroundImage: `linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)`,
+              backgroundImage: `linear-gradient(to right, #4a0715 1px, transparent 1px), linear-gradient(to bottom, #4a0715 1px, transparent 1px)`,
               backgroundSize: '20px 20px',
             }}
           />
@@ -45,30 +49,21 @@ export const GadgetBackground: React.FC = () => {
             "bottom-0 left-0 border-b-2 border-l-2",
             "bottom-0 right-0 border-b-2 border-r-2"
           ].map((pos, idx) => (
-            <div key={idx} className={`absolute ${pos} w-20 h-20 border-primary/10 m-10`} />
+            <div key={idx} className={`absolute ${pos} w-20 h-20 border-[#4a0715]/10 m-10`} />
           ))}
 
           {/* Industrial Metadata Labels */}
-          <div className="absolute top-1/2 left-32 -translate-y-1/2 -rotate-90 pointer-events-none opacity-5">
-             <span className="text-[12px] font-black tracking-[1em] text-primary uppercase whitespace-nowrap italic">PORTFOLIO · ALISHBA IQBAL</span>
+          <div className="absolute top-1/2 left-32 -translate-y-1/2 -rotate-90 pointer-events-none opacity-10">
+             <span className="text-[12px] font-black tracking-[1em] text-[#4a0715] uppercase whitespace-nowrap italic">PORTFOLIO · ALISHBA IQBAL</span>
           </div>
 
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.02),transparent_50%)]" />
-          
-          {/* Vintage Drafting Grain Overlay */}
-          <svg className="absolute inset-0 w-full h-full opacity-[0.03] pointer-events-none">
-            <filter id="drafting-grain">
-              <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch" />
-              <feColorMatrix type="saturate" values="0" />
-            </filter>
-            <rect width="100%" height="100%" filter="url(#drafting-grain)" />
-          </svg>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(74,7,21,0.02),transparent_50%)]" />
         </div>
       )}
 
       {/* 🌌 DARK: SAPPHIRE DATA MATRIX & SILK */}
       {isDark && (
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[#0A0F1E]">
           <Silk color="#0EA5E9" speed={0.1} noiseIntensity={0.8} className="opacity-[0.15]" />
 
           {/* Static Matrix Line Grid */}
@@ -99,13 +94,13 @@ export const GadgetBackground: React.FC = () => {
           {/* Constant Indigo Scanlines */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(59,130,246,0.02),rgba(14,165,233,0.01),rgba(59,130,246,0.02))] bg-[length:100%_4px,3px_100%] opacity-20" />
 
-          {/* Deep Ambient Void Glow (No circles) */}
+          {/* Deep Ambient Void Glow */}
           <div className="absolute inset-x-0 top-0 h-[80vh] bg-gradient-to-b from-primary/5 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 h-[50vh] bg-gradient-to-t from-primary/10 to-transparent" />
         </div>
       )}
 
-      {/* Surface Depth Layer (Professional Fine-Grain) */}
+      {/* Surface Depth Layer */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay" />
     </div>
   );

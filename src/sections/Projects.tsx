@@ -29,6 +29,7 @@ function ProjectCard({
   const github = project.github_link || project.githubUrl;
   const live = project.deployed_link || project.liveUrl;
   const stack = project.tech_stack || project.tags || [];
+  const hasVideo = !!project.video_url;
 
   return (
     <motion.div
@@ -46,6 +47,16 @@ function ProjectCard({
             alt={project.title}
             className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
           />
+          
+          {hasVideo && (
+            <div className="absolute top-4 right-4 z-10">
+              <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-2 py-1 rounded-md border border-white/10">
+                <PlayCircle className="w-3 h-3 text-primary animate-pulse" />
+                <span className="text-[8px] font-black text-white uppercase tracking-widest">Demo</span>
+              </div>
+            </div>
+          )}
+
           <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
              {github && (
                 <a href={github} target="_blank" rel="noreferrer" className="w-12 h-12 bg-primary text-primary-foreground flex items-center justify-center rounded-full hover:scale-110 transition-transform">

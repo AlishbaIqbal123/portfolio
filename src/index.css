@@ -141,6 +141,31 @@
   .dark .imperial-btn {
     @apply bg-primary text-primary-foreground border-0;
   }
+
+  /* Global Animations */
+  .floating {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .floating-delayed {
+    animation: float 6s ease-in-out infinite;
+    animation-delay: 2s;
+  }
+
+  .text-reveal {
+    animation: text-reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  @keyframes text-reveal {
+    0% { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); transform: translateY(20px); }
+    100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translateY(0); }
+  }
 }
 
 /* Subtle texture overlay */

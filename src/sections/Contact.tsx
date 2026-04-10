@@ -10,7 +10,8 @@ import {
   Loader2,
   CheckCircle,
 } from 'lucide-react';
-import { personalData } from '@/data/personal';
+import { getPersonalInfo } from '@/lib/api';
+import { useEffect } from 'react';
 
 export function Contact() {
   const [formState, setFormState] = useState({
@@ -18,8 +19,15 @@ export function Contact() {
     email: '',
     message: '',
   });
+    message: '',
+  });
+  const [data, setData] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    getPersonalInfo().then(setData);
+  }, []);
 
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
@@ -52,20 +60,20 @@ export function Contact() {
     {
       icon: MapPin,
       label: 'Location',
-      value: personalData.location,
+      value: data?.location || 'Vehari, Pakistan',
       href: null,
     },
     {
       icon: Phone,
       label: 'Phone',
-      value: personalData.phone,
-      href: `tel:${personalData.phone}`,
+      value: data?.phone || '+92 312 7954930',
+      href: `tel:${data?.phone}`,
     },
     {
       icon: Mail,
       label: 'Email',
-      value: personalData.email,
-      href: `mailto:${personalData.email}`,
+      value: data?.email || 'i.alishba1342@gmail.com',
+      href: `mailto:${data?.email}`,
     },
   ];
 
@@ -73,12 +81,12 @@ export function Contact() {
     {
       icon: Github,
       label: 'GitHub',
-      href: personalData.github,
+      href: data?.github || 'https://github.com/AlishbaIqbal123',
     },
     {
       icon: Linkedin,
       label: 'LinkedIn',
-      href: personalData.linkedin,
+      href: data?.linkedin || 'https://linkedin.com/in/alishba-iqbal-software-engineer',
     },
   ];
 

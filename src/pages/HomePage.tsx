@@ -12,6 +12,8 @@ import { getPersonalInfo, getProjects, getExperience } from '@/lib/api';
 import { personalData as staticPersonal } from '@/data/personal';
 import { QuickAdmin } from '@/components/QuickAdmin';
 import { SafeImage } from '@/components/ui/SafeImage';
+import { ScrollVelocity } from '@/components/effects/ScrollVelocity';
+import { BorderGlow } from '@/components/effects/BorderGlow';
 
 /* ── Shared Data ── */
 const interests = [
@@ -56,7 +58,7 @@ export function HomePage() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative bg-background overflow-x-hidden transition-colors duration-500">
+    <div ref={containerRef} className="relative bg-transparent overflow-x-hidden transition-colors duration-500">
       
       {/* ═══════════════════════════════════════════
           LIGHT MODE: "Silk Editorial"
@@ -77,10 +79,39 @@ export function HomePage() {
                 className="space-y-8 order-2 lg:order-1"
               >
                 <div className="space-y-3">
-                  <p className="text-xs font-medium tracking-[0.2em] text-primary uppercase">{personal.title || 'Software Engineer'}</p>
+                  <motion.p 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-xs font-medium tracking-[0.2em] text-primary uppercase"
+                  >{personal.title || 'Software Engineer'}</motion.p>
+                  
                   <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9] text-foreground">
-                    {personal.name?.split(' ')[0] || 'Alishba'}<br/>
-                    <span className="text-primary">{personal.name?.split(' ')[1] || 'Iqbal'}</span>
+                    {(personal.name?.split(' ')[0] || 'Alishba').split('').map((char, i) => (
+                      <motion.span
+                        key={i}
+                        initial={{ opacity: 0, filter: 'blur(10px)', y: 20 }}
+                        animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+                        transition={{ delay: 0.3 + i * 0.05, duration: 0.5 }}
+                        className="inline-block"
+                      >
+                        {char}
+                      </motion.span>
+                    ))}
+                    <br/>
+                    <span className="text-primary">
+                      {(personal.name?.split(' ')[1] || 'Iqbal').split('').map((char, i) => (
+                        <motion.span
+                          key={i}
+                          initial={{ opacity: 0, filter: 'blur(10px)', y: 20 }}
+                          animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+                          transition={{ delay: 0.8 + i * 0.05, duration: 0.5 }}
+                          className="inline-block"
+                        >
+                          {char}
+                        </motion.span>
+                      ))}
+                    </span>
                   </h1>
                 </div>
 
@@ -103,25 +134,45 @@ export function HomePage() {
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
-                className="order-1 lg:order-2"
+                className="order-1 lg:order-2 flex justify-center lg:justify-end"
               >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-primary/5 rounded-3xl -rotate-3 transition-transform hover:rotate-0 duration-700" />
-                  <div className="relative aspect-[4/5] overflow-hidden rounded-3xl shadow-xl">
+                <motion.div 
+                  whileHover={{ scale: 1.02, rotate: 1 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="relative w-full max-w-[400px] cursor-pointer"
+                >
+                  <motion.div 
+                    animate={{ rotate: [-3, -1, -3] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-primary/5 rounded-3xl" 
+                  />
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-xl">
                     <SafeImage 
                       src="/images/alishba_profile_original.jpg" 
-                      className="w-full h-full object-cover" 
+                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" 
                       alt={personal.name || "Alishba Iqbal"} 
                     />
                   </div>
-                </div>
+                </motion.div>
               </motion.div>
             </div>
           </section>
 
+          {/* ⚡ Dynamic Skills Marquee — Editorial Bold */}
+          <section className="py-6 border-y border-border/40 bg-card/10 backdrop-blur-sm -rotate-1 scale-105 origin-center overflow-hidden">
+            <ScrollVelocity 
+              texts={[
+                personal.skills?.technologies?.join(" · ") || "React · Flutter · Node · AI",
+                personal.skills?.languages?.join(" · ") || "C++ · Python · Dart · JS"
+              ]}
+              velocity={50}
+              className="text-4xl md:text-6xl font-black text-primary/80"
+            />
+          </section>
+
           {/* Insights — Horizontal scrolling cards */}
-          <section className="py-16 bg-muted/30 border-y border-border/50">
-            <div className="px-6 md:px-16 lg:px-24 mb-10 flex justify-between items-end max-w-6xl mx-auto">
+          <section className="py-16 bg-muted/10 backdrop-blur-sm border-y border-border/50">
+            <div className="px-6 md:px-12 lg:px-12 mb-10 flex justify-between items-end max-w-7xl mx-auto">
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Insights</h2>
                 <p className="text-sm text-muted-foreground mt-1">Technical perspectives & design thinking</p>
@@ -129,18 +180,41 @@ export function HomePage() {
               <Link to="/tips" className="text-sm font-medium text-primary hover:underline">View all →</Link>
             </div>
             
-            <div className="flex overflow-x-auto gap-5 px-6 md:px-16 lg:px-24 pb-6 no-scrollbar snap-x">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-6 md:px-12 lg:px-12 pb-6 max-w-7xl mx-auto">
+              {/* Insights — Grid reveal */}
               {[
                 { t: 'Clean Architecture', c: 'Maintain strict boundaries between layers for scalable systems.' },
                 { t: 'Visual Hierarchy', c: 'Guide users naturally through contrast, spacing, and typography.' },
                 { t: 'Performance First', c: 'Optimize for speed — every millisecond matters to users.' },
                 { t: 'Accessible Design', c: 'Build inclusive interfaces that work for everyone.' },
               ].map((item, i) => (
-                <div key={i} className="min-w-[280px] md:min-w-[340px] silk-card snap-center">
-                  <span className="text-xs text-primary font-medium">0{i+1}</span>
-                  <h3 className="text-xl font-bold tracking-tight mt-2 mb-3 text-foreground">{item.t}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{item.c}</p>
-                </div>
+                <motion.div 
+                  key={i} 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ delay: i * 0.1, duration: 0.6 }}
+                  className={`h-full floating`}
+                  style={{ animationDelay: `${i * 0.5}s` }}
+                >
+                  <BorderGlow
+                    borderRadius={24}
+                    glowRadius={30}
+                    glowColor="345 80% 30%"
+                    colors={['#7d0d1b', '#a90519', '#ff102a']}
+                    backgroundColor="hsl(var(--card))"
+                    animated
+                  >
+                    <motion.div 
+                      whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                      className="silk-card border-0 bg-transparent shadow-none h-full p-8 md:p-6 cursor-default"
+                    >
+                      <span className="text-xs text-primary font-medium">0{i+1}</span>
+                      <h3 className="text-xl font-bold tracking-tight mt-2 mb-3 text-foreground">{item.t}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{item.c}</p>
+                    </motion.div>
+                  </BorderGlow>
+                </motion.div>
               ))}
             </div>
           </section>
@@ -160,10 +234,18 @@ export function HomePage() {
                     { label: 'Experience', val: stats.experience },
                     { label: 'Focus', val: stats.focus }
                   ].map((s, i) => (
-                    <div key={i} className="silk-card text-center py-8">
+                    <motion.div 
+                      key={i} 
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1 }}
+                      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                      className="silk-card text-center py-8 cursor-default"
+                    >
                       <span className="text-xs text-muted-foreground font-medium tracking-wider uppercase">{s.label}</span>
                       <div className="text-3xl font-bold text-primary mt-2">{s.val}</div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
@@ -227,6 +309,19 @@ export function HomePage() {
             <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]" />
           </section>
 
+          {/* ⚡ Dynamic Skills Marquee — Architect Grid */}
+          <section className="py-12 bg-card/30 border-y border-white/5 overflow-hidden">
+            <ScrollVelocity 
+              texts={[
+                personal.skills?.technologies?.join(" · ") || "React · Flutter · Node · AI",
+                personal.skills?.languages?.join(" · ") || "C++ · Python · Dart · JS"
+              ]}
+              velocity={80}
+              className="text-5xl md:text-8xl font-black text-foreground/5 tracking-tighter"
+              parallaxStyle={{ padding: '20px 0' }}
+            />
+          </section>
+
           {/* Interests — Vertical grid, architectural cards */}
           <section className="py-24 px-6 md:px-16 lg:px-24">
             <div className="max-w-6xl mx-auto space-y-12">
@@ -235,7 +330,7 @@ export function HomePage() {
                 <div className="h-px flex-1 bg-border" />
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {interests.map((item, idx) => (
                   <motion.div 
                     key={idx}
@@ -243,11 +338,21 @@ export function HomePage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.08 }}
-                    className="architect-card group"
+                    className="group"
                   >
-                    <item.icon className="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform" />
-                    <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                    <BorderGlow
+                      borderRadius={16}
+                      glowRadius={30}
+                      glowIntensity={0.8}
+                      glowColor="45 100% 60%"
+                      colors={['#facc15', '#fbbf24', '#f59e0b']}
+                    >
+                      <div className="architect-card border-0 bg-card/20 backdrop-blur-md shadow-none h-full m-0">
+                        <item.icon className="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform" />
+                        <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">{item.title}</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                      </div>
+                    </BorderGlow>
                   </motion.div>
                 ))}
               </div>
@@ -255,7 +360,7 @@ export function HomePage() {
           </section>
 
           {/* Stats — Stacked column, dark blocks */}
-          <section className="py-24 px-6 md:px-16 lg:px-24 bg-card/50">
+          <section className="py-24 px-6 md:px-16 lg:px-24 bg-card/20 backdrop-blur-md">
             <div className="max-w-6xl mx-auto">
               <div className="flex items-center gap-6 mb-12">
                 <Terminal className="w-5 h-5 text-primary" />
@@ -288,7 +393,7 @@ export function HomePage() {
       {/* CTA — Shared but styled differently via CSS */}
       <section className="py-16 px-6 md:px-16 lg:px-24">
         <div className={`max-w-4xl mx-auto p-10 md:p-16 text-center transition-all duration-500 ${
-          isDark ? 'architect-card' : 'silk-card'
+          isDark ? 'architect-card' : 'silk-card bg-card/80 backdrop-blur-sm'
         }`}>
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-foreground">Let's Collaborate</h2>
           <p className="text-muted-foreground mb-8 max-w-lg mx-auto">

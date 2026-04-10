@@ -62,8 +62,13 @@ export function ContactPage() {
       <section className="py-8 px-6 md:px-16 lg:px-24">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-5 gap-8">
           
-          {/* Contact Info */}
-          <div className="lg:col-span-2 space-y-4">
+          <motion.div 
+            initial={!isDark ? { opacity: 0, x: -30 } : { opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, x: 0, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-2 space-y-4"
+          >
             <div className={isDark ? 'architect-card' : 'silk-card'}>
               <h2 className="text-lg font-bold mb-6 text-foreground">Contact Info</h2>
               <div className="space-y-6">
@@ -102,10 +107,15 @@ export function ContactPage() {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Contact Form */}
-          <div className="lg:col-span-3">
+          <motion.div 
+            initial={!isDark ? { opacity: 0, x: 30 } : { opacity: 0, scale: 1.1 }}
+            whileInView={{ opacity: 1, x: 0, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="lg:col-span-3"
+          >
             <form onSubmit={handleSubmit} className={`${isDark ? 'architect-card' : 'silk-card'} space-y-6`}>
               <h2 className="text-lg font-bold text-foreground mb-2">Send a Message</h2>
               
@@ -154,7 +164,7 @@ export function ContactPage() {
                 )}
               </button>
             </form>
-          </div>
+          </motion.div>
         </div>
       </section>
 

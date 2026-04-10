@@ -41,9 +41,9 @@ function SilkTimelineCard({ item, index }: { item: ExperienceItem; index: number
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      initial={{ opacity: 0, x: -30, filter: 'blur(10px)' }}
+      animate={isInView ? { opacity: 1, x: 0, filter: 'blur(0px)' } : {}}
+      transition={{ duration: 0.8, delay: index * 0.15, ease: "easeOut" }}
       className="group flex gap-6 mb-8"
     >
       {/* Timeline dot */}
@@ -91,9 +91,14 @@ function ArchitectExpCard({ item, index }: { item: ExperienceItem; index: number
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      initial={{ opacity: 0, y: 40, scale: 0.95 }}
+      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ 
+        type: "spring",
+        stiffness: 200, 
+        damping: 20, 
+        delay: index * 0.1 
+      }}
       className="architect-card flex flex-col h-full group"
     >
       <div className="flex items-center justify-between mb-6">
@@ -152,7 +157,7 @@ export function ExperiencePage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-background transition-colors duration-500">
+    <div className="relative min-h-screen bg-transparent transition-colors duration-500">
       
       {/* Header */}
       <section className="pt-24 pb-8 px-6 md:px-16 lg:px-24">
@@ -160,7 +165,7 @@ export function ExperiencePage() {
           {!isDark ? (
             <div className="space-y-3">
               <p className="text-xs font-medium tracking-[0.2em] text-primary uppercase">Career</p>
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">Experience</h1>
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground text-reveal">Experience</h1>
               <p className="text-muted-foreground max-w-lg">
                 Professional milestones and engineering growth.
               </p>
@@ -168,7 +173,7 @@ export function ExperiencePage() {
           ) : (
             <div className="text-center py-8">
               <p className="text-xs font-medium tracking-[0.3em] text-primary uppercase mb-3">Portfolio</p>
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground">Experience</h1>
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground text-reveal">Experience</h1>
               <p className="text-muted-foreground mt-3 max-w-md mx-auto">
                 My professional journey and key contributions.
               </p>
@@ -185,7 +190,7 @@ export function ExperiencePage() {
             { label: 'Projects', val: '12+' },
             { label: 'Collaborations', val: '15+' }
           ].map((s, i) => (
-            <div key={i} className={`p-6 text-center ${isDark ? 'architect-card' : 'silk-card'}`}>
+            <div key={i} className={`p-6 text-center floating-delayed ${isDark ? 'architect-card' : 'silk-card bg-card/80 backdrop-blur-sm'}`}>
               <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider block mb-2">{s.label}</span>
               <div className="text-3xl font-bold text-primary">{s.val}</div>
             </div>
@@ -216,7 +221,7 @@ export function ExperiencePage() {
 
       {/* CTA */}
       <section className="py-16 px-6 md:px-16 lg:px-24">
-        <div className={`max-w-4xl mx-auto p-10 md:p-16 text-center ${isDark ? 'architect-card' : 'silk-card'}`}>
+        <div className={`max-w-4xl mx-auto p-10 md:p-16 text-center ${isDark ? 'architect-card' : 'silk-card bg-card/80 backdrop-blur-sm'}`}>
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-3 text-foreground">Let's Connect</h2>
           <p className="text-muted-foreground mb-6 max-w-md mx-auto">
             Always open to new opportunities and creative partnerships.

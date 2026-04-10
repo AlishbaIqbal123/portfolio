@@ -10,10 +10,10 @@ export type Project = {
     title: string;
     description: string;
     image: string;
-    videoUrl?: string;
-    githubUrl?: string;
-    liveUrl?: string;
-    tags: string[];
+    video_url?: string;
+    github_link?: string;
+    deployed_link?: string;
+    tech_stack: string[];
     category: 'web' | 'mobile' | 'desktop';
     is_video_primary: boolean;
     created_at: string;

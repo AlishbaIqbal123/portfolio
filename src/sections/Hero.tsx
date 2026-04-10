@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Download, Shield, Zap, Hash, Layers } from 'lucide-react';
 import { personalData } from '@/data/personal';
+import { getPersonalInfo } from '@/lib/api';
 import { useTheme } from '@/hooks/useTheme';
 import { SafeImage } from '@/components/ui/SafeImage';
 
@@ -36,6 +37,11 @@ function TypingEffect({ text, delay = 0, isMono = false }: { text: string; delay
 
 export function Hero() {
   const { isDark } = useTheme();
+  const [data, setData] = useState<any>(null);
+
+  useEffect(() => {
+    getPersonalInfo().then(setData);
+  }, []);
 
   const downloadCV = () => {
     const link = document.createElement('a');
@@ -64,13 +70,13 @@ export function Hero() {
               transition={{ duration: 1, ease: "easeOut" }}
               className="text-8xl md:text-[11rem] font-black italic tracking-tighter text-primary uppercase leading-[0.8] heading-silk"
             >
-              {personalData.name.split(' ')[0]}
+              {data?.name?.split(' ')[0] || personalData.name.split(' ')[0]}
             </motion.h1>
           </div>
 
           <div className="max-w-2xl">
             <h2 className="text-xl md:text-3xl font-black uppercase text-foreground/80 leading-tight italic mb-8">
-              {personalData.tagline}
+              {data?.tagline || personalData.tagline}
             </h2>
             <div className="flex flex-wrap justify-center gap-4">
               <button onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })} className="imperial-btn">
@@ -118,7 +124,7 @@ export function Hero() {
             >
                <span className="text-[10px] font-black text-primary tracking-[1em] uppercase">SUBJECT_IDENTITY</span>
                <h1 className="text-7xl md:text-[9rem] font-black tracking-tighter text-foreground uppercase leading-[0.8] heading-cyber">
-                 {personalData.name.split(' ')[0]}
+                 {data?.name?.split(' ')[0] || personalData.name.split(' ')[0]}
                </h1>
             </motion.div>
 
@@ -139,8 +145,8 @@ export function Hero() {
 
           {/* Overseer Detail */}
           <div className="hidden md:flex col-span-3 flex-col items-center gap-10">
-             <div className="relative p-6 border-2 border-primary/20 bg-card/10 backdrop-blur-3xl overflow-hidden group">
-                <SafeImage src="/images/mascot.png" alt="Overseer" className="w-56 h-56 object-contain filter drop-shadow-[0_0_30px_rgba(255,20,147,0.4)]" />
+             <div className="relative p-6 border-2 border-primary/20 bg-card/10 backdrop-blur-3xl overflow-hidden group rounded-3xl">
+                <SafeImage src={data?.profile_pic || "/images/mascot.png"} alt="Overseer" className="w-56 h-56 object-cover rounded-2xl filter drop-shadow-[0_0_30px_rgba(255,20,147,0.4)] transition-transform group-hover:scale-105" />
                 <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="mt-4 text-[10px] font-black tracking-[0.4em] opacity-40 text-center">OVERSEER_ACTIVE</div>
              </div>

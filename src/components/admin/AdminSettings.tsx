@@ -11,17 +11,30 @@ export const AdminSettings = () => {
     const [profile, setProfile] = useState({
         full_name: '',
         email: '',
-        bio: ''
+        bio: '',
+        profile_pic: '',
+        github: '',
+        linkedin: '',
+        phone: ''
     });
 
     useEffect(() => {
         const fetchProfile = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
+                // Fetch additional settings from admin_settings table
+                const { data: settingsData } = await supabase.from('admin_settings').select('*');
+                const settingsObj: any = {};
+                settingsData?.forEach(s => settingsObj[s.key] = s.value);
+
                 setProfile({
-                    full_name: user.user_metadata?.full_name || '',
-                    email: user.email || '',
-                    bio: user.user_metadata?.bio || ''
+                    full_name: user.user_metadata?.full_name || settingsObj.name || '',
+                    email: user.email || settingsObj.email || '',
+                    bio: user.user_metadata?.bio || settingsObj.bio || '',
+                    profile_pic: settingsObj.profile_pic || '',
+                    github: settingsObj.github || '',
+                    linkedin: settingsObj.linkedin || '',
+                    phone: settingsObj.phone || ''
                 });
             }
             setLoading(false);
@@ -33,15 +46,61 @@ export const AdminSettings = () => {
         e.preventDefault();
         setIsSaving(true);
         try {
-            const { error } = await supabase.auth.updateUser({
+            const { error: authError } = await supabase.auth.updateUser({
                 data: { full_name: profile.full_name, bio: profile.bio }
             });
-            if (error) throw error;
-            toast.success('Profile updated successfully.');
+            if (authError) throw authError;
+
+            // Also update admin_settings table for public persistence
+            const updates = [
+                { key: 'name', value: profile.full_name },
+                { key: 'bio', value: profile.bio },
+                { key: 'profile_pic', value: profile.profile_pic },
+                { key: 'github', value: profile.github },
+                { key: 'linkedin', value: profile.linkedin },
+                { key: 'phone', value: profile.phone },
+            ];
+
+            for (const item of updates) {
+                await supabase.from('admin_settings').upsert({ 
+                    key: item.key, 
+                    value: item.value,
+                    updated_at: new Date().toISOString()
+                });
+            }
+
+            toast.success('Profile and Contact info updated.');
         } catch (error: any) {
             toast.error('Error: ' + error.message);
         } finally {
             setIsSaving(false);
+        }
+    };
+
+    const handleProfilePicUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        toast.info('Uploading profile picture...');
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `profile-${Date.now()}.${fileExt}`;
+            const filePath = `avatars/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('projects') // Using same bucket for simplicity or 'avatars' if exists
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('projects')
+                .getPublicUrl(filePath);
+
+            setProfile(prev => ({ ...prev, profile_pic: publicUrl }));
+            toast.success('Picture uploaded. Save to finalize.');
+        } catch (error: any) {
+            toast.error('Upload failed: ' + error.message);
         }
     };
 
@@ -78,7 +137,35 @@ export const AdminSettings = () => {
                             <h3 className="text-sm font-bold text-foreground">User Profile (Auth)</h3>
                         </div>
 
-                        <form onSubmit={handleUpdateProfile} className="space-y-5">
+                        <form onSubmit={handleUpdateProfile} className="space-y-6">
+                            <div className="flex flex-col md:flex-row gap-8 items-start mb-6">
+                                <div className="relative group">
+                                    <div className="w-24 h-24 rounded-2xl bg-muted overflow-hidden border-2 border-primary/20 group-hover:border-primary transition-all">
+                                        {profile.profile_pic ? (
+                                            <img src={profile.profile_pic} className="w-full h-full object-cover" alt="Profile" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                                                <User className="w-8 h-8 opacity-20" />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <label className="absolute -bottom-2 -right-2 bg-primary text-white p-1.5 rounded-lg cursor-pointer shadow-lg hover:scale-110 transition-transform">
+                                        <Activity className="w-3 h-3" />
+                                        <input type="file" className="hidden" accept="image/*" onChange={handleProfilePicUpload} />
+                                    </label>
+                                </div>
+                                <div className="space-y-1 flex-1 w-full">
+                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-[#0096D9] mb-1">Visual Identity</h4>
+                                    <input 
+                                        type="text" value={profile.profile_pic}
+                                        onChange={e => setProfile({...profile, profile_pic: e.target.value})}
+                                        className={`w-full h-9 rounded-lg border px-3 text-[10px] font-bold outline-none italic ${isDark ? 'bg-background border-border' : 'bg-slate-50 border-border'}`}
+                                        placeholder="Profile Pic URL (external)"
+                                    />
+                                    <p className="text-[8px] text-muted-foreground opacity-50 uppercase font-black">Direct URL or upload via icon</p>
+                                </div>
+                            </div>
+
                             <div className="grid md:grid-cols-2 gap-5">
                                 <div className="space-y-1.5">
                                     <label className="text-xs font-medium text-muted-foreground">Full Name</label>
@@ -92,21 +179,59 @@ export const AdminSettings = () => {
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-medium text-muted-foreground">Email (read-only)</label>
+                                    <label className="text-xs font-medium text-muted-foreground">Email</label>
                                     <input 
-                                        type="email" disabled value={profile.email}
-                                        className={`w-full h-10 rounded-lg border px-4 text-sm outline-none opacity-60 ${
-                                            isDark ? 'bg-background border-border' : 'bg-muted border-border'
+                                        type="email" value={profile.email}
+                                        onChange={e => setProfile({...profile, email: e.target.value})}
+                                        className={`w-full h-10 rounded-lg border px-4 text-sm outline-none transition-colors ${
+                                            isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
                                         }`}
                                     />
                                 </div>
                             </div>
+
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-medium text-muted-foreground">GitHub Profile</label>
+                                    <input 
+                                        type="text" value={profile.github}
+                                        onChange={e => setProfile({...profile, github: e.target.value})}
+                                        className={`w-full h-10 rounded-lg border px-4 text-sm outline-none transition-colors ${
+                                            isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
+                                        }`}
+                                        placeholder="https://github.com/..."
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-medium text-muted-foreground">LinkedIn Profile</label>
+                                    <input 
+                                        type="text" value={profile.linkedin}
+                                        onChange={e => setProfile({...profile, linkedin: e.target.value})}
+                                        className={`w-full h-10 rounded-lg border px-4 text-sm outline-none transition-colors ${
+                                            isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
+                                        }`}
+                                        placeholder="https://linkedin.com/in/..."
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-medium text-muted-foreground">Contact Phone</label>
+                                    <input 
+                                        type="text" value={profile.phone}
+                                        onChange={e => setProfile({...profile, phone: e.target.value})}
+                                        className={`w-full h-10 rounded-lg border px-4 text-sm outline-none transition-colors ${
+                                            isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
+                                        }`}
+                                        placeholder="+92 3XX XXXXXXX"
+                                    />
+                                </div>
+                            </div>
+
                             <div className="flex justify-end pt-4">
                                 <button 
                                     type="submit" disabled={isSaving}
                                     className="px-6 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
                                 >
-                                    {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Save className="w-4 h-4" /> Update Auth Metadata</>}
+                                    {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Save className="w-4 h-4" /> Synchronize Profile Data</>}
                                 </button>
                             </div>
                         </form>

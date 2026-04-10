@@ -14,7 +14,7 @@ interface Experience {
     id: string;
     role: string;
     company: string;
-    period: string;
+    duration: string;
     description: string;
     location?: string;
     points: string[];
@@ -118,7 +118,7 @@ export const AdminExperience = () => {
                     </div>
                 </div>
                 <button 
-                    onClick={() => setEditingExp({ role: '', company: '', period: '', description: '', points: [], location: '' })}
+                    onClick={() => setEditingExp({ role: '', company: '', duration: '', description: '', points: [], location: '' })}
                     className={`px-5 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors ${
                         isDark ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-primary text-white hover:bg-primary/90'
                     }`}
@@ -147,7 +147,7 @@ export const AdminExperience = () => {
                                     </div>
                                     <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                                         <span>@ {exp.company}</span>
-                                        <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {exp.period}</span>
+                                        <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {exp.duration}</span>
                                         {exp.location && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {exp.location}</span>}
                                     </div>
                                     <p className="text-sm text-muted-foreground leading-relaxed">{exp.description}</p>
@@ -238,10 +238,10 @@ export const AdminExperience = () => {
                                         </div>
                                         <div className="grid md:grid-cols-2 gap-5">
                                             <div className="space-y-1.5">
-                                                <label className="text-xs font-medium text-muted-foreground">Period</label>
+                                                <label className="text-xs font-medium text-muted-foreground">Duration</label>
                                                 <input 
-                                                    type="text" value={editingExp.period}
-                                                    onChange={e => setEditingExp({...editingExp, period: e.target.value})}
+                                                    type="text" value={editingExp.duration}
+                                                    onChange={e => setEditingExp({...editingExp, duration: e.target.value})}
                                                     className={`w-full h-10 rounded-lg border px-4 text-sm outline-none transition-colors ${
                                                         isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
                                                     }`}
