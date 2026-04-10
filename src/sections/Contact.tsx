@@ -19,8 +19,6 @@ export function Contact() {
     email: '',
     message: '',
   });
-    message: '',
-  });
   const [data, setData] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);

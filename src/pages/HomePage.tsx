@@ -87,7 +87,7 @@ export function HomePage() {
                   >{personal.title || 'Software Engineer'}</motion.p>
                   
                   <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9] text-foreground">
-                    {(personal.name?.split(' ')[0] || 'Alishba').split('').map((char, i) => (
+                    {(personal.name?.split(' ')[0] || 'Alishba').split('').map((char: string, i: number) => (
                       <motion.span
                         key={i}
                         initial={{ opacity: 0, filter: 'blur(10px)', y: 20 }}
@@ -100,7 +100,7 @@ export function HomePage() {
                     ))}
                     <br/>
                     <span className="text-primary">
-                      {(personal.name?.split(' ')[1] || 'Iqbal').split('').map((char, i) => (
+                      {(personal.name?.split(' ')[1] || 'Iqbal').split('').map((char: string, i: number) => (
                         <motion.span
                           key={i}
                           initial={{ opacity: 0, filter: 'blur(10px)', y: 20 }}

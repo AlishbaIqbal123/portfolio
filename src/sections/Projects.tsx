@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
-import { Github, ExternalLink, Folder, Smartphone, Monitor, Layout, Loader2 } from 'lucide-react';
+import { Github, ExternalLink, Folder, Smartphone, Monitor, Layout, Loader2, PlayCircle } from 'lucide-react';
 import { projectsData } from '@/data/projects';
 import { useTheme } from '@/hooks/useTheme';
 import { getProjects } from '@/lib/api';
