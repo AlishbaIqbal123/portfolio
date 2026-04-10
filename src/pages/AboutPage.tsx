@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Layers, Zap, ShieldCheck, Heart, Rocket } from 'lucide-react';
+import { Shield, Layers, Zap, ShieldCheck, Heart, Rocket, Download } from 'lucide-react';
 import { QuickAdmin } from '@/components/QuickAdmin';
 import { SafeImage } from '@/components/ui/SafeImage';
 import { getPersonalInfo } from '@/lib/api';
@@ -72,6 +72,22 @@ export function AboutPage() {
                     <p className="text-xs text-muted-foreground mt-1">Location</p>
                   </motion.div>
                 </div>
+                
+                <div className="pt-6">
+                  <button 
+                    onClick={() => {
+                        const link = document.createElement('a');
+                        link.href = staticPersonal.cvPath;
+                        link.download = 'ALISHBA_RESUME.pdf';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }}
+                    className="imperial-btn flex items-center gap-2"
+                  >
+                    <Download className="w-4 h-4" /> DOWNLOAD CV
+                  </button>
+                </div>
               </motion.div>
 
               <motion.div 
@@ -126,8 +142,23 @@ export function AboutPage() {
               </div>
               
               <div className="grid lg:grid-cols-12 gap-6">
-                <div className="lg:col-span-8 architect-card">
-                  <p className="text-lg text-muted-foreground leading-relaxed">{bio}</p>
+                <div className="lg:col-span-8 architect-card relative group transition-all duration-500 hover:border-primary/40">
+                  <p className="text-lg text-muted-foreground leading-relaxed transition-colors group-hover:text-foreground">{bio}</p>
+                  <div className="mt-8 pt-8 border-t border-primary/10">
+                    <button 
+                      onClick={() => {
+                          const link = document.createElement('a');
+                          link.href = staticPersonal.cvPath;
+                          link.download = 'ALISHBA_RESUME.pdf';
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                      }}
+                      className="imperial-btn flex items-center gap-2"
+                    >
+                      <Download className="w-4 h-4" /> DOWNLOAD CV
+                    </button>
+                  </div>
                 </div>
                 <div className="lg:col-span-4 grid grid-cols-2 gap-4">
                   <div className="architect-card text-center py-8">

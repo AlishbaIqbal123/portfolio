@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Sun, Moon, Star } from 'lucide-react';
+import { Menu, X, Sun, Moon, Star, Download } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
+import { personalData } from '@/data/personal';
 
 const navLinks = [
   { name: 'HOME', href: '/' },
@@ -108,8 +109,28 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* Right: Theme toggle + Mobile menu */}
+          {/* Right: CV Download + Theme toggle + Mobile menu */}
           <div className="flex items-center gap-2">
+            <button 
+              onClick={() => {
+                const link = document.createElement('a');
+                link.href = personalData.cvPath;
+                link.download = 'ALISHBA_RESUME.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              className={`hidden sm:flex items-center gap-2 h-9 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-300
+                ${isDark 
+                  ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
+                  : 'bg-foreground text-background hover:bg-foreground/90'
+                }
+              `}
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>CV</span>
+            </button>
+
             <button 
               onClick={toggleTheme}
               className={`w-9 h-9 flex items-center justify-center rounded-lg transition-all duration-300
@@ -196,6 +217,24 @@ export function Navbar() {
                  </motion.div>
                ))}
             </div>
+
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              onClick={() => {
+                const link = document.createElement('a');
+                link.href = personalData.cvPath;
+                link.download = 'ALISHBA_RESUME.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setIsMobileMenuOpen(false);
+              }}
+              className="mt-4 px-8 py-4 bg-primary text-primary-foreground rounded-xl text-sm font-black uppercase tracking-widest flex items-center gap-2"
+            >
+               <Download className="w-4 h-4" /> DOWNLOAD CV
+            </motion.button>
 
             <button 
               onClick={() => setIsMobileMenuOpen(false)}
