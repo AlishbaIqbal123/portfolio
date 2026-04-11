@@ -176,14 +176,37 @@ const AdminContent = () => {
                         <div className={`mb-12 flex flex-col items-center justify-center text-center border-b pb-12 gap-10 relative ${
                             theme === 'doraemon' ? 'border-[#0096D9] border-b-4' : 'border-pink-100/20'
                         }`}>
-                            <div className="flex flex-col items-center gap-6">
-                                <span className={`text-4xl md:text-6xl font-black tracking-[0.2em] uppercase leading-none ${
-                                    theme === 'doraemon' ? 'text-[#0096D9]' : 'text-pink-600'
-                                }`}>
-                                    {theme === 'doraemon' && "GADGET "}
-                                    {currentTabTitle}
-                                    {theme === 'barbie' && " ✨"}
-                                </span>
+                            <div className="flex flex-col items-center gap-8 w-full">
+                                <div className="relative flex items-center justify-center w-full">
+                                    {/* Left Decorator (Doraemon) */}
+                                    {theme === 'doraemon' && (
+                                        <motion.span 
+                                            initial={{ x: -20, opacity: 0 }}
+                                            animate={{ x: 0, opacity: 1 }}
+                                            className="absolute right-[calc(50%+160px)] md:right-[calc(50%+220px)] lg:right-[calc(50%+250px)] text-lg md:text-2xl font-black text-[#0096D9]/30 italic tracking-widest uppercase"
+                                        >
+                                            GADGET
+                                        </motion.span>
+                                    )}
+
+                                    {/* Perfectly Centered Main Title */}
+                                    <h1 className={`text-5xl md:text-8xl font-black tracking-[0.15em] uppercase leading-none z-10 ${
+                                        theme === 'doraemon' ? 'text-[#0096D9]' : 'text-pink-600'
+                                    }`}>
+                                        {currentTabTitle}
+                                    </h1>
+
+                                    {/* Right Decorator (Barbie) */}
+                                    {theme === 'barbie' && (
+                                        <motion.span 
+                                            initial={{ x: 20, opacity: 0 }}
+                                            animate={{ x: 0, opacity: 1 }}
+                                            className="absolute left-[calc(50%+160px)] md:left-[calc(50%+220px)] lg:left-[calc(50%+250px)] text-3xl md:text-6xl"
+                                        >
+                                            ✨
+                                        </motion.span>
+                                    )}
+                                </div>
                                 
                                 <div className="flex flex-wrap items-center justify-center gap-4">
                                     <button 
