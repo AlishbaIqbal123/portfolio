@@ -31,20 +31,22 @@ export const AdminEducation = () => {
 
     const fetchEducation = async () => {
         setLoading(true);
+        // Explicitly name columns to avoid 'date'/'institution' schema cache errors
         const { data, error } = await supabase
             .from('education')
-            .select('*')
+            .select('id, school, degree, duration, cgpa, location, status, details, achievements, order_index, created_at')
             .order('id', { ascending: false });
 
         if (error) {
-            toast.error('Failed to load education data.');
+            console.error('Fetch error:', error);
+            toast.error('Failed to load education data. Ensure "school" and "duration" columns exist.');
         } else {
             const normalizedData = (data || []).map((edu: any) => ({
                 id: edu.id,
-                school: edu.school || edu.institution || '',
+                school: edu.school || '',
                 degree: edu.degree || '',
-                duration: edu.duration || edu.date || edu.period || '',
-                cgpa: edu.cgpa || edu.grade || ''
+                duration: edu.duration || '',
+                cgpa: edu.cgpa || ''
             }));
             setEducation(normalizedData);
         }
@@ -60,24 +62,33 @@ export const AdminEducation = () => {
 
         setIsSaving(true);
         try {
+            // STRICT SANITIZATION: Only send columns that exist in the new schema
+            const eduToSave: any = {
+                school: editingEdu.school,
+                degree: editingEdu.degree,
+                duration: editingEdu.duration || '',
+                cgpa: editingEdu.cgpa || ''
+            };
+
             if (editingEdu.id) {
                 const { error } = await supabase
                     .from('education')
-                    .update(editingEdu)
+                    .update(eduToSave)
                     .eq('id', editingEdu.id);
                 if (error) throw error;
                 toast.success('Education entry updated.');
             } else {
                 const { error } = await supabase
                     .from('education')
-                    .insert([editingEdu]);
+                    .insert([eduToSave]);
                 if (error) throw error;
                 toast.success('Education entry added.');
             }
             setEditingEdu(null);
             fetchEducation();
         } catch (error: any) {
-            toast.error('Error: ' + error.message);
+            console.error('Save error:', error);
+            toast.error('Sync Error: ' + error.message);
         } finally {
             setIsSaving(false);
         }

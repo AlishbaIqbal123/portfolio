@@ -173,66 +173,116 @@ const AdminContent = () => {
                             </button>
                         </div>
                         
-                        <div className={`mb-12 flex flex-col items-center justify-center text-center border-b pb-12 gap-10 relative ${
-                            theme === 'doraemon' ? 'border-[#0096D9] border-b-4' : 'border-pink-100/20'
-                        }`}>
-                            <div className="flex flex-col items-center gap-8 w-full">
-                                {/* Mathematically Centered Header Grid */}
-                                <div className="grid grid-cols-3 items-center w-full max-w-5xl mx-auto">
-                                    {/* Left Decorator Box */}
-                                    <div className="flex justify-end pr-8">
-                                        {theme === 'doraemon' ? (
-                                            <motion.span 
-                                                initial={{ x: -20, opacity: 0 }}
-                                                animate={{ x: 0, opacity: 1 }}
-                                                className="text-lg md:text-2xl font-black text-[#0096D9]/30 italic tracking-widest uppercase pointer-events-none"
+                        {/* Ultra-Premium Architectural Header */}
+                        <div className={`mb-16 flex flex-col items-center gap-12 relative group`}>
+                            {/* Decorative Background Glow */}
+                            <div className={`absolute -top-24 w-[300px] h-[300px] rounded-full blur-[120px] opacity-20 transition-colors duration-1000 ${
+                                theme === 'doraemon' ? 'bg-[#0096D9]' : 'bg-pink-500'
+                            }`} />
+
+                            <div className="flex flex-col items-center gap-10 w-full relative z-10">
+                                {/* Title Architecture - 3 Column Layout with balanced spacing */}
+                                <div className="flex items-center justify-center gap-6 md:gap-12 w-full max-w-7xl mx-auto px-4">
+                                    {/* Left Flank */}
+                                    <div className="hidden lg:flex flex-1 justify-end">
+                                        {theme === 'doraemon' && (
+                                            <motion.div 
+                                                initial={{ opacity: 0, x: -20 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                className="px-6 py-2 border-l-4 border-[#0096D9] bg-[#0096D9]/5"
                                             >
-                                                GADGET
-                                            </motion.span>
-                                        ) : (
-                                            <div />
+                                                <span className="text-xs font-black text-[#0096D9] tracking-[0.3em] uppercase">SYSTEM.LOG</span>
+                                            </motion.div>
                                         )}
                                     </div>
 
-                                    {/* Center Title Box */}
-                                    <div className="flex justify-center">
-                                        <h1 className={`text-5xl md:text-7xl lg:text-8xl font-black tracking-[0.15em] uppercase leading-none z-10 whitespace-nowrap transition-all ${
-                                            theme === 'doraemon' ? 'text-[#0096D9]' : 'text-pink-600'
-                                        }`}>
-                                            {currentTabTitle}
-                                        </h1>
-                                    </div>
+                                    {/* Central Command Plate */}
+                                    <motion.div 
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className={`relative px-12 py-8 md:px-20 md:py-12 flex flex-col items-center justify-center text-center rounded-[3rem] border transition-all duration-700 ${
+                                            theme === 'doraemon' 
+                                            ? 'bg-sky-500/5 border-sky-400/20 shadow-[0_0_80px_rgba(0,150,217,0.1)]' 
+                                            : 'bg-pink-500/5 border-pink-400/20 shadow-[0_0_80px_rgba(236,72,153,0.1)]'
+                                        }`}
+                                    >
+                                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full border bg-background text-[10px] font-black tracking-[0.4em] uppercase opacity-50">
+                                            {theme === 'doraemon' ? 'MOD_DORA' : 'MOD_BARBIE'}
+                                        </div>
 
-                                    {/* Right Decorator Box */}
-                                    <div className="flex justify-start pl-8">
-                                        {theme === 'barbie' ? (
-                                            <motion.span 
-                                                initial={{ x: 20, opacity: 0 }}
-                                                animate={{ x: 0, opacity: 1 }}
-                                                className="text-3xl md:text-6xl pointer-events-none"
+                                        <div className="relative">
+                                            {/* Decorators floating just outside the text bounds */}
+                                            {theme === 'doraemon' && (
+                                                <motion.span 
+                                                    animate={{ y: [0, -5, 0] }}
+                                                    transition={{ duration: 4, repeat: Infinity }}
+                                                    className="absolute -left-16 top-1/2 -translate-y-1/2 text-2xl font-black text-[#0096D9]/40 italic tracking-widest uppercase hidden md:block"
+                                                >
+                                                    GDGT
+                                                </motion.span>
+                                            )}
+
+                                            <h1 className={`text-4xl md:text-6xl lg:text-7xl font-black tracking-[0.2em] uppercase leading-none transition-all ${
+                                                theme === 'doraemon' ? 'text-[#0096D9]' : 'text-pink-600'
+                                            }`}>
+                                                {currentTabTitle}
+                                            </h1>
+
+                                            {theme === 'barbie' && (
+                                                <motion.span 
+                                                    animate={{ rotate: [0, 15, 0], scale: [1, 1.1, 1] }}
+                                                    transition={{ duration: 3, repeat: Infinity }}
+                                                    className="absolute -right-16 top-1/2 -translate-y-1/2 text-4xl pointer-events-none hidden md:block"
+                                                >
+                                                    ✨
+                                                </motion.span>
+                                            )}
+                                        </div>
+
+                                        {/* Dynamic Status Bar */}
+                                        <div className="mt-8 flex items-center gap-3">
+                                            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                            <span className="text-[10px] font-bold tracking-[0.3em] uppercase opacity-30">Active_Hub_Stabilized</span>
+                                        </div>
+                                    </motion.div>
+
+                                    {/* Right Flank */}
+                                    <div className="hidden lg:flex flex-1 justify-start">
+                                        {theme === 'barbie' && (
+                                            <motion.div 
+                                                initial={{ opacity: 0, x: 20 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                className="px-6 py-2 border-r-4 border-pink-500 bg-pink-500/5"
                                             >
-                                                ✨
-                                            </motion.span>
-                                        ) : (
-                                            <div />
+                                                <span className="text-xs font-black text-pink-500 tracking-[0.3em] uppercase">IMPERIAL.OS</span>
+                                            </motion.div>
                                         )}
                                     </div>
                                 </div>
                                 
+                                {/* Quick Access Hub */}
                                 <div className="flex flex-wrap items-center justify-center gap-4">
                                     <button 
                                         onClick={toggleAdminTheme}
-                                        className={`flex items-center gap-3 px-6 h-12 border rounded-xl text-xs font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 ${theme === 'doraemon' ? 'bg-sky-500 border-sky-400 text-white shadow-[0_6px_0_#0369a1]' : 'bg-pink-600 border-pink-400 text-white shadow-[0_6px_0_#9d174d]'}`}
+                                        className={`group relative flex items-center gap-3 px-8 h-12 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:scale-105 active:scale-95 ${
+                                            theme === 'doraemon' 
+                                            ? 'bg-[#0096D9] text-white shadow-[0_6px_0_#006699]' 
+                                            : 'bg-pink-600 text-white shadow-[0_6px_0_#9d174d]'
+                                        }`}
                                     >
-                                        {theme === 'doraemon' ? <Bell className="w-5 h-5 fill-yellow-400 text-yellow-400" /> : <Heart className="w-5 h-5 fill-white text-white" />}
-                                        {theme === 'doraemon' ? "Doraemon Sync" : "Imperial Barbie"}
+                                        {theme === 'doraemon' ? <Bell className="w-4 h-4 fill-yellow-400 text-yellow-400 group-hover:rotate-12 transition-transform" /> : <Heart className="w-4 h-4 fill-white text-white group-hover:scale-110 child-hover:animate-ping" />}
+                                        {theme === 'doraemon' ? "Catalyst Sync" : "Imperial Barbie"}
                                     </button>
                                     <button 
                                         onClick={toggleTheme}
-                                        className={`flex items-center gap-3 px-6 h-12 border rounded-xl text-xs font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 ${isDark ? 'bg-slate-800 border-slate-700 text-primary shadow-[0_6px_0_#0f172a]' : 'bg-white border-slate-200 text-slate-700 shadow-[0_6px_0_#e2e8f0]'}`}
+                                        className={`flex items-center gap-3 px-8 h-12 border rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:scale-105 active:scale-95 ${
+                                            isDark 
+                                            ? 'bg-slate-900 border-slate-700 text-slate-400 shadow-[0_6px_0_#020617]' 
+                                            : 'bg-white border-slate-200 text-slate-600 shadow-[0_6px_0_#f1f5f9]'
+                                        }`}
                                     >
-                                        {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                                        {isDark ? "Light Ops" : "Dark Ops"}
+                                        {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                                        {isDark ? "LITE_MODE" : "DEEP_MODE"}
                                     </button>
                                 </div>
                             </div>

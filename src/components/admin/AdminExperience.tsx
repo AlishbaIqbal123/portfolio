@@ -34,22 +34,24 @@ export const AdminExperience = () => {
 
     const fetchExperience = async () => {
         setLoading(true);
+        // Explicitly name columns to avoid 'date' schema cache errors
         const { data, error } = await supabase
             .from('experience')
-            .select('*')
+            .select('id, role, company, duration, description, location, points, type, link, order_index, created_at')
             .order('id', { ascending: false });
 
         if (error) {
-            toast.error('Failed to load experience data.');
+            console.error('Fetch error:', error);
+            toast.error('Failed to load experience data. Ensure database column "duration" exists.');
         } else {
             const normalizedData = (data || []).map((exp: any) => ({
                 id: exp.id,
-                role: exp.role || exp.title || '',
+                role: exp.role || '',
                 company: exp.company || '',
-                duration: exp.duration || exp.date || '',
+                duration: exp.duration || '',
                 description: typeof exp.description === 'string' ? exp.description : (Array.isArray(exp.description) ? exp.description.join('\n') : ''),
                 location: exp.location || '',
-                points: Array.isArray(exp.points) ? exp.points : (Array.isArray(exp.skills) ? exp.skills : [])
+                points: Array.isArray(exp.points) ? exp.points : []
             }));
             setExperiences(normalizedData);
         }
@@ -66,7 +68,15 @@ export const AdminExperience = () => {
         const pointsArray = pointsText.split(',').map(s => s.trim()).filter(Boolean);
         setIsSaving(true);
         try {
-            const expToSave = { ...editingExp, points: pointsArray };
+            // STRICT SANITIZATION: Only send columns that exist in the new schema
+            const expToSave: any = {
+                role: editingExp.role,
+                company: editingExp.company,
+                duration: editingExp.duration,
+                location: editingExp.location || '',
+                description: editingExp.description || '',
+                points: pointsArray
+            };
             
             if (editingExp.id) {
                 const { error } = await supabase.from('experience').update(expToSave).eq('id', editingExp.id);
@@ -81,7 +91,8 @@ export const AdminExperience = () => {
             setPointsText('');
             fetchExperience();
         } catch (error: any) {
-            toast.error('Error: ' + error.message);
+            console.error('Save error:', error);
+            toast.error('Sync Error: ' + error.message);
         } finally {
             setIsSaving(false);
         }

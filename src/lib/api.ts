@@ -31,7 +31,7 @@ export const uploadProjectImages = async (files: File[]) => {
 export const getProjects = async () => {
     const { data, error } = await supabase
         .from('projects')
-        .select('*')
+        .select('id, title, description, images, image, video_url, github_link, deployed_link, tech_stack, category, is_video_primary, featured, created_at')
         .order('created_at', { ascending: false });
     if (error) throw error;
     return data;
@@ -40,7 +40,7 @@ export const getProjects = async () => {
 export const getExperience = async () => {
     const { data, error } = await supabase
         .from('experience')
-        .select('*')
+        .select('id, role, company, location, duration, type, description, points, link, order_index, created_at')
         .order('created_at', { ascending: false });
     if (error) throw error;
     return data;
@@ -49,7 +49,7 @@ export const getExperience = async () => {
 export const getEducation = async () => {
     const { data, error } = await supabase
         .from('education')
-        .select('*')
+        .select('id, degree, school, location, duration, status, details, achievements, cgpa, order_index, created_at');
     if (error) throw error;
     return data;
 };
