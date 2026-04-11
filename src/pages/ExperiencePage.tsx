@@ -178,9 +178,14 @@ export function ExperiencePage() {
             <div className="text-center py-8">
               <p className="text-xs font-medium tracking-[0.3em] text-primary uppercase mb-3">Portfolio</p>
               <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground text-reveal">Experience</h1>
-              <p className="text-muted-foreground mt-3 max-w-md mx-auto">
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 2, delay: 0.8 }}
+                className="text-muted-foreground mt-3 max-w-md mx-auto"
+              >
                 My professional journey and key contributions.
-              </p>
+              </motion.p>
             </div>
           )}
         </div>
@@ -188,16 +193,22 @@ export function ExperiencePage() {
 
       {/* Stats */}
       <section className="py-8 px-6 md:px-16 lg:px-24">
-        <div className="max-w-6xl mx-auto grid grid-cols-3 gap-4">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
             { label: 'Internships', val: '2+' },
             { label: 'Projects', val: '12+' },
             { label: 'Collaborations', val: '15+' }
           ].map((s, i) => (
-            <div key={i} className={`p-6 text-center floating-delayed ${isDark ? 'architect-card' : 'silk-card bg-card/80 backdrop-blur-sm'}`}>
+            <motion.div 
+              key={i} 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.5, delay: 1 + (i * 0.3) }}
+              className={`p-6 text-center floating-delayed ${isDark ? 'architect-card' : 'silk-card bg-card/80 backdrop-blur-sm'}`}>
               <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider block mb-2">{s.label}</span>
               <div className="text-3xl font-bold text-primary">{s.val}</div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>

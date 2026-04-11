@@ -64,7 +64,7 @@ export const GadgetBackground: React.FC = () => {
       {/* 🌌 DARK: SAPPHIRE DATA MATRIX & SILK */}
       {isDark && (
         <div className="absolute inset-0 bg-[#0A0F1E]">
-          <Silk color="#0EA5E9" speed={0.1} noiseIntensity={0.8} className="opacity-[0.15]" />
+          <Silk color="#0EA5E9" speed={0.05} noiseIntensity={0.8} className="opacity-[0.15]" />
 
           {/* Static Matrix Line Grid */}
           <div 

@@ -60,9 +60,9 @@ export function Navbar() {
       {/* Fixed top navbar — clean, minimal, no extra spacing */}
       <div className="fixed top-0 left-0 right-0 z-[200] px-4 md:px-8 pt-3 pb-2">
         <motion.nav
-          initial={{ y: -80 }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
           className={`
             max-w-6xl mx-auto h-14 flex items-center justify-between px-5 md:px-8
             backdrop-blur-xl border transition-all duration-500
@@ -102,7 +102,8 @@ export function Navbar() {
                 {isActive(link.href) && (
                   <motion.div
                     layoutId="navIndicator"
-                    className="absolute bottom-0 left-3 right-3 h-[2px] bg-primary rounded-full"
+                    transition={{ type: 'spring', stiffness: 40, damping: 15 }}
+                    className="absolute bottom-0 left-3 right-3 h-[2px] bg-primary rounded-full shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]"
                   />
                 )}
               </Link>
