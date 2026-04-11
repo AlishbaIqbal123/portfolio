@@ -28,7 +28,7 @@ const interests = [
 export function HomePage() {
   const { isDark } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [stats, setStats] = useState({ cgpa: '3.5+', projects: '12+', experience: '3+', focus: 'Full Stack' });
+  const [stats, setStats] = useState({ internships: '2+', projects: '12+', experience: '3+', focus: 'Full Stack' });
   const [personal, setPersonal] = useState<any>(staticPersonal);
 
   useEffect(() => {
