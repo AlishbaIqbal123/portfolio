@@ -49,7 +49,7 @@ export const getExperience = async () => {
 export const getEducation = async () => {
     const { data, error } = await supabase
         .from('education')
-        .select('id, degree, school, location, duration, status, details, achievements, cgpa, order_index, created_at');
+        .select('id, degree, school, location, duration, status, details, achievements, order_index, created_at');
     if (error) throw error;
     return data;
 };
@@ -80,7 +80,6 @@ export const getPersonalInfo = async () => {
         bio: settingsObj.bio,
         tagline: settingsObj.tagline,
         stats: settingsObj.stats || {
-            cgpa: settingsObj.cgpa || '3.64/4.0',
             projects: settingsObj.projects_count || '12',
             internships: settingsObj.internships_count || '02'
         }

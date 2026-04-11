@@ -46,7 +46,7 @@ export function HomePage() {
         if (info) {
           setPersonal(info);
           setStats({
-            cgpa: (info as any).stats?.cgpa || (info as any).cgpa || '3.6+',
+            internships: (exps?.filter((e: any) => e.role?.toLowerCase().includes('intern'))?.length || 2) + '+',
             projects: (prjs?.length || 12) + '+',
             experience: (exps?.length || 3) + '+',
             focus: focusVal
@@ -229,7 +229,7 @@ export function HomePage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { label: 'CGPA', val: stats.cgpa },
+                    { label: 'Internships', val: (stats as any).internships || '2+' },
                     { label: 'Projects', val: stats.projects },
                     { label: 'Experience', val: stats.experience },
                     { label: 'Focus', val: stats.focus }
@@ -369,9 +369,9 @@ export function HomePage() {
               
               <div className="grid sm:grid-cols-3 gap-4">
                 {[
-                  { label: 'CGPA', val: stats.cgpa },
                   { label: 'Projects', val: stats.projects },
-                  { label: 'Experience', val: stats.experience }
+                  { label: 'Experience', val: stats.experience },
+                  { label: 'Focus', val: stats.focus }
                 ].map((s, i) => (
                   <div key={i} className="architect-card p-10 text-center group hover:bg-primary/5">
                     <span className="text-xs text-muted-foreground font-medium tracking-wider uppercase block mb-4">{s.label}</span>
