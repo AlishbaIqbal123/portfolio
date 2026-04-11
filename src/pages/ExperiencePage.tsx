@@ -6,30 +6,26 @@ import { useTheme } from '@/hooks/useTheme';
 
 interface ExperienceItem {
   id: string;
-  title: string;
+  role: string;
   company: string;
   location: string;
-  date: string;
-  type: 'internship' | 'simulation';
-  description: string[];
-  skills: string[];
+  duration: string;
+  type: 'internship' | 'simulation' | 'work';
+  description: string;
+  points: string[];
   link?: string;
 }
 
 const staticExperiences: ExperienceItem[] = [
   {
     id: 'tkxel',
-    title: 'Frontend Development Intern (React)',
+    role: 'Frontend Development Intern (React)',
     company: 'TKXEL',
     location: 'Lahore, Pakistan',
-    date: 'August 2025',
+    duration: 'August 2025',
     type: 'internship',
-    description: [
-      'Developing interactive and reusable user interfaces using React and modern frontend practices',
-      'Implementing responsive designs with HTML, CSS, and Tailwind CSS',
-      'Collaborating in a professional development environment using Git-based workflows',
-    ],
-    skills: ['React', 'Tailwind CSS', 'Git', 'Responsive Design'],
+    description: 'Developing interactive and reusable user interfaces using React and modern frontend practices. Implementing responsive designs with HTML, CSS, and Tailwind CSS. Collaborating in a professional development environment using Git-based workflows.',
+    points: ['React', 'Tailwind CSS', 'Git', 'Responsive Design'],
   },
 ];
 
@@ -37,6 +33,9 @@ const staticExperiences: ExperienceItem[] = [
 function SilkTimelineCard({ item, index }: { item: ExperienceItem; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.1 });
+  const descriptionPoints = typeof item.description === 'string' 
+    ? item.description.split('\n').filter(Boolean) 
+    : Array.isArray(item.description) ? item.description : [];
 
   return (
     <motion.div
@@ -56,14 +55,14 @@ function SilkTimelineCard({ item, index }: { item: ExperienceItem; index: number
       <div className="flex-1 pb-8">
         <div className="silk-card">
           <div className="flex items-center gap-3 mb-4">
-            <span className="text-xs text-primary font-medium">{item.date}</span>
+            <span className="text-xs text-primary font-medium">{item.duration}</span>
             <span className="text-xs text-muted-foreground">·</span>
             <span className="text-xs text-muted-foreground">{item.type}</span>
           </div>
-          <h3 className="text-xl font-bold tracking-tight mb-1 text-foreground">{item.title}</h3>
+          <h3 className="text-xl font-bold tracking-tight mb-1 text-foreground">{item.role}</h3>
           <p className="text-sm text-muted-foreground mb-4">{item.company} — {item.location}</p>
           <ul className="space-y-2 mb-6">
-            {item.description.map((desc, i) => (
+            {descriptionPoints.map((desc, i) => (
               <li key={i} className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary/40 mt-2 shrink-0" />
                 <span className="text-sm text-muted-foreground leading-relaxed">{desc}</span>
@@ -71,7 +70,7 @@ function SilkTimelineCard({ item, index }: { item: ExperienceItem; index: number
             ))}
           </ul>
           <div className="flex flex-wrap gap-2">
-            {item.skills.map((skill) => (
+            {(item.points || []).map((skill) => (
               <span key={skill} className="text-[10px] font-medium text-primary bg-primary/5 border border-primary/10 px-3 py-1 rounded-full">
                 {skill}
               </span>
@@ -87,6 +86,9 @@ function SilkTimelineCard({ item, index }: { item: ExperienceItem; index: number
 function ArchitectExpCard({ item, index }: { item: ExperienceItem; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.1 });
+  const descriptionPoints = typeof item.description === 'string' 
+    ? item.description.split('\n').filter(Boolean) 
+    : Array.isArray(item.description) ? item.description : [];
 
   return (
     <motion.div
@@ -106,15 +108,15 @@ function ArchitectExpCard({ item, index }: { item: ExperienceItem; index: number
           <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
             <Briefcase className="w-5 h-5 text-primary" />
           </div>
-          <span className="text-xs text-primary font-medium">{item.date}</span>
+          <span className="text-xs text-primary font-medium">{item.duration}</span>
         </div>
       </div>
 
-      <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">{item.title}</h3>
+      <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">{item.role}</h3>
       <p className="text-sm text-muted-foreground mb-6">{item.company} — {item.location}</p>
 
       <div className="space-y-3 mb-6 flex-1">
-        {item.description.slice(0, 3).map((desc, i) => (
+        {descriptionPoints.slice(0, 3).map((desc, i) => (
           <div key={i} className="flex gap-3 items-start">
             <div className="w-1 h-1 bg-primary mt-2 shrink-0" />
             <span className="text-sm text-muted-foreground leading-relaxed">{desc}</span>
@@ -123,7 +125,7 @@ function ArchitectExpCard({ item, index }: { item: ExperienceItem; index: number
       </div>
 
       <div className="flex flex-wrap gap-2 pt-4 border-t border-border">
-        {item.skills.map(s => (
+        {(item.points || []).map(s => (
           <span key={s} className="text-[10px] font-medium text-primary bg-primary/5 px-3 py-1 rounded-md">{s}</span>
         ))}
       </div>
@@ -142,8 +144,10 @@ export function ExperiencePage() {
         if (data && data.length > 0) {
           setExps(data.map((exp: any) => ({
             ...exp,
-            description: Array.isArray(exp.description) ? exp.description : (exp.description as string).split('\n').filter(Boolean),
-            skills: Array.isArray(exp.skills) ? exp.skills : (exp.skills as string).split(',').map((s: string) => s.trim()).filter(Boolean)
+            role: exp.role || exp.title || '',
+            duration: exp.duration || exp.date || '',
+            points: Array.isArray(exp.points) ? exp.points : (Array.isArray(exp.skills) ? exp.skills : []),
+            description: typeof exp.description === 'string' ? exp.description : (Array.isArray(exp.description) ? exp.description.join('\n') : '')
           })));
         } else {
           setExps(staticExperiences);

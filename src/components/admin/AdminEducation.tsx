@@ -39,7 +39,14 @@ export const AdminEducation = () => {
         if (error) {
             toast.error('Failed to load education data.');
         } else {
-            setEducation(data || []);
+            const normalizedData = (data || []).map((edu: any) => ({
+                id: edu.id,
+                school: edu.school || edu.institution || '',
+                degree: edu.degree || '',
+                duration: edu.duration || edu.date || edu.period || '',
+                cgpa: edu.cgpa || edu.grade || ''
+            }));
+            setEducation(normalizedData);
         }
         setLoading(false);
     };

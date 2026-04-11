@@ -7,22 +7,20 @@ import { useTheme } from '@/hooks/useTheme';
 interface EducationItem {
   id: string;
   degree: string;
-  institution: string;
+  school: string;
   location: string;
-  date: string;
+  duration: string;
   grade?: string;
   description: string[];
-  school?: string;
-  period?: string;
 }
 
 const staticEducation: EducationItem[] = [
   {
     id: 'bs-cs',
     degree: 'Bachelor of Science (Computer Science)',
-    institution: 'The University of Faisalabad',
+    school: 'The University of Faisalabad',
     location: 'Faisalabad, Pakistan',
-    date: '2023 - 2027',
+    duration: '2023 - 2027',
     grade: 'Currently Ongoing',
     description: [
       'Focusing on Core Computer Science principles and advanced software engineering',
@@ -52,9 +50,9 @@ export function EducationPage() {
           const normalized = data.map((edu: any) => ({
              id: edu.id,
              degree: edu.degree || '',
-             institution: edu.institution || edu.school || '',
+             school: edu.school || edu.institution || '',
              location: edu.location || '',
-             date: edu.date || edu.period || '',
+             duration: edu.duration || edu.date || edu.period || '',
              grade: edu.grade || edu.cgpa || '',
              description: Array.isArray(edu.description) ? edu.description : typeof edu.description === 'string' ? edu.description.split('\n').filter(Boolean) : [],
           }));

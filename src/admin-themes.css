@@ -285,25 +285,32 @@
   color: #FFB7C5 !important;
 }
 
+.dark .theme-barbie .admin-sidebar button[class*="bg-primary"] {
+    background: #D4AF37 !important;
+    color: #1A0006 !important;
+}
+
 .dark .theme-barbie .admin-card {
   background: rgba(45, 0, 10, 0.8) !important;
   border: 1px solid rgba(212, 175, 55, 0.3) !important;
   box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5) !important;
 }
 
+.dark .theme-barbie .admin-card h1,
 .dark .theme-barbie .admin-card h2, 
 .dark .theme-barbie .admin-card h3 {
   color: #D4AF37 !important;
 }
 
 .dark .theme-barbie .admin-card p,
-.dark .theme-barbie .admin-card label {
+.dark .theme-barbie .admin-card label,
+.dark .theme-barbie .admin-card span {
   color: #FFB7C5 !important;
-  opacity: 0.8;
 }
 
 .dark .theme-barbie .grid > div,
-.dark .theme-barbie .space-y-6 > .grid > div {
+.dark .theme-barbie .space-y-6 > .grid > div,
+.dark .theme-barbie .border.rounded-lg {
     background: #2D000A !important;
     border: 1px solid rgba(212, 175, 55, 0.2) !important;
 }
@@ -325,6 +332,19 @@
     background: #D4AF37 !important;
     color: #1A0006 !important;
     box-shadow: 5px 5px 0 #800020 !important;
+}
+
+/* --- DORAEMON DARK LIST OVERRIDES --- */
+.dark .theme-doraemon .grid > div,
+.dark .theme-doraemon .space-y-6 > .grid > div,
+.dark .theme-doraemon .border.rounded-lg {
+    background: #002D4A !important;
+    border: 1px solid #0096D9 !important;
+}
+
+.dark .theme-doraemon .admin-card span[class*="text-slate-500"],
+.dark .theme-doraemon .admin-card p[class*="text-slate-500"] {
+    color: #93C5FD !important; /* Sky-300 for better visibility */
 }
 
 

@@ -28,9 +28,9 @@ CREATE TABLE IF NOT EXISTS projects (
 CREATE TABLE IF NOT EXISTS education (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     degree TEXT NOT NULL,
-    institution TEXT NOT NULL,
+    school TEXT NOT NULL, -- Matched to Admin form
     location TEXT,
-    date TEXT,
+    duration TEXT, -- Matched to Admin form (was date)
     status TEXT CHECK (status IN ('ongoing', 'completed')),
     details TEXT[] DEFAULT '{}',
     achievements TEXT[] DEFAULT '{}',
@@ -42,13 +42,13 @@ CREATE TABLE IF NOT EXISTS education (
 -- Create Experience table
 CREATE TABLE IF NOT EXISTS experience (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    title TEXT NOT NULL,
+    role TEXT NOT NULL, -- Matched to Admin form (was title)
     company TEXT NOT NULL,
     location TEXT,
-    date TEXT,
+    duration TEXT, -- Matched to Admin form (was date)
     type TEXT CHECK (type IN ('work', 'internship', 'simulation')),
-    description TEXT[] DEFAULT '{}',
-    skills TEXT[] DEFAULT '{}',
+    description TEXT DEFAULT '', -- Changed from TEXT[] to TEXT to match Admin textarea
+    points TEXT[] DEFAULT '{}', -- Matched to Admin form (was skills)
     link TEXT,
     order_index INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL

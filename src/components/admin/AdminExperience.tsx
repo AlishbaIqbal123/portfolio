@@ -42,7 +42,16 @@ export const AdminExperience = () => {
         if (error) {
             toast.error('Failed to load experience data.');
         } else {
-            setExperiences(data || []);
+            const normalizedData = (data || []).map((exp: any) => ({
+                id: exp.id,
+                role: exp.role || exp.title || '',
+                company: exp.company || '',
+                duration: exp.duration || exp.date || '',
+                description: typeof exp.description === 'string' ? exp.description : (Array.isArray(exp.description) ? exp.description.join('\n') : ''),
+                location: exp.location || '',
+                points: Array.isArray(exp.points) ? exp.points : (Array.isArray(exp.skills) ? exp.skills : [])
+            }));
+            setExperiences(normalizedData);
         }
         setLoading(false);
     };
