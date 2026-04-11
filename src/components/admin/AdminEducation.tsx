@@ -15,7 +15,7 @@ interface Education {
     school: string;
     degree: string;
     duration: string;
-    cgpa?: string;
+    location: string;
 }
 
 export const AdminEducation = () => {
@@ -46,7 +46,7 @@ export const AdminEducation = () => {
                 school: edu.school || '',
                 degree: edu.degree || '',
                 duration: edu.duration || '',
-                cgpa: edu.cgpa || ''
+                location: edu.location || ''
             }));
             setEducation(normalizedData);
         }
@@ -67,7 +67,7 @@ export const AdminEducation = () => {
                 school: editingEdu.school,
                 degree: editingEdu.degree,
                 duration: editingEdu.duration || '',
-                cgpa: editingEdu.cgpa || ''
+                location: editingEdu.location || ''
             };
 
             if (editingEdu.id) {
@@ -168,11 +168,6 @@ export const AdminEducation = () => {
                                         <div className="flex items-center gap-2">
                                             <Calendar className="w-3 h-3" /> {edu.duration}
                                         </div>
-                                        {edu.cgpa && (
-                                            <div className="flex items-center gap-2 px-2 py-0.5 rounded-md bg-primary/10 text-primary font-bold">
-                                                CGPA: {edu.cgpa}
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
                                 <div className="flex gap-1.5">
@@ -266,14 +261,14 @@ export const AdminEducation = () => {
                                                 />
                                             </div>
                                             <div className="space-y-1.5">
-                                                <label className="text-xs font-medium text-muted-foreground">CGPA / Marks</label>
+                                                <label className="text-xs font-medium text-muted-foreground">Location</label>
                                                 <input 
-                                                    type="text" value={editingEdu.cgpa || ''}
-                                                    onChange={e => setEditingEdu({...editingEdu, cgpa: e.target.value})}
+                                                    type="text" value={editingEdu.location || ''}
+                                                    onChange={e => setEditingEdu({...editingEdu, location: e.target.value})}
                                                     className={`w-full h-10 rounded-lg border px-4 text-sm outline-none transition-colors ${
                                                         isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
                                                     }`}
-                                                    placeholder="e.g. 3.8/4.0"
+                                                    placeholder="e.g. Faisalabad, PK"
                                                 />
                                             </div>
                                         </div>

@@ -13,7 +13,6 @@ export const personalData = {
     paragraph2: "Seeking a Software Engineer / Full Stack Developer internship where I can contribute to building efficient and user-focused software solutions. Passionate about creating magical, high-fidelity digital experiences that bridge the gap between imagination and reality."
   },
   stats: {
-    cgpa: "3.64/4.00",
     projects: 12, 
     internships: 2 
   },

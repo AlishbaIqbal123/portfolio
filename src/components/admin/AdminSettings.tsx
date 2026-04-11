@@ -304,8 +304,7 @@ const SiteConfigForm = ({ isDark }: { isDark: boolean }) => {
         name: '',
         bio: '',
         tagline: '',
-        location: '',
-        cgpa: ''
+        location: ''
     });
 
     useEffect(() => {
@@ -316,9 +315,8 @@ const SiteConfigForm = ({ isDark }: { isDark: boolean }) => {
                 const bio = data.find((s: any) => s.key === 'bio' || s.key === 'site_bio')?.value || '';
                 const tagline = data.find((s: any) => s.key === 'tagline' || s.key === 'site_focus')?.value || '';
                 const location = data.find((s: any) => s.key === 'location')?.value || '';
-                const cgpa = data.find((s: any) => s.key === 'cgpa')?.value || '';
                 
-                setConfig({ name, bio, tagline, location, cgpa });
+                setConfig({ name, bio, tagline, location });
             }
             setLoading(false);
         };
@@ -335,7 +333,6 @@ const SiteConfigForm = ({ isDark }: { isDark: boolean }) => {
                 { key: 'bio', value: config.bio },
                 { key: 'tagline', value: config.tagline },
                 { key: 'location', value: config.location },
-                { key: 'cgpa', value: config.cgpa },
                 { key: 'updated_at', value: new Date().toISOString() } // This key doesn't exist as primary, but we'll use individual updated_ats
             ];
 
@@ -391,7 +388,7 @@ const SiteConfigForm = ({ isDark }: { isDark: boolean }) => {
 
             <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/60 italic">Location</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/60 italic">Base Location</label>
                     <input 
                         type="text" value={config.location}
                         onChange={e => setConfig({...config, location: e.target.value})}
@@ -399,17 +396,6 @@ const SiteConfigForm = ({ isDark }: { isDark: boolean }) => {
                             isDark ? 'bg-background focus:border-primary/50' : 'bg-slate-50 focus:border-primary/30'
                         }`}
                         placeholder="e.g. Faisalabad, Pakistan"
-                    />
-                </div>
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/60 italic">Global CGPA / Stats</label>
-                    <input 
-                        type="text" value={config.cgpa}
-                        onChange={e => setConfig({...config, cgpa: e.target.value})}
-                        className={`w-full h-11 rounded-xl border border-border px-4 text-sm font-medium outline-none transition-all ${
-                            isDark ? 'bg-background focus:border-primary/50' : 'bg-slate-50 focus:border-primary/30'
-                        }`}
-                        placeholder="e.g. 3.64 / 4.00"
                     />
                 </div>
             </div>

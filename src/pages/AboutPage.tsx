@@ -59,15 +59,6 @@ export function AboutPage() {
                     whileInView={{ scale: 1 }}
                     className="text-center"
                   >
-                    <div className="text-2xl font-bold text-primary">{personal.stats?.cgpa || personal.cgpa || '3.64'}</div>
-                    <p className="text-xs text-muted-foreground mt-1">CGPA</p>
-                  </motion.div>
-                  <div className="w-px h-10 bg-border" />
-                  <motion.div 
-                    initial={{ scale: 0.9 }}
-                    whileInView={{ scale: 1 }}
-                    className="text-center"
-                  >
                     <div className="text-2xl font-bold text-primary">{personal.location || 'Pakistan'}</div>
                     <p className="text-xs text-muted-foreground mt-1">Location</p>
                   </motion.div>
@@ -160,14 +151,10 @@ export function AboutPage() {
                     </button>
                   </div>
                 </div>
-                <div className="lg:col-span-4 grid grid-cols-2 gap-4">
-                  <div className="architect-card text-center py-8">
-                    <div className="text-xs text-muted-foreground mb-2">CGPA</div>
-                    <div className="text-3xl font-bold text-primary">{personal.stats?.cgpa || personal.cgpa || '3.64'}</div>
-                  </div>
-                  <div className="architect-card text-center py-8">
-                    <div className="text-xs text-muted-foreground mb-2">Location</div>
-                    <div className="text-lg font-bold text-primary">{personal.location || 'Pk'}</div>
+                <div className="lg:col-span-4 flex items-center justify-center">
+                  <div className="architect-card text-center py-10 w-full">
+                    <div className="text-xs text-muted-foreground mb-3 uppercase tracking-widest">Base Operations</div>
+                    <div className="text-2xl font-bold text-primary">{personal.location || 'Pakistan'}</div>
                   </div>
                 </div>
               </div>

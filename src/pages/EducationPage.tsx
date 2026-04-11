@@ -113,13 +113,11 @@ export function EducationPage() {
                     <p className="text-sm text-muted-foreground">{item.school} — {item.location}</p>
                   </div>
                 </div>
-                {item.grade && (
-                  <span className={`text-xs font-medium px-3 py-1 shrink-0 ${
-                    isDark ? 'bg-primary/10 text-primary rounded-md' : 'bg-primary/5 text-primary rounded-full border border-primary/10'
+                  <span className={`text-xs font-medium px-4 py-1.5 shrink-0 ${
+                    isDark ? 'bg-primary/5 text-primary rounded-md border border-primary/10' : 'bg-primary/5 text-primary rounded-full border border-primary/10'
                   }`}>
-                    {typeof item.grade === 'string' && item.grade.includes('.') ? `CGPA: ${item.grade}` : item.grade}
+                    {item.school.includes('Faisalabad') ? 'In Progress' : 'Academic Record'}
                   </span>
-                )}
               </div>
 
               <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">

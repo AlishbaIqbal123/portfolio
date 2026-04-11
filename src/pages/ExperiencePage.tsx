@@ -97,9 +97,9 @@ function ArchitectExpCard({ item, index }: { item: ExperienceItem; index: number
       animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{ 
         type: "spring",
-        stiffness: 200, 
-        damping: 20, 
-        delay: index * 0.1 
+        stiffness: 100, 
+        damping: 25, 
+        delay: index * 0.2 
       }}
       className="architect-card flex flex-col h-full group"
     >
