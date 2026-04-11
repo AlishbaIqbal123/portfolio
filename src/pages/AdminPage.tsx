@@ -173,36 +173,34 @@ const AdminContent = () => {
                             </button>
                         </div>
                         
-                        <div className={`mb-12 flex flex-col md:flex-row items-center justify-between border-b pb-8 gap-6 relative ${
-                            theme === 'doraemon' ? 'border-[#0096D9] border-b-4' : 'border-pink-50'
+                        <div className={`mb-12 flex flex-col items-center justify-center text-center border-b pb-12 gap-10 relative ${
+                            theme === 'doraemon' ? 'border-[#0096D9] border-b-4' : 'border-pink-100/20'
                         }`}>
-                            <div className="flex items-center gap-4">
-                                <span className={`text-3xl font-black tracking-tighter uppercase ${
+                            <div className="flex flex-col items-center gap-6">
+                                <span className={`text-4xl md:text-6xl font-black tracking-[0.2em] uppercase leading-none ${
                                     theme === 'doraemon' ? 'text-[#0096D9]' : 'text-pink-600'
                                 }`}>
-                                    {theme === 'doraemon' && "Gadget "}
+                                    {theme === 'doraemon' && "GADGET "}
                                     {currentTabTitle}
                                     {theme === 'barbie' && " ✨"}
                                 </span>
-                            </div>
-
-                            {/* Floating Characters Removed for Cleanest UI */}
-
-                            <div className="flex items-center gap-4 relative z-10">
-                                <button 
-                                    onClick={toggleAdminTheme}
-                                    className={`flex items-center gap-3 px-4 h-10 border rounded-xl text-xs font-bold transition-all hover:scale-105 active:scale-95 ${theme === 'doraemon' ? 'bg-sky-500 border-sky-400 text-white shadow-[0_4px_0_#0369a1]' : 'bg-pink-500 border-pink-400 text-white shadow-[0_4px_0_#9d174d]'}`}
-                                >
-                                    {theme === 'doraemon' ? <Bell className="w-4 h-4 fill-yellow-400 text-yellow-400" /> : <Heart className="w-4 h-4 fill-white text-white" />}
-                                    {theme === 'doraemon' ? "Doraemon" : "Princess Barbie"}
-                                </button>
-                                <button 
-                                    onClick={toggleTheme}
-                                    className={`flex items-center gap-3 px-4 h-10 border rounded-xl text-xs font-semibold transition-all hover:scale-105 active:scale-95 ${isDark ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-white border-slate-200 text-slate-700 shadow-sm'}`}
-                                >
-                                    {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                                    {isDark ? "Light" : "Dark"}
-                                </button>
+                                
+                                <div className="flex flex-wrap items-center justify-center gap-4">
+                                    <button 
+                                        onClick={toggleAdminTheme}
+                                        className={`flex items-center gap-3 px-6 h-12 border rounded-xl text-xs font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 ${theme === 'doraemon' ? 'bg-sky-500 border-sky-400 text-white shadow-[0_6px_0_#0369a1]' : 'bg-pink-600 border-pink-400 text-white shadow-[0_6px_0_#9d174d]'}`}
+                                    >
+                                        {theme === 'doraemon' ? <Bell className="w-5 h-5 fill-yellow-400 text-yellow-400" /> : <Heart className="w-5 h-5 fill-white text-white" />}
+                                        {theme === 'doraemon' ? "Doraemon Sync" : "Imperial Barbie"}
+                                    </button>
+                                    <button 
+                                        onClick={toggleTheme}
+                                        className={`flex items-center gap-3 px-6 h-12 border rounded-xl text-xs font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 ${isDark ? 'bg-slate-800 border-slate-700 text-primary shadow-[0_6px_0_#0f172a]' : 'bg-white border-slate-200 text-slate-700 shadow-[0_6px_0_#e2e8f0]'}`}
+                                    >
+                                        {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                                        {isDark ? "Light Ops" : "Dark Ops"}
+                                    </button>
+                                </div>
                             </div>
                         </div>
 

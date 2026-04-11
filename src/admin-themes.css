@@ -54,6 +54,44 @@
   box-shadow: 8px 8px 0 #FDC901;
 }
 
+/* --- DORAEMON DARK COMPATIBILITY --- */
+.dark .theme-doraemon {
+  --admin-bg: #001A2C;
+  --admin-glass-bg: rgba(0, 26, 44, 0.8);
+  --background: 201 100% 10%;
+  --card: 201 100% 15%;
+  --border: 201 100% 30%;
+}
+
+.dark .theme-doraemon.admin-page-container::before {
+  background: rgba(0, 10, 20, 0.8);
+}
+
+.dark .theme-doraemon .admin-sidebar {
+  background: #004D76 !important;
+  border-right: 12px solid #FDC901;
+}
+
+.dark .theme-doraemon .admin-card {
+  background: #001A2C !important;
+  border-color: #0096D9;
+  box-shadow: 8px 8px 0 #FDC901;
+}
+
+.dark .theme-doraemon .admin-card h2, 
+.dark .theme-doraemon .admin-card h3,
+.dark .theme-doraemon .admin-card p {
+  color: #E0F2FE !important;
+}
+
+.dark .theme-doraemon input,
+.dark .theme-doraemon textarea,
+.dark .theme-doraemon select {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border-color: rgba(0, 150, 217, 0.3) !important;
+  color: white !important;
+}
+
 /* --- STRONG FEMININE BARBIE THEME: "Power Silk & Burgundy" --- */
 .theme-barbie {
   --admin-primary: #800020; /* Deep Burgundy */
@@ -224,4 +262,69 @@
 .theme-doraemon .character-img {
     filter: drop-shadow(0 0 30px rgba(0, 150, 217, 0.8));
 }
+
+/* --- BARBIE DARK COMPATIBILITY --- */
+.dark .theme-barbie {
+  --admin-primary: #FFB7C5; /* Lighter Pink for contrast in dark */
+  --admin-bg: #1A0006;
+  --background: 345 100% 5%;
+  --card: 345 100% 8%;
+  --border: 345 100% 20%;
+}
+
+.dark .theme-barbie.admin-page-container::before {
+  background: rgba(26, 0, 6, 0.92) !important;
+}
+
+.dark .theme-barbie .admin-sidebar {
+  background: rgba(45, 0, 10, 0.6) !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2) !important;
+}
+
+.dark .theme-barbie .admin-sidebar button {
+  color: #FFB7C5 !important;
+}
+
+.dark .theme-barbie .admin-card {
+  background: rgba(45, 0, 10, 0.8) !important;
+  border: 1px solid rgba(212, 175, 55, 0.3) !important;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark .theme-barbie .admin-card h2, 
+.dark .theme-barbie .admin-card h3 {
+  color: #D4AF37 !important;
+}
+
+.dark .theme-barbie .admin-card p,
+.dark .theme-barbie .admin-card label {
+  color: #FFB7C5 !important;
+  opacity: 0.8;
+}
+
+.dark .theme-barbie .grid > div,
+.dark .theme-barbie .space-y-6 > .grid > div {
+    background: #2D000A !important;
+    border: 1px solid rgba(212, 175, 55, 0.2) !important;
+}
+
+.dark .theme-barbie .grid > div:hover {
+    box-shadow: 15px 15px 0 #D4AF37 !important;
+    border-color: #D4AF37 !important;
+}
+
+.dark .theme-barbie input, 
+.dark .theme-barbie textarea, 
+.dark .theme-barbie select {
+    background: rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(212, 175, 55, 0.2) !important;
+    color: #fff !important;
+}
+
+.dark .theme-barbie button[class*="bg-primary"] {
+    background: #D4AF37 !important;
+    color: #1A0006 !important;
+    box-shadow: 5px 5px 0 #800020 !important;
+}
+
 
