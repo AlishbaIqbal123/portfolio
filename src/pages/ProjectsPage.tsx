@@ -158,7 +158,7 @@ export function ProjectsPage() {
             id: p.id || Math.random().toString(),
             title: p.title || 'Untitled Project',
             category: (p.category || 'all').toLowerCase(),
-            tags: Array.isArray(p.tech_stack) ? p.tech_stack : (p.tech_stack?.split(',') || p.tags || [])
+            tags: Array.isArray(p.tech_stack) ? p.tech_stack : (typeof p.tech_stack === 'string' ? p.tech_stack.split(',') : [])
           }));
           setProjects(normalized);
         }

@@ -110,7 +110,7 @@ export function EducationPage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold tracking-tight text-foreground">{item.degree}</h3>
-                    <p className="text-sm text-muted-foreground">{item.institution} — {item.location}</p>
+                    <p className="text-sm text-muted-foreground">{item.school} — {item.location}</p>
                   </div>
                 </div>
                 {item.grade && (
@@ -123,7 +123,7 @@ export function EducationPage() {
               </div>
 
               <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
-                <span>{item.date}</span>
+                <span>{item.duration}</span>
               </div>
 
               <ul className="space-y-2">
