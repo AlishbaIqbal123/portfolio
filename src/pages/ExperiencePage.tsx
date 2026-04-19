@@ -1,7 +1,8 @@
 import { useRef, useEffect, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Briefcase, MapPin, ArrowRight, Building2, Zap, Terminal } from 'lucide-react';
-import { getExperience } from '@/lib/api';
+import { getExperience, getProjects } from '@/lib/api';
+import { calculateTotalExperience } from '@/lib/utils';
 import { useTheme } from '@/hooks/useTheme';
 
 interface ExperienceItem {
@@ -136,19 +137,31 @@ function ArchitectExpCard({ item, index }: { item: ExperienceItem; index: number
 export function ExperiencePage() {
   const { isDark } = useTheme();
   const [exps, setExps] = useState<ExperienceItem[]>([]);
+  const [stats, setStats] = useState({ internships: '2+', projects: '12+', experience: '0+ Years' });
 
   useEffect(() => {
     async function loadData() {
       try {
-        const data = await getExperience();
-        if (data && data.length > 0) {
-          setExps(data.map((exp: any) => ({
+        const [experienceData, projectData] = await Promise.all([
+          getExperience(),
+          getProjects()
+        ]);
+
+        if (experienceData && experienceData.length > 0) {
+          const normalizedExps = experienceData.map((exp: any) => ({
             ...exp,
             role: exp.role || exp.title || '',
             duration: exp.duration || exp.date || '',
             points: Array.isArray(exp.points) ? exp.points : (Array.isArray(exp.skills) ? exp.skills : []),
             description: typeof exp.description === 'string' ? exp.description : (Array.isArray(exp.description) ? exp.description.join('\n') : '')
-          })));
+          }));
+          setExps(normalizedExps);
+          
+          setStats({
+            internships: (normalizedExps.filter((e: any) => e.role?.toLowerCase().includes('intern'))?.length || 2) + '+',
+            projects: (projectData?.length || 12) + '+',
+            experience: calculateTotalExperience(normalizedExps)
+          });
         } else {
           setExps(staticExperiences);
         }
@@ -195,9 +208,9 @@ export function ExperiencePage() {
       <section className="py-8 px-6 md:px-16 lg:px-24">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { label: 'Internships', val: '2+' },
-            { label: 'Projects', val: '12+' },
-            { label: 'Collaborations', val: '15+' }
+            { label: 'Internships', val: stats.internships },
+            { label: 'Projects', val: stats.projects },
+            { label: 'Experience', val: stats.experience }
           ].map((s, i) => (
             <motion.div 
               key={i} 

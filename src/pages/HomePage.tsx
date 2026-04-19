@@ -8,7 +8,8 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/hooks/useTheme';
-import { getPersonalInfo, getProjects, getExperience } from '@/lib/api';
+import { getPersonalInfo, getProjects, getExperience, getCodingTips } from '@/lib/api';
+import { calculateTotalExperience } from '@/lib/utils';
 import { personalData as staticPersonal } from '@/data/personal';
 import { QuickAdmin } from '@/components/QuickAdmin';
 import { SafeImage } from '@/components/ui/SafeImage';
@@ -30,6 +31,7 @@ export function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [stats, setStats] = useState({ internships: '2+', projects: '12+', experience: '3+', focus: 'Full Stack' });
   const [personal, setPersonal] = useState<any>(staticPersonal);
+  const [insights, setInsights] = useState<any[]>([]);
 
   useEffect(() => {
     async function loadData() {
@@ -48,9 +50,14 @@ export function HomePage() {
           setStats({
             internships: (exps?.filter((e: any) => e.role?.toLowerCase().includes('intern'))?.length || 2) + '+',
             projects: (prjs?.length || 12) + '+',
-            experience: (exps?.length || 3) + '+',
+            experience: calculateTotalExperience(exps),
             focus: focusVal
           });
+        }
+
+        const tips = await getCodingTips();
+        if (tips && tips.length > 0) {
+          setInsights(tips.slice(0, 4));
         }
       } catch (err) { console.error(err); }
     }
@@ -182,12 +189,12 @@ export function HomePage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-6 md:px-12 lg:px-12 pb-6 max-w-7xl mx-auto">
               {/* Insights — Grid reveal */}
-              {[
-                { t: 'Clean Architecture', c: 'Maintain strict boundaries between layers for scalable systems.' },
-                { t: 'Visual Hierarchy', c: 'Guide users naturally through contrast, spacing, and typography.' },
-                { t: 'Performance First', c: 'Optimize for speed — every millisecond matters to users.' },
-                { t: 'Accessible Design', c: 'Build inclusive interfaces that work for everyone.' },
-              ].map((item, i) => (
+              {(insights.length > 0 ? insights : [
+                { title: 'Clean Architecture', content: 'Maintain strict boundaries between layers for scalable systems.' },
+                { title: 'Visual Hierarchy', content: 'Guide users naturally through contrast, spacing, and typography.' },
+                { title: 'Performance First', content: 'Optimize for speed — every millisecond matters to users.' },
+                { title: 'Accessible Design', content: 'Build inclusive interfaces that work for everyone.' },
+              ]).map((item, i) => (
                 <motion.div 
                   key={i} 
                   initial={{ opacity: 0, y: 30 }}
@@ -210,8 +217,8 @@ export function HomePage() {
                       className="silk-card border-0 bg-transparent shadow-none h-full p-8 md:p-6 cursor-default"
                     >
                       <span className="text-xs text-primary font-medium">0{i+1}</span>
-                      <h3 className="text-xl font-bold tracking-tight mt-2 mb-3 text-foreground">{item.t}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{item.c}</p>
+                      <h3 className="text-xl font-bold tracking-tight mt-2 mb-3 text-foreground">{item.title || item.t}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{item.content || item.c}</p>
                     </motion.div>
                   </BorderGlow>
                 </motion.div>
