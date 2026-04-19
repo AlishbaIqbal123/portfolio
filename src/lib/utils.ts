@@ -18,7 +18,7 @@ export function calculateTotalExperience(experiences: any[]) {
         const duration = exp.duration || "";
         if (!duration || !duration.includes('-')) return;
 
-        const parts = duration.split('-').map(s => s.trim());
+        const parts = duration.split('-').map((s: string) => s.trim());
         const startStr = parts[0];
         const endStr = parts[1];
         
