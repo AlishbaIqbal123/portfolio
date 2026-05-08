@@ -2,8 +2,13 @@ name: Daily Coding Tip
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Every day at midnight UTC
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+    # Run 4x per day to be resilient against GitHub Actions delays.
+    # The heartbeat script itself prevents duplicate insertions (once per UTC day).
+    - cron: '0 0 * * *'   # Midnight UTC (primary)
+    - cron: '0 6 * * *'   # 6AM UTC (retry if midnight failed)
+    - cron: '0 12 * * *'  # Noon UTC (retry)
+    - cron: '0 18 * * *'  # 6PM UTC (final retry)
+  workflow_dispatch: # Manual trigger from GitHub UI at any time
 
 jobs:
   heartbeat:
@@ -29,4 +34,4 @@ jobs:
 
       - name: Report Status
         if: always()
-        run: echo "Heartbeat completed at $(date -u)"
+        run: echo "Heartbeat attempt completed at $(date -u)"
