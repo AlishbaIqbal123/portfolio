@@ -79,13 +79,30 @@ async function runHeartbeat() {
     const selectedTip = await getNewTip();
     if (!selectedTip) throw new Error("Could not retrieve a new tip.");
 
-    // 3. Insert with all fields (Ensure title/tutorial exist in DB via fix_schema.js first)
+    // 3. Insert with all fields
     await client.query(
       "INSERT INTO coding_tips (title, content, tutorial, category, author, fetched_at) VALUES ($1, $2, $3, $4, $5, NOW())",
       [selectedTip.title, selectedTip.content, selectedTip.tutorial || '', selectedTip.category, selectedTip.author]
     );
 
     console.log(`✨ Successfully Synchronized: "${selectedTip.title}"`);
+
+    // 4. Cleanup: keep only the 10 most recent tips, delete the rest
+    const MAX_TIPS = 10;
+    const cleanupRes = await client.query(
+      `DELETE FROM coding_tips
+       WHERE id NOT IN (
+         SELECT id FROM coding_tips
+         ORDER BY fetched_at DESC
+         LIMIT $1
+       )`,
+      [MAX_TIPS]
+    );
+    const deleted = cleanupRes.rowCount ?? 0;
+    if (deleted > 0) {
+      console.log(`🧹 Cleaned up ${deleted} old tip(s). Keeping latest ${MAX_TIPS}.`);
+    }
+
     console.log("🏆 Database heartbeat recorded successfully.");
 
   } catch (err) {
