@@ -74,6 +74,16 @@ const friendlyDetails: Record<string, { heading: string; points: string[]; emoji
     }
 };
 
+const inspirationalQuotes: Record<string, { quote: string; by: string }> = {
+    'frontend': { quote: 'Design is not just what it looks like. Design is how it works.', by: 'Steve Jobs' },
+    'backend': { quote: 'The best code is no code at all. Every new line is a potential bug.', by: 'Jeff Atwood' },
+    'software engineering': { quote: 'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.', by: 'Martin Fowler' },
+    'performance': { quote: 'Premature optimization is the root of all evil.', by: 'Donald Knuth' },
+    'algorithms': { quote: 'An algorithm must be seen to be believed.', by: 'Donald Knuth' },
+    'clean code': { quote: 'Any fool can write code that a computer can understand.', by: 'Martin Fowler' },
+    'default': { quote: 'Simplicity is the soul of efficiency.', by: 'Austin Freeman' },
+};
+
 /* ── Proper block-based tutorial renderer ── */
 function TutorialRenderer({ text, isDark }: { text: string; isDark: boolean }) {
     // Split into blocks: split on code fences first
