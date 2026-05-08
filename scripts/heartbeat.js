@@ -87,8 +87,8 @@ async function runHeartbeat() {
 
     console.log(`✨ Successfully Synchronized: "${selectedTip.title}"`);
 
-    // 4. Cleanup: keep only the 10 most recent tips, delete the rest
-    const MAX_TIPS = 10;
+    // 4. Cleanup: keep only the 20 most recent tips, delete the rest
+    const MAX_TIPS = 20;
     const cleanupRes = await client.query(
       `DELETE FROM coding_tips
        WHERE id NOT IN (
