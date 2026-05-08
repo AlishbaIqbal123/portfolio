@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Calendar, User, Loader2, Lightbulb, Heart, BookOpen, Sparkles, CheckCircle2, Quote } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Loader2, Lightbulb, Heart, BookOpen, Sparkles, CheckCircle2, Quote, Code2 } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 import { SafeImage } from '@/components/ui/SafeImage';
 
@@ -10,6 +10,7 @@ interface Tip {
     id: string;
     title: string;
     content: string;
+    tutorial?: string;
     category: string;
     author: string;
     fetched_at: string;
@@ -73,12 +74,67 @@ const friendlyDetails: Record<string, { heading: string; points: string[]; emoji
     }
 };
 
-const inspirationalQuotes: Record<string, { quote: string; by: string }> = {
-    'frontend': { quote: 'Design is not just what it looks like. Design is how it works.', by: 'Steve Jobs' },
-    'backend': { quote: 'The best code is no code at all. Every new line is a potential bug.', by: 'Jeff Atwood' },
-    'software engineering': { quote: 'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.', by: 'Martin Fowler' },
-    'default': { quote: 'Simplicity is the soul of efficiency.', by: 'Austin Freeman' },
-};
+/* ── Proper block-based tutorial renderer ── */
+function TutorialRenderer({ text, isDark }: { text: string; isDark: boolean }) {
+    // Split into blocks: split on code fences first
+    const blocks: Array<{ type: 'heading' | 'code' | 'bullet' | 'text'; content: string }> = [];
+    const lines = text.split('\n');
+    let i = 0;
+    while (i < lines.length) {
+        const line = lines[i];
+        if (line.startsWith('```')) {
+            // Collect everything until the closing ```
+            const codeLines: string[] = [];
+            i++;
+            while (i < lines.length && !lines[i].startsWith('```')) {
+                codeLines.push(lines[i]);
+                i++;
+            }
+            blocks.push({ type: 'code', content: codeLines.join('\n') });
+        } else if (line.startsWith('###')) {
+            blocks.push({ type: 'heading', content: line.replace(/^###\s*/, '') });
+        } else if (line.trim().startsWith('- ') || line.trim().startsWith('* ')) {
+            blocks.push({ type: 'bullet', content: line.replace(/^\s*[-*]\s*/, '') });
+        } else if (line.trim()) {
+            blocks.push({ type: 'text', content: line.trim() });
+        }
+        i++;
+    }
+
+    return (
+        <div className="space-y-3">
+            {blocks.map((block, idx) => {
+                if (block.type === 'heading') return (
+                    <h4 key={idx} className="text-sm font-black uppercase tracking-wider text-foreground mt-6 mb-1 pt-2">
+                        {block.content}
+                    </h4>
+                );
+                if (block.type === 'code') return (
+                    <div key={idx} className={`relative rounded-lg overflow-hidden my-3 border ${
+                        isDark ? 'border-primary/20 bg-black/50' : 'border-border bg-muted/60'
+                    }`}>
+                        <div className={`flex items-center gap-2 px-4 py-2 border-b text-[10px] font-mono ${
+                            isDark ? 'border-primary/10 text-primary/60' : 'border-border text-muted-foreground'
+                        }`}>
+                            <Code2 className="w-3 h-3" />
+                            javascript
+                        </div>
+                        <pre className="p-4 overflow-x-auto font-mono text-[12px] leading-relaxed text-foreground/90">
+                            <code>{block.content}</code>
+                        </pre>
+                    </div>
+                );
+                if (block.type === 'bullet') return (
+                    <div key={idx} className="flex items-start gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" />
+                        <p className="text-sm text-muted-foreground">{block.content}</p>
+                    </div>
+                );
+                return <p key={idx} className="text-sm text-muted-foreground leading-relaxed">{block.content}</p>;
+            })}
+        </div>
+    );
+}
 
 export const TipDetailPage = () => {
     const { id } = useParams();
@@ -220,18 +276,36 @@ export const TipDetailPage = () => {
                                 <Sparkles className="w-5 h-5 text-primary animate-pulse" />
                                 <h2 className="text-xs font-black uppercase tracking-[0.4em] text-foreground">The Insight</h2>
                             </div>
-                            <p className="text-lg md:text-xl font-bold leading-snug text-foreground/90 mb-8 italic">
+                            <p className="text-lg md:text-xl font-bold leading-snug text-foreground/90 mb-6 italic">
                                 "{tip.content}"
                             </p>
-                            
-                            <div className={`p-6 border-l-4 border-primary ${
-                                isDark ? 'bg-card/50 rounded-r-lg' : 'bg-muted/30 rounded-r-2xl'
+
+                            {tip.tutorial ? (
+                                <div className="mt-6">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <BookOpen className="w-4 h-4 text-primary" />
+                                        <h3 className="text-xs font-black uppercase tracking-widest text-foreground">Step-by-Step Tutorial</h3>
+                                    </div>
+                                    <TutorialRenderer text={tip.tutorial} isDark={isDark} />
+                                </div>
+                            ) : (
+                                <div className={`p-6 border-l-4 border-primary ${
+                                    isDark ? 'bg-card/50 rounded-r-lg' : 'bg-muted/30 rounded-r-2xl'
+                                }`}>
+                                    <h4 className="text-[10px] font-black uppercase text-primary mb-2 italic">Engineering Verdict</h4>
+                                    <p className="text-xs leading-relaxed text-muted-foreground font-medium">
+                                        This insight focuses on {tip.category.toLowerCase()} excellence.
+                                        By applying this logic, you are optimizing for long-term maintainability and system performance.
+                                    </p>
+                                </div>
+                            )}
+
+                            <div className={`p-5 mt-6 border-l-4 border-primary/50 ${
+                                isDark ? 'bg-card/30 rounded-r-lg' : 'bg-muted/20 rounded-r-2xl'
                             }`}>
-                                <h4 className="text-[10px] font-black uppercase text-primary mb-2 italic">Detailed Analysis</h4>
-                                <p className="text-xs leading-relaxed text-muted-foreground font-medium">
-                                    Deep engineering cycles reveal that {tip.category} standards often dictate the lifespan of a deployment. 
-                                    By prioritizing this specific insight, you are opting for structural longevity over temporary velocity. 
-                                    High-end development is a marathon of consistency, not a sprint of hacks.
+                                <h4 className="text-[10px] font-black uppercase text-primary/70 mb-1.5 italic">Engineering Verdict</h4>
+                                <p className="text-xs leading-relaxed text-muted-foreground">
+                                    Mastering {tip.category.toLowerCase()} patterns is the difference between code that survives and code that scales.
                                 </p>
                             </div>
                         </motion.article>

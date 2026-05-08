@@ -1,28 +1,32 @@
-name: Supabase Heartbeat
+name: Daily Coding Tip
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Every day at midnight
-  workflow_dispatch: # Allows manual trigger
+    - cron: '0 0 * * *' # Every day at midnight UTC
+  workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
   heartbeat:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install Dependencies
         working-directory: ./app
-        run: npm install @supabase/supabase-js dotenv pg
+        run: npm install pg dotenv
 
       - name: Run Heartbeat
         working-directory: ./app
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: node scripts/heartbeat.js
+
+      - name: Report Status
+        if: always()
+        run: echo "Heartbeat completed at $(date -u)"

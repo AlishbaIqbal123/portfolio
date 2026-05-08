@@ -13,7 +13,8 @@ async function addTitleColumn() {
     console.log("Connected to Supabase PostgreSQL.");
     
     await client.query('ALTER TABLE coding_tips ADD COLUMN IF NOT EXISTS title TEXT;');
-    console.log("✅ Successfully added 'title' column to 'coding_tips' table.");
+    await client.query('ALTER TABLE coding_tips ADD COLUMN IF NOT EXISTS tutorial TEXT;');
+    console.log("✅ Successfully updated 'coding_tips' table with 'title' and 'tutorial' columns.");
     
   } catch (err) {
     console.error("❌ Failed to update schema:", err);

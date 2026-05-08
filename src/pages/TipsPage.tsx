@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Search, Calendar, ArrowRight, Loader2, Lightbulb } from 'lucide-react';
+import { Search, Calendar, ArrowRight, Loader2, Lightbulb, RefreshCw, Zap } from 'lucide-react';
 import { getCodingTips } from '@/lib/api';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -18,23 +18,32 @@ export function TipsPage() {
     const { isDark } = useTheme();
     const [tips, setTips] = useState<Tip[]>([]);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
+    const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('ALL');
     const navigate = useNavigate();
 
-    useEffect(() => {
-        async function fetchTips() {
-            try {
-                const data = await getCodingTips();
-                setTips(data || []);
-            } catch (err) {
-                console.error('Failed to fetch tips:', err);
-            } finally {
-                setLoading(false);
-            }
+    const fetchTips = useCallback(async (isRefresh = false) => {
+        if (isRefresh) setRefreshing(true);
+        try {
+            const data = await getCodingTips();
+            setTips(data || []);
+            setLastUpdated(new Date());
+        } catch (err) {
+            console.error('Failed to fetch tips:', err);
+        } finally {
+            setLoading(false);
+            setRefreshing(false);
         }
-        fetchTips();
     }, []);
+
+    useEffect(() => {
+        fetchTips();
+        // Auto-refresh every 5 minutes to pick up newly inserted tips
+        const interval = setInterval(() => fetchTips(true), 5 * 60 * 1000);
+        return () => clearInterval(interval);
+    }, [fetchTips]);
 
     const categories = ['ALL', ...Array.from(new Set(tips.filter(t => t?.category).map(tip => tip.category.toUpperCase())))];
 
@@ -52,21 +61,47 @@ export function TipsPage() {
             {/* Header */}
             <section className="pt-24 pb-8 px-6 md:px-16 lg:px-24">
                 <div className="max-w-6xl mx-auto">
-                    {!isDark ? (
+        {!isDark ? (
                         <div className="space-y-3">
-                            <p className="text-xs font-medium tracking-[0.2em] text-primary uppercase">Knowledge Base</p>
+                            <div className="flex items-center gap-3">
+                                <p className="text-xs font-medium tracking-[0.2em] text-primary uppercase">Knowledge Base</p>
+                                <span className="flex items-center gap-1.5 text-[10px] font-medium text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                    Live · Updated Daily
+                                </span>
+                            </div>
                             <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">Tips & Insights</h1>
-                            <p className="text-muted-foreground max-w-lg">
-                                Coding tips, design thinking, and engineering best practices.
-                            </p>
+                            <div className="flex items-center gap-4">
+                                <p className="text-muted-foreground max-w-lg">
+                                    Performance tips, algorithm optimizations, and engineering best practices.
+                                </p>
+                                {lastUpdated && (
+                                    <button onClick={() => fetchTips(true)} title="Refresh" className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-primary transition-colors shrink-0">
+                                        <RefreshCw className={`w-3 h-3 ${refreshing ? 'animate-spin' : ''}`} />
+                                        {refreshing ? 'Refreshing...' : `Updated ${lastUpdated.toLocaleTimeString()}`}
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     ) : (
                         <div className="text-center py-8">
-                            <p className="text-xs font-medium tracking-[0.3em] text-primary uppercase mb-3">Knowledge</p>
+                            <div className="flex items-center justify-center gap-2 mb-3">
+                                <p className="text-xs font-medium tracking-[0.3em] text-primary uppercase">Knowledge</p>
+                                <span className="flex items-center gap-1 text-[10px] font-medium text-emerald-500">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                    Live
+                                </span>
+                            </div>
                             <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground">Tips</h1>
                             <p className="text-muted-foreground mt-3 max-w-md mx-auto">
-                                Curated insights from my engineering experience.
+                                Performance optimizations & engineering insights, refreshed daily.
                             </p>
+                            {lastUpdated && (
+                                <button onClick={() => fetchTips(true)} className="mt-3 flex items-center gap-1 text-[10px] text-muted-foreground hover:text-primary transition-colors mx-auto">
+                                    <RefreshCw className={`w-3 h-3 ${refreshing ? 'animate-spin' : ''}`} />
+                                    {refreshing ? 'Refreshing...' : `Synced ${lastUpdated.toLocaleTimeString()}`}
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>
@@ -211,10 +246,16 @@ export function TipsPage() {
             {/* Footer CTA */}
             <section className="py-16 px-6 md:px-16 lg:px-24">
                 <div className={`max-w-4xl mx-auto p-10 md:p-16 text-center ${isDark ? 'architect-card' : 'silk-card'}`}>
-                    <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-3 text-foreground">More Coming Soon</h2>
+                    <Zap className="w-8 h-8 text-primary mx-auto mb-4 opacity-60" />
+                    <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-3 text-foreground">New Tip Every Day</h2>
                     <p className="text-muted-foreground max-w-md mx-auto">
-                        New tips and insights are added regularly. Check back for updates.
+                        Tips covering performance, algorithms, clean code, and modern JavaScript — automatically updated at midnight UTC.
                     </p>
+                    {lastUpdated && (
+                        <p className="text-xs text-muted-foreground/50 mt-4">
+                            Last synced: {lastUpdated.toLocaleString()}
+                        </p>
+                    )}
                 </div>
             </section>
         </div>
