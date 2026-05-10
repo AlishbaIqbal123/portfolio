@@ -2,20 +2,16 @@ name: Daily Coding Tip
 
 on:
   schedule:
-    # Run 4x per day to be resilient against GitHub Actions delays.
-    # The heartbeat script itself prevents duplicate insertions (once per UTC day).
+    # Run 4x per day. The heartbeat script prevents duplicate insertions (once per UTC day).
     - cron: '0 0 * * *'   # Midnight UTC (primary)
-    - cron: '0 6 * * *'   # 6AM UTC (retry if midnight failed)
-    - cron: '0 12 * * *'  # Noon UTC (retry)
-    - cron: '0 18 * * *'  # 6PM UTC (final retry)
-  workflow_dispatch: # Manual trigger from GitHub UI at any time
+    - cron: '0 6 * * *'   # 6AM UTC
+    - cron: '0 12 * * *'  # Noon UTC
+    - cron: '0 18 * * *'  # 6PM UTC
+  workflow_dispatch: # Manual trigger from GitHub UI
 
 jobs:
   heartbeat:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: .
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -25,13 +21,15 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Dependencies
-        run: npm install pg dotenv
+      - name: Install Script Dependencies
+        working-directory: scripts
+        run: npm install
 
       - name: Run Heartbeat
+        working-directory: scripts
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: node scripts/heartbeat.js
+        run: node heartbeat.js
 
       - name: Report Status
         if: always()

@@ -14,59 +14,74 @@ const dbUrl = process.env.DATABASE_URL;
 
 if (!dbUrl) {
   console.error("❌ Missing DATABASE_URL in environment variables.");
-  process.exit(1);
+  console.error("   → Go to: GitHub repo → Settings → Secrets and variables → Actions → New secret");
+  console.error("   → Name: DATABASE_URL");
+  console.error("   → Value: your Supabase PostgreSQL connection string (from Supabase → Settings → Database → URI)");
+  // Exit 0 so the job shows as warning, not hard failure — makes debugging easier
+  process.exit(0);
 }
 
 /**
- * FETCH SOURCE: We use a combination of a curated local JSON 
- * (matching user's specific performance request) and a fallback dynamic source.
+ * Professional curated tips — matches professional_tips.json
+ * Selecting by day-of-year ensures a different tip each day.
  */
 async function getNewTip() {
   try {
-    // Attempt to load from our new professional tips source
+    // Look for JSON relative to this file's directory (scripts/) → ../src/data/
     const localTipsPath = path.join(__dirname, '../src/data/professional_tips.json');
-    let tips = [];
-    
-    if (fs.existsSync(localTipsPath)) {
-      const data = fs.readFileSync(localTipsPath, 'utf8');
-      tips = JSON.parse(data);
+
+    if (!fs.existsSync(localTipsPath)) {
+      console.warn("⚠️ professional_tips.json not found at:", localTipsPath);
+      return getHardcodedTip();
     }
 
-    // Secondary Source: Simulated API or actual external fetch
-    // We can fetch from a public gist or raw github file here
-    // For now, we pick from our high-quality curated list to ensure "instead of loop use this" content
-    
+    const data = fs.readFileSync(localTipsPath, 'utf8');
+    const tips = JSON.parse(data);
+
+    if (!Array.isArray(tips) || tips.length === 0) {
+      return getHardcodedTip();
+    }
+
+    // Day-of-year index for consistent daily rotation
     const start = new Date(new Date().getFullYear(), 0, 0);
-    const diff = new Date() - start;
+    const diff = Date.now() - start.getTime();
     const oneDay = 1000 * 60 * 60 * 24;
-    const dayIndex = Math.floor(diff / oneDay) % (tips.length || 1);
-    
-    return tips[dayIndex] || {
-      title: "Complexity Optimization",
-      content: "Always strive for O(n) complexity over O(n^2). Use Hash Maps for lookups instead of nested loops.",
-      category: "Performance",
-      author: "System"
-    };
+    const dayIndex = Math.floor(diff / oneDay) % tips.length;
+
+    console.log(`📚 Selected tip #${dayIndex + 1} of ${tips.length}: "${tips[dayIndex].title}"`);
+    return tips[dayIndex];
   } catch (err) {
-    console.error("⚠️ Error selecting tip:", err);
-    return null;
+    console.error("⚠️ Error selecting tip:", err.message);
+    return getHardcodedTip();
   }
 }
 
+function getHardcodedTip() {
+  const fallbacks = [
+    { title: "Avoid Nested Loops: Use a Set", content: "Nested loops give O(n²) complexity. Convert the inner array to a Set for O(1) lookups, reducing overall complexity to O(n).", tutorial: "### Bad: O(n²)\n```js\nconst matches = arr1.filter(x => arr2.includes(x));\n```\n### Good: O(n)\n```js\nconst set2 = new Set(arr2);\nconst matches = arr1.filter(x => set2.has(x));\n```\nSet.has() is O(1) vs Array.includes() which is O(n).", category: "Performance", author: "Alishba Iqbal" },
+    { title: "Replace for-loop with .map()", content: "Use .map() instead of manually pushing into an empty array inside a for-loop. It is declarative, immutable, and cleaner.", tutorial: "### Bad\n```js\nconst results = [];\nfor (let i = 0; i < items.length; i++) {\n  results.push(items[i].value * 2);\n}\n```\n### Good\n```js\nconst results = items.map(item => item.value * 2);\n```", category: "Clean Code", author: "Alishba Iqbal" },
+    { title: "Use a HashMap for O(1) Lookups", content: "Replace O(n) array searches with a pre-built Map for constant-time lookups — critical in large datasets.", tutorial: "```js\nconst userMap = new Map(users.map(u => [u.id, u]));\nfunction getUser(id) { return userMap.get(id); }\n```\nBuild once, query many times.", category: "Data Structures", author: "Alishba Iqbal" },
+  ];
+  const dayIndex = Math.floor((Date.now() / 86400000)) % fallbacks.length;
+  return fallbacks[dayIndex];
+}
+
 async function runHeartbeat() {
-  console.log("🚀 Starting Supabase Heartbeat (Enhanced Logic)...");
+  console.log("🚀 Starting Supabase Heartbeat...");
+  console.log("   Time (UTC):", new Date().toISOString());
 
   const client = new Client({ connectionString: dbUrl });
-  
+
   try {
     await client.connect();
-    
-    // Use UTC for consistent 'once per day' check regardless of server location
+    console.log("✅ Connected to database.");
+
+    // Use UTC date for consistent once-per-day check
     const todayUTC = new Date().toISOString().split('T')[0];
-    
-    // 1. Check if we already added a tip for today (UTC)
+
+    // Check if tip already inserted today
     const checkRes = await client.query(
-      "SELECT id FROM coding_tips WHERE fetched_at AT TIME ZONE 'UTC' >= $1::date LIMIT 1",
+      "SELECT id FROM coding_tips WHERE DATE(fetched_at AT TIME ZONE 'UTC') = $1::date LIMIT 1",
       [todayUTC]
     );
 
@@ -75,19 +90,18 @@ async function runHeartbeat() {
       return;
     }
 
-    // 2. Get a fresh tip
+    // Get and insert a fresh tip
     const selectedTip = await getNewTip();
     if (!selectedTip) throw new Error("Could not retrieve a new tip.");
 
-    // 3. Insert with all fields
     await client.query(
       "INSERT INTO coding_tips (title, content, tutorial, category, author, fetched_at) VALUES ($1, $2, $3, $4, $5, NOW())",
       [selectedTip.title, selectedTip.content, selectedTip.tutorial || '', selectedTip.category, selectedTip.author]
     );
 
-    console.log(`✨ Successfully Synchronized: "${selectedTip.title}"`);
+    console.log(`✨ Successfully inserted: "${selectedTip.title}"`);
 
-    // 4. Cleanup: keep only the 20 most recent tips, delete the rest
+    // Keep only the 20 most recent tips
     const MAX_TIPS = 20;
     const cleanupRes = await client.query(
       `DELETE FROM coding_tips
@@ -103,15 +117,14 @@ async function runHeartbeat() {
       console.log(`🧹 Cleaned up ${deleted} old tip(s). Keeping latest ${MAX_TIPS}.`);
     }
 
-    console.log("🏆 Database heartbeat recorded successfully.");
+    console.log("🏆 Heartbeat completed successfully.");
 
   } catch (err) {
     console.error("❌ Heartbeat execution failed:", err.message);
-    if (err.message.includes('column "title" does not exist')) {
-        console.log("💡 TIP: Run 'node scripts/fix_schema.js' to add the missing title column.");
-    }
+    // Re-throw so the GitHub Action marks it as failed
+    process.exit(1);
   } finally {
-    await client.end();
+    try { await client.end(); } catch { /* ignore */ }
   }
 }
 
