@@ -13,6 +13,9 @@ on:
 jobs:
   heartbeat:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -23,11 +26,9 @@ jobs:
           node-version: 20
 
       - name: Install Dependencies
-        working-directory: ./app
         run: npm install pg dotenv
 
       - name: Run Heartbeat
-        working-directory: ./app
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: node scripts/heartbeat.js

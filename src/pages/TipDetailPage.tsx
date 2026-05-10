@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, Calendar, User, Loader2, Lightbulb, Heart, BookOpen, Sparkles, CheckCircle2, Quote, Code2 } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 import { SafeImage } from '@/components/ui/SafeImage';
+import { getCodingTips } from '@/lib/api';
 
 interface Tip {
     id: string;
@@ -22,17 +23,35 @@ const friendlyDetails: Record<string, { heading: string; points: string[]; emoji
         heading: '🏗️ Engineering Wisdom',
         emoji: '🔧',
         points: [
-            'Clean code is not about perfection, but about being kind to the next person who reads it (most likely you).',
+            'Clean code is not about perfection, but about being kind to the next person who reads it.',
             'Automated testing is the insurance policy for your future productivity.',
             'Design patterns are vocabularies that help engineers communicate complex ideas efficiently.',
+        ]
+    },
+    'programming': {
+        heading: '💻 Programming Craft',
+        emoji: '⌨️',
+        points: [
+            'Write code for humans first, machines second. Clarity beats cleverness every time.',
+            'The best optimization is the one you do not have to make — design algorithms well from the start.',
+            'Master one language deeply before adding another. Depth beats breadth early in your career.',
+        ]
+    },
+    'clean code': {
+        heading: '🧹 Clean Code Principles',
+        emoji: '✨',
+        points: [
+            'Functions should do one thing, do it well, and do it only.',
+            'Names are documentation. A good variable name eliminates the need for a comment.',
+            'Leave the codebase cleaner than you found it — always.',
         ]
     },
     'frontend': {
         heading: '🎨 Interface Excellence',
         emoji: '✨',
         points: [
-            'Visual stability isn\'t just about aesthetics — it\'s about user trust and accessibility.',
-            'Responsive design is the standard. If it doesn\'t work on a phone, it doesn\'t truly exist.',
+            'Visual stability is not just about aesthetics — it is about user trust and accessibility.',
+            'Responsive design is the standard. If it does not work on a phone, it does not truly exist.',
             'Performance is a feature. Every millisecond saved is a friction point removed.',
         ]
     },
@@ -51,7 +70,25 @@ const friendlyDetails: Record<string, { heading: string; points: string[]; emoji
         points: [
             'Architecture is about making the important decisions now so you can make smaller ones later.',
             'Loose coupling and high cohesion are the twin pillars of a resilient system.',
-            'Good architecture handles requirements that haven\'t been written yet.',
+            'Good architecture handles requirements that have not been written yet.',
+        ]
+    },
+    'algorithms': {
+        heading: '🔢 Algorithm Mastery',
+        emoji: '🧮',
+        points: [
+            'Choose the right data structure first — the algorithm follows naturally.',
+            'Big O notation is the universal language of efficiency. Speak it fluently.',
+            'A O(n log n) solution beats O(n²) at scale — always measure before optimizing.',
+        ]
+    },
+    'performance': {
+        heading: '⚡ Performance Engineering',
+        emoji: '🚀',
+        points: [
+            'Measure first, optimize second. Never guess where the bottleneck is.',
+            'Cache aggressively, but invalidate carefully. Stale data is worse than slow data.',
+            'The fastest code is the code that does not run. Eliminate before you optimize.',
         ]
     },
     'database': {
@@ -60,27 +97,70 @@ const friendlyDetails: Record<string, { heading: string; points: string[]; emoji
         points: [
             'Data is the ultimate source of truth. Protecting it is your most important job.',
             'Indexes are like library catalogs — they make finding things fast, but they take up space.',
-            'Normalization reduces redundancy; Denormalization increases performance. Choose wisely.',
+            'Normalization reduces redundancy; denormalization increases performance. Choose wisely.',
+        ]
+    },
+    'modern js': {
+        heading: '🟨 Modern JavaScript',
+        emoji: '⚡',
+        points: [
+            'ES6+ features are not just syntax sugar — they encode best practices into the language.',
+            'Optional chaining and nullish coalescing eliminate entire categories of null-pointer bugs.',
+            'Destructuring makes intent explicit and code self-documenting.',
+        ]
+    },
+    'best practices': {
+        heading: '🎯 Professional Standards',
+        emoji: '🏆',
+        points: [
+            'Best practices are distilled lessons from thousands of engineers who learned the hard way.',
+            'Code reviews are not about finding bugs — they are about transferring knowledge.',
+            'Documentation is a gift to your future self.',
+        ]
+    },
+    'it operations': {
+        heading: '🛠️ IT Operations',
+        emoji: '🔩',
+        points: [
+            'Infrastructure as code makes your environment reproducible and auditable.',
+            'Version control every configuration — your server setup is code too.',
+            'Monitoring and alerting are not optional in production. You cannot fix what you cannot see.',
+        ]
+    },
+    'data structures': {
+        heading: '🗂️ Data Structures',
+        emoji: '📊',
+        points: [
+            'Choosing the right data structure can reduce your time complexity by orders of magnitude.',
+            'Maps and Sets solve the majority of lookup and uniqueness problems in O(1).',
+            'Trees and graphs model relationships that arrays and objects cannot.',
         ]
     },
     'default': {
-        heading: '✨ Pro Tips',
+        heading: '✨ Engineering Wisdom',
         emoji: '🌟',
         points: [
-            'The best tool is the one you know how to use well, but the best dev is the one who keeps learning new ones.',
-            'Don\'t just fix the bug — understand why it happened to prevent an entire class of errors.',
-            'Write code as if you\'re writing a letter to your future self.',
+            'The best tool is the one you know how to use well, but the best dev is the one who keeps learning.',
+            'Do not just fix the bug — understand why it happened to prevent an entire class of errors.',
+            'Write code as if you are writing a letter to your future self.',
         ]
     }
 };
 
 const inspirationalQuotes: Record<string, { quote: string; by: string }> = {
     'frontend': { quote: 'Design is not just what it looks like. Design is how it works.', by: 'Steve Jobs' },
-    'backend': { quote: 'The best code is no code at all. Every new line is a potential bug.', by: 'Jeff Atwood' },
+    'backend': { quote: 'The best code is no code at all. Every new line of code you write is a line you will have to debug.', by: 'Jeff Atwood' },
     'software engineering': { quote: 'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.', by: 'Martin Fowler' },
+    'programming': { quote: 'Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.', by: 'Martin Golding' },
     'performance': { quote: 'Premature optimization is the root of all evil.', by: 'Donald Knuth' },
     'algorithms': { quote: 'An algorithm must be seen to be believed.', by: 'Donald Knuth' },
-    'clean code': { quote: 'Any fool can write code that a computer can understand.', by: 'Martin Fowler' },
+    'clean code': { quote: 'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.', by: 'Martin Fowler' },
+    'database': { quote: 'Data is a precious thing and will last longer than the systems themselves.', by: 'Tim Berners-Lee' },
+    'architecture': { quote: 'Make it work, make it right, make it fast.', by: 'Kent Beck' },
+    'best practices': { quote: 'First, solve the problem. Then, write the code.', by: 'John Johnson' },
+    'modern js': { quote: 'JavaScript is the world\'s most misunderstood programming language.', by: 'Douglas Crockford' },
+    'data structures': { quote: 'Bad programmers worry about the code. Good programmers worry about data structures and their relationships.', by: 'Linus Torvalds' },
+    'it operations': { quote: 'The key to DevOps is eliminating the distinction between build and run.', by: 'Werner Vogels' },
     'default': { quote: 'Simplicity is the soul of efficiency.', by: 'Austin Freeman' },
 };
 
@@ -154,13 +234,25 @@ export const TipDetailPage = () => {
 
     useEffect(() => {
         const fetchTip = async () => {
+            // Try database first
             const { data } = await supabase
                 .from('coding_tips')
                 .select('*')
                 .eq('id', id)
                 .single();
                 
-            if (data) setTip(data);
+            if (data) {
+                setTip(data);
+                setLoading(false);
+                return;
+            }
+
+            // Fallback: search static tips (handles st_* IDs)
+            try {
+                const allTips = await getCodingTips();
+                const found = allTips.find((t: { id: string }) => t.id === id);
+                if (found) setTip(found as Tip);
+            } catch { /* ignore */ }
             setLoading(false);
         };
         fetchTip();
@@ -298,24 +390,14 @@ export const TipDetailPage = () => {
                                     </div>
                                     <TutorialRenderer text={tip.tutorial} isDark={isDark} />
                                 </div>
-                            ) : (
-                                <div className={`p-6 border-l-4 border-primary ${
-                                    isDark ? 'bg-card/50 rounded-r-lg' : 'bg-muted/30 rounded-r-2xl'
-                                }`}>
-                                    <h4 className="text-[10px] font-black uppercase text-primary mb-2 italic">Engineering Verdict</h4>
-                                    <p className="text-xs leading-relaxed text-muted-foreground font-medium">
-                                        This insight focuses on {tip.category.toLowerCase()} excellence.
-                                        By applying this logic, you are optimizing for long-term maintainability and system performance.
-                                    </p>
-                                </div>
-                            )}
+                            ) : null}
 
                             <div className={`p-5 mt-6 border-l-4 border-primary/50 ${
                                 isDark ? 'bg-card/30 rounded-r-lg' : 'bg-muted/20 rounded-r-2xl'
                             }`}>
-                                <h4 className="text-[10px] font-black uppercase text-primary/70 mb-1.5 italic">Engineering Verdict</h4>
+                                <h4 className="text-[10px] font-black uppercase text-primary/70 mb-1.5 italic">Why This Matters</h4>
                                 <p className="text-xs leading-relaxed text-muted-foreground">
-                                    Mastering {tip.category.toLowerCase()} patterns is the difference between code that survives and code that scales.
+                                    Mastering {tip.category.toLowerCase()} patterns is the difference between code that survives and code that scales. Apply this consistently and compound the gains over every project.
                                 </p>
                             </div>
                         </motion.article>
