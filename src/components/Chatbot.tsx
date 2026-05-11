@@ -159,20 +159,21 @@ export function Chatbot() {
                                             ? 'bg-primary text-primary-foreground rounded-tr-none' 
                                             : 'bg-muted/50 border border-primary/10 text-foreground rounded-tl-none backdrop-blur-sm'
                                     }`}>
-                                        <ReactMarkdown 
-                                            remarkPlugins={[remarkGfm]}
-                                            className="prose prose-sm dark:prose-invert max-w-none break-words"
-                                            components={{
-                                                p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-                                                ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
-                                                ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
-                                                li: ({ children }) => <li className="mb-1">{children}</li>,
-                                                strong: ({ children }) => <span className="font-bold text-primary">{children}</span>,
-                                                code: ({ children }) => <code className="bg-primary/10 px-1 rounded text-xs font-mono">{children}</code>
-                                            }}
-                                        >
-                                            {msg.content}
-                                        </ReactMarkdown>
+                                        <div className="prose prose-sm dark:prose-invert max-w-none break-words">
+                                            <ReactMarkdown 
+                                                remarkPlugins={[remarkGfm]}
+                                                components={{
+                                                    p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                                                    ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
+                                                    ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
+                                                    li: ({ children }) => <li className="mb-1">{children}</li>,
+                                                    strong: ({ children }) => <span className="font-bold text-primary">{children}</span>,
+                                                    code: ({ children }) => <code className="bg-primary/10 px-1 rounded text-xs font-mono">{children}</code>
+                                                }}
+                                            >
+                                                {msg.content}
+                                            </ReactMarkdown>
+                                        </div>
                                     </div>
                                 </motion.div>
                             ))}
