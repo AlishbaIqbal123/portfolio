@@ -62,28 +62,30 @@ export function Chatbot() {
                 parts: [{ text: m.content }]
             }));
 
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-goog-api-key': apiKey 
+                },
                 body: JSON.stringify({
-                    system_instruction: {
-                        parts: [{ text: `You are Alishba's expert AI assistant. Your tone is professional, senior-engineer level, and extremely concise. 
-                        
-                        Context:
-                        ${context}
-                        
-                        Strict Rules:
-                        1. BE CONCISE. Give "to the point" answers. Do not use filler text.
-                        2. If asked about current work: Check the Experience section. If no role is listed as "Present", she is currently available for new opportunities. Answer directly: "She is currently focused on her projects and available for work." or similar.
-                        3. Format your answers using Markdown (bolding, bullet points) for readability.
-                        4. Only answer based on the provided context.` }]
-                    },
                     contents: [
+                        { 
+                            role: 'user', 
+                            parts: [{ text: `SYSTEM: You are Alishba's expert AI assistant. Professional, senior-engineer level, extremely concise. 
+                            Context: ${context}
+                            Rules: BE CONCISE. Give "to the point" answers. Format with Markdown.
+                            Current Status: If asked about work, answer directly if she is available.` }] 
+                        },
+                        {
+                            role: 'model',
+                            parts: [{ text: "Understood. I will provide concise, professional, and properly formatted information about Alishba Iqbal." }]
+                        },
                         ...history,
                         { role: 'user', parts: [{ text: userMessage }] }
                     ],
                     generationConfig: {
-                        temperature: 0.8,
+                        temperature: 0.7,
                         maxOutputTokens: 1000,
                     }
                 })
