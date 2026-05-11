@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Search, Calendar, ArrowRight, Loader2, Lightbulb, RefreshCw, Zap } from 'lucide-react';
+import { Search, Calendar, ArrowRight, Loader2, Lightbulb, RefreshCw, Zap, Sparkles, User } from 'lucide-react';
 import { getCodingTips } from '@/lib/api';
 import { useTheme } from '@/hooks/useTheme';
 
