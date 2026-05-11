@@ -53,7 +53,7 @@ export function EducationPage() {
              school: edu.school || edu.institution || '',
              location: edu.location || '',
              duration: edu.duration || edu.date || edu.period || '',
-             grade: edu.grade || edu.cgpa || '',
+             grade: edu.grade || '',
              description: Array.isArray(edu.description) ? edu.description : typeof edu.description === 'string' ? edu.description.split('\n').filter(Boolean) : [],
           }));
           setEduLocal(normalized);

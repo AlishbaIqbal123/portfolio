@@ -73,6 +73,8 @@ function AnimatedRoutes() {
   );
 }
 
+import { Chatbot } from '@/components/Chatbot';
+
 function AppLayout() {
   const location = useLocation();
   const { isDark } = useTheme();
@@ -87,6 +89,9 @@ function AppLayout() {
       
       {!isAdmin && <GadgetBackground />}
       {!isAdmin && !isDemo && <Navbar />}
+      
+      {/* AI Chatbot Helper */}
+      {!isAdmin && <Chatbot />}
 
       {/* 
           Dynamic Content Padding:

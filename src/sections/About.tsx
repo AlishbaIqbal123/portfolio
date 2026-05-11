@@ -54,7 +54,7 @@ export function About() {
   }, []);
 
   const stats = [
-    { label: 'CGPA', value: parseFloat(data?.stats?.cgpa || '3.67'), suffix: '', isDecimal: true },
+    { label: 'Success Rate', value: 100, suffix: '%' },
     { label: 'Projects', value: parseInt(data?.stats?.projects || '10'), suffix: '+' },
     { label: 'Internships', value: parseInt(data?.stats?.internships || '2'), suffix: '+' },
   ];
@@ -116,11 +116,7 @@ export function About() {
                   className="text-center"
                 >
                   <div className="text-3xl md:text-4xl font-bold text-[#e1bb80] font-['Playfair_Display']">
-                    {stat.isDecimal ? (
-                      <span>{data?.stats?.cgpa || '3.67'}</span>
-                    ) : (
-                      <CountUp end={stat.value} suffix={stat.suffix} />
-                    )}
+                    <CountUp end={stat.value} suffix={stat.suffix} />
                   </div>
                   <div className="text-white/50 text-sm mt-1">{stat.label}</div>
                 </motion.div>

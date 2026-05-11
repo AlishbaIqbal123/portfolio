@@ -34,7 +34,7 @@ export const AdminEducation = () => {
         // Explicitly name columns to avoid 'date'/'institution' schema cache errors
         const { data, error } = await supabase
             .from('education')
-            .select('id, school, degree, duration, cgpa, location, status, details, achievements, order_index, created_at')
+            .select('id, school, degree, duration, location, status, details, achievements, order_index, created_at')
             .order('id', { ascending: false });
 
         if (error) {

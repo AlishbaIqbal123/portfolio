@@ -25,9 +25,8 @@ if (!dbUrl) {
  * Professional curated tips — matches professional_tips.json
  * Selecting by day-of-year ensures a different tip each day.
  */
-async function getNewTip() {
+async function getNewTip(currentTips = []) {
   try {
-    // Look for JSON relative to this file's directory (scripts/) → ../src/data/
     const localTipsPath = path.join(__dirname, '../src/data/professional_tips.json');
 
     if (!fs.existsSync(localTipsPath)) {
@@ -36,20 +35,52 @@ async function getNewTip() {
     }
 
     const data = fs.readFileSync(localTipsPath, 'utf8');
-    const tips = JSON.parse(data);
+    const allTips = JSON.parse(data);
 
-    if (!Array.isArray(tips) || tips.length === 0) {
+    if (!Array.isArray(allTips) || allTips.length === 0) {
       return getHardcodedTip();
     }
 
-    // Day-of-year index for consistent daily rotation
-    const start = new Date(new Date().getFullYear(), 0, 0);
-    const diff = Date.now() - start.getTime();
-    const oneDay = 1000 * 60 * 60 * 24;
-    const dayIndex = Math.floor(diff / oneDay) % tips.length;
+    // Smart Selection: Prioritize under-represented categories
+    const categoryCounts = {};
+    currentTips.forEach(tip => {
+      categoryCounts[tip.category] = (categoryCounts[tip.category] || 0) + 1;
+    });
 
-    console.log(`📚 Selected tip #${dayIndex + 1} of ${tips.length}: "${tips[dayIndex].title}"`);
-    return tips[dayIndex];
+    // Get all available categories from the full library
+    const allCategories = [...new Set(allTips.map(t => t.category))];
+    
+    // Find categories that are missing or have the fewest entries in the current set
+    const categoryFrequencies = allCategories.map(cat => ({
+      category: cat,
+      count: categoryCounts[cat] || 0
+    })).sort((a, b) => a.count - b.count);
+
+    const minCount = categoryFrequencies[0].count;
+    const priorityCategories = categoryFrequencies
+      .filter(f => f.count === minCount)
+      .map(f => f.category);
+
+    // Filter library tips for these priority categories
+    let pool = allTips.filter(t => priorityCategories.includes(t.category));
+    
+    // Also ensure we don't pick the exact same tip as the most recent ones
+    const recentTitles = currentTips.slice(0, 15).map(t => t.title);
+    pool = pool.filter(t => !recentTitles.includes(t.title));
+
+    // Fallback if priority pool is empty
+    if (pool.length === 0) {
+      pool = allTips.filter(t => !recentTitles.includes(t.title));
+    }
+    if (pool.length === 0) pool = allTips;
+
+    // Random selection from the pool for variety
+    const selected = pool[Math.floor(Math.random() * pool.length)];
+    
+    console.log(`🎯 Category Priority: ${priorityCategories.join(', ')} (count: ${minCount})`);
+    console.log(`✨ Selected Tip: "${selected.title}" [${selected.category}]`);
+    
+    return selected;
   } catch (err) {
     console.error("⚠️ Error selecting tip:", err.message);
     return getHardcodedTip();
@@ -60,10 +91,8 @@ function getHardcodedTip() {
   const fallbacks = [
     { title: "Avoid Nested Loops: Use a Set", content: "Nested loops give O(n²) complexity. Convert the inner array to a Set for O(1) lookups, reducing overall complexity to O(n).", tutorial: "### Bad: O(n²)\n```js\nconst matches = arr1.filter(x => arr2.includes(x));\n```\n### Good: O(n)\n```js\nconst set2 = new Set(arr2);\nconst matches = arr1.filter(x => set2.has(x));\n```\nSet.has() is O(1) vs Array.includes() which is O(n).", category: "Performance", author: "Alishba Iqbal" },
     { title: "Replace for-loop with .map()", content: "Use .map() instead of manually pushing into an empty array inside a for-loop. It is declarative, immutable, and cleaner.", tutorial: "### Bad\n```js\nconst results = [];\nfor (let i = 0; i < items.length; i++) {\n  results.push(items[i].value * 2);\n}\n```\n### Good\n```js\nconst results = items.map(item => item.value * 2);\n```", category: "Clean Code", author: "Alishba Iqbal" },
-    { title: "Use a HashMap for O(1) Lookups", content: "Replace O(n) array searches with a pre-built Map for constant-time lookups — critical in large datasets.", tutorial: "```js\nconst userMap = new Map(users.map(u => [u.id, u]));\nfunction getUser(id) { return userMap.get(id); }\n```\nBuild once, query many times.", category: "Data Structures", author: "Alishba Iqbal" },
   ];
-  const dayIndex = Math.floor((Date.now() / 86400000)) % fallbacks.length;
-  return fallbacks[dayIndex];
+  return fallbacks[Math.floor(Math.random() * fallbacks.length)];
 }
 
 async function runHeartbeat() {
@@ -76,33 +105,26 @@ async function runHeartbeat() {
     await client.connect();
     console.log("✅ Connected to database.");
 
-    // Use UTC date for consistent once-per-day check
-    const todayUTC = new Date().toISOString().split('T')[0];
-
-    // Check if tip already inserted today
-    const checkRes = await client.query(
-      "SELECT id FROM coding_tips WHERE DATE(fetched_at AT TIME ZONE 'UTC') = $1::date LIMIT 1",
-      [todayUTC]
+    // Fetch current tips to inform selection and handle rotation
+    const currentRes = await client.query(
+      "SELECT title, category, fetched_at FROM coding_tips ORDER BY fetched_at DESC LIMIT 50"
     );
+    const currentTips = currentRes.rows;
 
-    if (checkRes.rows.length > 0) {
-      console.log("✅ Tip already exists for today (UTC). No new insertion needed.");
-      return;
-    }
-
-    // Get and insert a fresh tip
-    const selectedTip = await getNewTip();
+    // Get a fresh tip using the smart selection logic
+    const selectedTip = await getNewTip(currentTips);
     if (!selectedTip) throw new Error("Could not retrieve a new tip.");
 
+    // Insert the new tip
     await client.query(
       "INSERT INTO coding_tips (title, content, tutorial, category, author, fetched_at) VALUES ($1, $2, $3, $4, $5, NOW())",
       [selectedTip.title, selectedTip.content, selectedTip.tutorial || '', selectedTip.category, selectedTip.author]
     );
 
-    console.log(`✨ Successfully inserted: "${selectedTip.title}"`);
+    console.log(`✅ Successfully inserted: "${selectedTip.title}"`);
 
-    // Keep only the 20 most recent tips
-    const MAX_TIPS = 20;
+    // Retention: Keep 30 tips (increased from 20 for better category coverage)
+    const MAX_TIPS = 30;
     const cleanupRes = await client.query(
       `DELETE FROM coding_tips
        WHERE id NOT IN (
@@ -112,6 +134,7 @@ async function runHeartbeat() {
        )`,
       [MAX_TIPS]
     );
+    
     const deleted = cleanupRes.rowCount ?? 0;
     if (deleted > 0) {
       console.log(`🧹 Cleaned up ${deleted} old tip(s). Keeping latest ${MAX_TIPS}.`);
@@ -121,7 +144,6 @@ async function runHeartbeat() {
 
   } catch (err) {
     console.error("❌ Heartbeat execution failed:", err.message);
-    // Re-throw so the GitHub Action marks it as failed
     process.exit(1);
   } finally {
     try { await client.end(); } catch { /* ignore */ }

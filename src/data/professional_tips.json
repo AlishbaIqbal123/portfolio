@@ -215,5 +215,75 @@
     "tutorial": "### Tightly coupled (hard to test)\n```js\nfunction sendEmail(to, msg) {\n  const mailer = new ProductionMailer(); // Hardcoded!\n  mailer.send(to, msg);\n}\n```\n### Dependency injection (easy to test)\n```js\nfunction sendEmail(to, msg, mailer) {\n  mailer.send(to, msg);\n}\n// In tests:\nsendEmail('a@b.com', 'hello', new MockMailer());\n// In production:\nsendEmail('a@b.com', 'hello', new ProductionMailer());\n```",
     "category": "Architecture",
     "author": "Alishba Iqbal"
+  },
+  {
+    "title": "DocumentFragment: Batch DOM Updates",
+    "content": "Updating the DOM is expensive. Instead of appending elements one by one, use a DocumentFragment to batch them into a single reflow.",
+    "tutorial": "### Bad: Multiple Reflows\n```js\nconst list = document.getElementById('list');\nitems.forEach(item => {\n  const li = document.createElement('li');\n  li.textContent = item;\n  list.appendChild(li); // Causes a reflow every time!\n});\n```\n### Good: Single Reflow\n```js\nconst fragment = document.createDocumentFragment();\nitems.forEach(item => {\n  const li = document.createElement('li');\n  li.textContent = item;\n  fragment.appendChild(li);\n});\nlist.appendChild(fragment); // Only one reflow\n```\nBatching DOM operations is critical for UI performance.",
+    "category": "Frontend",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "Bitwise Operators for Performance",
+    "content": "For extremely performance-critical logic like graphics or high-frequency calculations, bitwise operators (<<, >>, |) are much faster than Math functions.",
+    "tutorial": "### Math.floor Replacement\n```js\n// Instead of:\nconst x = Math.floor(y / 2);\n// Use Bitwise Shift:\nconst x = y >> 1;\n```\n### Math.trunc Replacement\n```js\nconst truncated = 12.34 | 0; // 12\n```\nNote: Use sparingly as it reduces readability. Only for hot code paths.",
+    "category": "Performance",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "Generators for Memory Efficiency",
+    "content": "When processing massive datasets, use Generators (function*) to yield items one-by-one instead of loading the entire array into memory.",
+    "tutorial": "### Memory Intensive\n```js\nfunction getLargeData() {\n  return Array.from({ length: 1000000 }, (_, i) => i);\n}\nconst data = getLargeData(); // Allocates huge array immediately\n```\n### Memory Efficient\n```js\nfunction* dataGenerator() {\n  for (let i = 0; i < 1000000; i++) {\n    yield i;\n  }\n}\nconst data = dataGenerator(); // No allocation yet\nfor (const item of data) { /* process one by one */ }\n```",
+    "category": "Architecture",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "Web Workers for Heavy Computing",
+    "content": "Don't block the main thread. Move heavy computations (sorting large sets, image processing) to a Web Worker to keep the UI responsive.",
+    "tutorial": "### Main Thread (Blocks UI)\n```js\nconst result = heavyCalculation(data);\n```\n### Web Worker (Background)\n```js\nconst worker = new Worker('worker.js');\nworker.postMessage(data);\nworker.onmessage = (e) => {\n  console.log('Result:', e.data);\n};\n```\nKeep the main thread for UI and events only.",
+    "category": "Frontend",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "Tail Call Optimization (TCO)",
+    "content": "Write recursive functions in 'tail position' to allow the engine to reuse the stack frame, preventing 'Maximum call stack size exceeded' errors.",
+    "tutorial": "### Non-Tail Recursive (Danger)\n```js\nfunction factorial(n) {\n  if (n === 1) return 1;\n  return n * factorial(n - 1); // Multiplication happens AFTER call\n}\n```\n### Tail Recursive (Safe)\n```js\nfunction factorial(n, acc = 1) {\n  if (n === 1) return acc;\n  return factorial(n - 1, n * acc); // Recursive call is the LAST thing\n}\n```\nNote: TCO is part of the ES6 spec, but browser support varies.",
+    "category": "Algorithms",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "Intersection Observer: Efficient Lazy Loading",
+    "content": "Stop using scroll listeners for lazy loading. Intersection Observer is browser-native, asynchronous, and significantly more performant.",
+    "tutorial": "### Bad: Scroll Listener (Heavy)\n```js\nwindow.addEventListener('scroll', () => {\n  if (isInViewport(img)) loadImg(img);\n}); // Fires constantly!\n```\n### Good: Intersection Observer (Light)\n```js\nconst observer = new IntersectionObserver((entries) => {\n  entries.forEach(entry => {\n    if (entry.isIntersecting) {\n      loadImg(entry.target);\n      observer.unobserve(entry.target);\n    }\n  });\n});\nobserver.observe(img);\n```",
+    "category": "Frontend",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "CSS Contain: Isolate Layout Costs",
+    "content": "Use the 'contain' property to tell the browser that an element's subtree is independent, preventing layout changes from triggering global reflows.",
+    "tutorial": "### Isolate a complex component\n```css\n.complex-widget {\n  contain: content;\n  /* or contain: layout paint size; */\n}\n```\nThis informs the browser that nothing inside this element affects the layout of anything outside it. Huge performance win for dynamic UIs.",
+    "category": "Frontend",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "JSONB vs JSON in PostgreSQL",
+    "content": "Always prefer JSONB over JSON in Postgres. JSONB is stored in binary format, supports GIN indexing, and is faster for queries, despite a slightly higher ingestion cost.",
+    "tutorial": "### Create table with JSONB\n```sql\nCREATE TABLE logs (\n  id SERIAL PRIMARY KEY,\n  data JSONB\n);\n```\n### Index a specific field\n```sql\nCREATE INDEX idx_user_id ON logs ((data->>'user_id'));\n```\nUse JSONB for everything except cases where you must preserve exact whitespace or key ordering.",
+    "category": "Database",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "Service Workers for Offline-First",
+    "content": "Use Service Workers to intercept network requests and serve cached assets immediately, enabling offline access and near-instant load times.",
+    "tutorial": "### Register Worker\n```js\nnavigator.serviceWorker.register('/sw.js');\n```\n### sw.js: Cache-first Strategy\n```js\nself.addEventListener('fetch', (event) => {\n  event.respondWith(\n    caches.match(event.request).then(res => {\n      return res || fetch(event.request);\n    })\n  );\n});\n```",
+    "category": "Architecture",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "React Error Boundaries",
+    "content": "Wrap high-risk components in Error Boundaries to catch JavaScript errors in their child component tree and display a fallback UI instead of crashing the whole app.",
+    "tutorial": "### Error Boundary Component\n```jsx\nclass ErrorBoundary extends React.Component {\n  componentDidCatch(error, info) {\n    logError(error, info);\n  }\n  render() {\n    if (this.state.hasError) return <h1>Something went wrong.</h1>;\n    return this.props.children;\n  }\n}\n```\n### Usage\n```jsx\n<ErrorBoundary>\n  <ComplexWidget />\n</ErrorBoundary>\n```",
+    "category": "Best Practices",
+    "author": "Alishba Iqbal"
   }
 ]
