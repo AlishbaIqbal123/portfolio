@@ -123,15 +123,23 @@ async function runHeartbeat() {
 
     console.log(`✅ Successfully inserted: "${selectedTip.title}"`);
 
-    // Retention: Keep 30 tips (increased from 20 for better category coverage)
+    // Perfection Retention: Keep the 30 newest tips OVERALL, 
+    // BUT also ensure we never delete the "last remaining" tip of any category.
+    // This guarantees "each category has a tip" as requested.
     const MAX_TIPS = 30;
     const cleanupRes = await client.query(
-      `DELETE FROM coding_tips
-       WHERE id NOT IN (
-         SELECT id FROM coding_tips
-         ORDER BY fetched_at DESC
+      `WITH LatestPerCategory AS (
+         SELECT id, ROW_NUMBER() OVER(PARTITION BY category ORDER BY fetched_at DESC) as rank
+         FROM coding_tips
+       ),
+       NewestOverall AS (
+         SELECT id FROM coding_tips 
+         ORDER BY fetched_at DESC 
          LIMIT $1
-       )`,
+       )
+       DELETE FROM coding_tips
+       WHERE id NOT IN (SELECT id FROM NewestOverall)
+       AND id NOT IN (SELECT id FROM LatestPerCategory WHERE rank = 1)`,
       [MAX_TIPS]
     );
     

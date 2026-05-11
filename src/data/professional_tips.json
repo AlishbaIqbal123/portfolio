@@ -285,5 +285,40 @@
     "tutorial": "### Error Boundary Component\n```jsx\nclass ErrorBoundary extends React.Component {\n  componentDidCatch(error, info) {\n    logError(error, info);\n  }\n  render() {\n    if (this.state.hasError) return <h1>Something went wrong.</h1>;\n    return this.props.children;\n  }\n}\n```\n### Usage\n```jsx\n<ErrorBoundary>\n  <ComplexWidget />\n</ErrorBoundary>\n```",
     "category": "Best Practices",
     "author": "Alishba Iqbal"
+  },
+  {
+    "title": "O(n) Lookups: Map vs Nested Loops",
+    "content": "Stop using nested loops to find matching items. Use a Hash Map (Object or Map in JS) to reduce time complexity from O(n²) to O(n).",
+    "tutorial": "### Bad: Nested Loops (O(n²))\n```js\nfor (let user of users) {\n  const profile = profiles.find(p => p.id === user.id);\n}\n```\n### Good: Hash Map Lookup (O(n))\n```js\nconst profileMap = new Map(profiles.map(p => [p.id, p]));\nfor (let user of users) {\n  const profile = profileMap.get(user.id);\n}\n```\nThis is the difference between an app that lags with 1,000 items and one that flies with 1,000,000.",
+    "category": "Algorithms",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "Safe Navigation: Optional Chaining",
+    "content": "Stop writing long chains of null checks. Use Optional Chaining (?.) to safely access deeply nested properties and improve readability.",
+    "tutorial": "### Bad: Verbose Checks\n```js\nconst city = user && user.address && user.address.city;\n```\n### Good: Optional Chaining\n```js\nconst city = user?.address?.city ?? 'Unknown';\n```\nIt's cleaner, less error-prone, and built into modern JavaScript engines.",
+    "category": "Modern JS",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "React: Referential Identity with useCallback",
+    "content": "Prevent unnecessary child re-renders by wrapping event handlers in useCallback. This ensures the function reference stays stable across renders.",
+    "tutorial": "### Issue: Function recreation\n```jsx\nconst handleClick = () => log(id);\n<Child onClick={handleClick} /> // Always re-renders Child\n```\n### Solution: useCallback\n```jsx\nconst handleClick = useCallback(() => log(id), [id]);\n<Child onClick={handleClick} /> // Only re-renders if id changes\n```",
+    "category": "Frontend",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "Node.js: Processing Large Files with Streams",
+    "content": "Never read large files into memory with fs.readFile. Use Streams to process data in chunks, preventing memory overflow and keeping your server responsive.",
+    "tutorial": "### Bad: Memory Intensive (Buffer)\n```js\nconst data = fs.readFileSync('huge-log.txt'); // Server crashes!\n```\n### Good: Memory Efficient (Stream)\n```js\nconst stream = fs.createReadStream('huge-log.txt');\nstream.on('data', (chunk) => process(chunk));\n```",
+    "category": "Architecture",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "Flutter: Const Constructors for Performance",
+    "content": "Use 'const' for widget constructors whenever possible. This tells Flutter the widget won't change, allowing it to skip the rebuild and reuse the element.",
+    "tutorial": "### Bad: Rebuilds every time\n```dart\nreturn Column(children: [Text('Static Title')]);\n```\n### Good: Cached Widget\n```dart\nreturn Column(children: [const Text('Static Title')]);\n```\nIn complex apps, this dramatically reduces the load on the UI thread.",
+    "category": "Modern JS",
+    "author": "Alishba Iqbal"
   }
 ]
