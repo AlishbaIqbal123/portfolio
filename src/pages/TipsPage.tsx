@@ -153,86 +153,127 @@ export function TipsPage() {
                             <span className="text-sm text-muted-foreground">Loading tips...</span>
                         </div>
                     ) : filteredTips.length > 0 ? (
-                        !isDark ? (
-                            /* Light: List-style cards */
-                            <motion.div 
-                              layout 
-                              className="space-y-4"
-                            >
-                                {filteredTips.map((tip, index) => (
-                                    <motion.div
-                                        key={tip.id}
-                                        layout
-                                        initial={{ opacity: 0, x: -30, filter: 'blur(8px)' }}
-                                        whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-                                        transition={{ delay: index * 0.05, duration: 0.6 }}
-                                        viewport={{ once: true }}
-                                        whileHover={{ x: 10, transition: { duration: 0.2 } }}
-                                        onClick={() => navigate(`/tips/${tip.id}`)}
-                                        className="silk-card cursor-pointer group flex items-center gap-6"
-                                    >
-                                        <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center shrink-0">
-                                            <Lightbulb className="w-5 h-5 text-primary" />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="text-[10px] font-medium text-primary uppercase tracking-wider">{tip.category}</span>
-                                                <span className="text-muted-foreground text-[10px]">·</span>
-                                                <span className="text-[10px] text-muted-foreground">{new Date(tip.fetched_at).toLocaleDateString()}</span>
+                        <>
+                            {/* Featured Tip Hero */}
+                            {selectedCategory === 'ALL' && !searchQuery && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    onClick={() => navigate(`/tips/${filteredTips[0].id}`)}
+                                    className={`mb-12 p-8 md:p-12 cursor-pointer group relative overflow-hidden transition-all ${
+                                        isDark ? 'architect-card' : 'silk-card bg-primary/[0.02]'
+                                    }`}
+                                >
+                                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                                        <Zap className="w-32 h-32 text-primary" />
+                                    </div>
+                                    <div className="relative z-10">
+                                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest mb-6">
+                                            <Sparkles className="w-3 h-3" /> Featured Tip
+                                        </span>
+                                        <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 max-w-2xl font-['Playfair_Display']">
+                                            {filteredTips[0].title}
+                                        </h2>
+                                        <p className="text-lg text-muted-foreground mb-8 max-w-xl line-clamp-2 italic">
+                                            "{filteredTips[0].content}"
+                                        </p>
+                                        <div className="flex items-center gap-6">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                                                    <User className="w-4 h-4 text-primary" />
+                                                </div>
+                                                <span className="text-sm font-medium text-foreground">{filteredTips[0].author}</span>
                                             </div>
-                                            <h3 className="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                                            <span className="text-xs text-muted-foreground flex items-center gap-2">
+                                                <Calendar className="w-4 h-4" /> {new Date(filteredTips[0].fetched_at).toLocaleDateString()}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {/* Tips Grid */}
+                            {!isDark ? (
+                                /* Light: List-style cards */
+                                <motion.div 
+                                  layout 
+                                  className="space-y-4"
+                                >
+                                    {filteredTips.slice(selectedCategory === 'ALL' && !searchQuery ? 1 : 0).map((tip, index) => (
+                                        <motion.div
+                                            key={tip.id}
+                                            layout
+                                            initial={{ opacity: 0, x: -30, filter: 'blur(8px)' }}
+                                            whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                                            transition={{ delay: index * 0.05, duration: 0.6 }}
+                                            viewport={{ once: true }}
+                                            whileHover={{ x: 10, transition: { duration: 0.2 } }}
+                                            onClick={() => navigate(`/tips/${tip.id}`)}
+                                            className="silk-card cursor-pointer group flex items-center gap-6"
+                                        >
+                                            <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center shrink-0">
+                                                <Lightbulb className="w-5 h-5 text-primary" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="text-[10px] font-medium text-primary uppercase tracking-wider">{tip.category}</span>
+                                                    <span className="text-muted-foreground text-[10px]">·</span>
+                                                    <span className="text-[10px] text-muted-foreground">{new Date(tip.fetched_at).toLocaleDateString()}</span>
+                                                </div>
+                                                <h3 className="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                                                    {tip.title}
+                                                </h3>
+                                                <p className="text-sm text-muted-foreground line-clamp-1 mt-0.5">{tip.content}</p>
+                                            </div>
+                                            <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0" />
+                                        </motion.div>
+                                    ))}
+                                </motion.div>
+                            ) : (
+                                /* Dark: Grid cards */
+                                <motion.div 
+                                  layout
+                                  className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+                                >
+                                    {filteredTips.slice(selectedCategory === 'ALL' && !searchQuery ? 1 : 0).map((tip, index) => (
+                                        <motion.div
+                                            key={tip.id}
+                                            layout
+                                            initial={{ opacity: 0, y: 40, skewY: 2 }}
+                                            whileInView={{ opacity: 1, y: 0, skewY: 0 }}
+                                            transition={{ 
+                                              type: "spring",
+                                              damping: 30,
+                                              stiffness: 200,
+                                              delay: index * 0.04 
+                                            }}
+                                            viewport={{ once: true }}
+                                            whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                                            onClick={() => navigate(`/tips/${tip.id}`)}
+                                            className="architect-card cursor-pointer group flex flex-col"
+                                        >
+                                            <div className="flex items-center justify-between mb-4">
+                                                <span className="text-[10px] font-medium text-primary uppercase tracking-wider bg-primary/5 px-3 py-1 rounded-md">
+                                                    {tip.category}
+                                                </span>
+                                                <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                                                    <Calendar className="w-3 h-3" />
+                                                    {new Date(tip.fetched_at).toLocaleDateString()}
+                                                </span>
+                                            </div>
+                                            <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-2">
                                                 {tip.title}
                                             </h3>
-                                            <p className="text-sm text-muted-foreground line-clamp-1 mt-0.5">{tip.content}</p>
-                                        </div>
-                                        <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0" />
-                                    </motion.div>
-                                ))}
-                            </motion.div>
-                        ) : (
-                            /* Dark: Grid cards */
-                            <motion.div 
-                              layout
-                              className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
-                            >
-                                {filteredTips.map((tip, index) => (
-                                    <motion.div
-                                        key={tip.id}
-                                        layout
-                                        initial={{ opacity: 0, y: 40, skewY: 2 }}
-                                        whileInView={{ opacity: 1, y: 0, skewY: 0 }}
-                                        transition={{ 
-                                          type: "spring",
-                                          damping: 30,
-                                          stiffness: 200,
-                                          delay: index * 0.04 
-                                        }}
-                                        viewport={{ once: true }}
-                                        whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                                        onClick={() => navigate(`/tips/${tip.id}`)}
-                                        className="architect-card cursor-pointer group flex flex-col"
-                                    >
-                                        <div className="flex items-center justify-between mb-4">
-                                            <span className="text-[10px] font-medium text-primary uppercase tracking-wider bg-primary/5 px-3 py-1 rounded-md">
-                                                {tip.category}
-                                            </span>
-                                            <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                                                <Calendar className="w-3 h-3" />
-                                                {new Date(tip.fetched_at).toLocaleDateString()}
-                                            </span>
-                                        </div>
-                                        <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                                            {tip.title}
-                                        </h3>
-                                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 flex-1">{tip.content}</p>
-                                        <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
-                                            <span className="text-xs text-muted-foreground">Read more</span>
-                                            <ArrowRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </motion.div>
-                        )
+                                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 flex-1">{tip.content}</p>
+                                            <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+                                                <span className="text-xs text-muted-foreground">Read more</span>
+                                                <ArrowRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </>
                     ) : (
                         <div className="py-24 text-center">
                             <Lightbulb className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
