@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Send, X, Sparkles, Loader2, User, Bot, Minimize2 } from 'lucide-react';
 import { getPortfolioContext } from '@/lib/chatbot-context';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -65,15 +67,16 @@ export function Chatbot() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     system_instruction: {
-                        parts: [{ text: `You are Alishba's professional AI assistant. Use a friendly, expert senior-engineer tone. 
+                        parts: [{ text: `You are Alishba's expert AI assistant. Your tone is professional, senior-engineer level, and extremely concise. 
                         
-                        Context about Alishba:
+                        Context:
                         ${context}
                         
-                        Rules:
-                        - Be concise but helpful.
-                        - If asked about contact, mention the contact form.
-                        - Highlight her skills in React, TypeScript, and Full-stack development.` }]
+                        Strict Rules:
+                        1. BE CONCISE. Give "to the point" answers. Do not use filler text.
+                        2. If asked about current work: Check the Experience section. If no role is listed as "Present", she is currently available for new opportunities. Answer directly: "She is currently focused on her projects and available for work." or similar.
+                        3. Format your answers using Markdown (bolding, bullet points) for readability.
+                        4. Only answer based on the provided context.` }]
                     },
                     contents: [
                         ...history,
@@ -156,7 +159,20 @@ export function Chatbot() {
                                             ? 'bg-primary text-primary-foreground rounded-tr-none' 
                                             : 'bg-muted/50 border border-primary/10 text-foreground rounded-tl-none backdrop-blur-sm'
                                     }`}>
-                                        {msg.content}
+                                        <ReactMarkdown 
+                                            remarkPlugins={[remarkGfm]}
+                                            className="prose prose-sm dark:prose-invert max-w-none break-words"
+                                            components={{
+                                                p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                                                ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
+                                                ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
+                                                li: ({ children }) => <li className="mb-1">{children}</li>,
+                                                strong: ({ children }) => <span className="font-bold text-primary">{children}</span>,
+                                                code: ({ children }) => <code className="bg-primary/10 px-1 rounded text-xs font-mono">{children}</code>
+                                            }}
+                                        >
+                                            {msg.content}
+                                        </ReactMarkdown>
                                     </div>
                                 </motion.div>
                             ))}
