@@ -22,6 +22,7 @@ export function TipsPage() {
     const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('ALL');
+    const [sortOrder, setSortOrder] = useState<'NEWEST' | 'OLDEST'>('NEWEST');
     const navigate = useNavigate();
 
     const fetchTips = useCallback(async (isRefresh = false) => {
@@ -45,7 +46,7 @@ export function TipsPage() {
         return () => clearInterval(interval);
     }, [fetchTips]);
 
-    const categories = ['ALL', ...Array.from(new Set(tips.filter(t => t?.category).map(tip => tip.category.toUpperCase())))];
+    const categories = ['ALL', 'OOP', 'DSA', 'REACT', 'LANGUAGES', ...Array.from(new Set(tips.filter(t => t?.category).map(tip => tip.category.toUpperCase()))).filter(c => !['OOP', 'DSA', 'REACT', 'LANGUAGES'].includes(c))];
 
     const filteredTips = tips.filter(tip => {
         if (!tip) return false;
@@ -53,6 +54,10 @@ export function TipsPage() {
                              (tip.content || "").toLowerCase().includes(searchQuery.toLowerCase());
         const matchesCategory = selectedCategory === 'ALL' || (tip.category || "").toUpperCase() === selectedCategory;
         return matchesSearch && matchesCategory;
+    }).sort((a, b) => {
+        const dateA = new Date(a.fetched_at).getTime();
+        const dateB = new Date(b.fetched_at).getTime();
+        return sortOrder === 'NEWEST' ? dateB - dateA : dateA - dateB;
     });
 
     return (
@@ -123,7 +128,17 @@ export function TipsPage() {
                                 className="w-full h-10 bg-transparent pl-10 text-sm outline-none placeholder:text-muted-foreground"
                             />
                         </div>
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <button
+                                onClick={() => setSortOrder(prev => prev === 'NEWEST' ? 'OLDEST' : 'NEWEST')}
+                                className={`flex items-center gap-2 px-4 py-1.5 text-xs font-bold border transition-all ${
+                                    isDark ? 'rounded-md border-primary/20 hover:bg-primary/5' : 'rounded-full border-primary/10 hover:bg-primary/5'
+                                }`}
+                            >
+                                <RefreshCw className={`w-3 h-3 ${sortOrder === 'NEWEST' ? '' : 'rotate-180'} transition-transform`} />
+                                {sortOrder === 'NEWEST' ? 'Newest First' : 'Oldest First'}
+                            </button>
+                            <div className="h-6 w-px bg-border hidden md:block mx-1" />
                             {categories.map(cat => (
                                 <button
                                     key={cat} 

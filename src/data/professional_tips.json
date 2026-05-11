@@ -320,5 +320,47 @@
     "tutorial": "### Bad: Rebuilds every time\n```dart\nreturn Column(children: [Text('Static Title')]);\n```\n### Good: Cached Widget\n```dart\nreturn Column(children: [const Text('Static Title')]);\n```\nIn complex apps, this dramatically reduces the load on the UI thread.",
     "category": "Modern JS",
     "author": "Alishba Iqbal"
+  },
+  {
+    "title": "OOP: Composition over Inheritance",
+    "content": "Avoid deep inheritance trees. Use Composition to build complex objects by combining simpler ones, making your code more flexible and easier to maintain.",
+    "tutorial": "### Bad: Deep Inheritance\n```js\nclass RobotDog extends Dog extends Animal { ... }\n```\n### Good: Composition\n```js\nconst canBark = { bark: () => console.log('Woof') };\nconst canWalk = { walk: () => console.log('Walking') };\nconst robotDog = { ...canBark, ...canWalk };\n```",
+    "category": "OOP",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "DSA: Binary Search vs Linear Search",
+    "content": "Instead of checking every element (O(n)), use Binary Search (O(log n)) on sorted arrays to find elements much faster.",
+    "tutorial": "### Linear Search (Slow)\n```js\nfor(let i=0; i<arr.length; i++) if(arr[i] === target) return i;\n```\n### Binary Search (Fast)\n```js\nlet left = 0, right = arr.length - 1;\nwhile (left <= right) {\n  let mid = Math.floor((left + right) / 2);\n  if (arr[mid] === target) return mid;\n  if (arr[mid] < target) left = mid + 1; else right = mid - 1;\n}\n```",
+    "category": "DSA",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "React: Portals for Modals",
+    "content": "Instead of nesting modals inside your component tree (which can cause z-index issues), use React Portals to render them at the end of the document body.",
+    "tutorial": "### Modal with Portal\n```jsx\nreturn ReactDOM.createPortal(\n  <div className=\"modal\">{children}</div>,\n  document.body\n);\n```",
+    "category": "React",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "Languages: Python Decorators",
+    "content": "Use Decorators to wrap functions with additional logic (like logging or timing) without modifying their original code.",
+    "tutorial": "### Simple Decorator\n```python\ndef log_call(func):\n    def wrapper(*args, **kwargs):\n        print(f\"Calling {func.__name__}\")\n        return func(*args, **kwargs)\n    return wrapper\n\n@log_call\ndef my_func(): pass\n```",
+    "category": "Languages",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "OOP: The Liskov Substitution Principle",
+    "content": "Ensure that subclasses can stand in for their parent classes without breaking the app. This is the 'L' in SOLID.",
+    "tutorial": "### The Violation\nIf a `Square` inherits from `Rectangle` but changes how `setWidth` works, it breaks the parent's contract. Instead, create a shared `Shape` interface.",
+    "category": "OOP",
+    "author": "Alishba Iqbal"
+  },
+  {
+    "title": "DSA: Big O Memory Complexity",
+    "content": "Don't just optimize for speed; optimize for memory. Avoid creating large intermediate arrays when a single pass or a generator will suffice.",
+    "tutorial": "### Bad: Memory Heavy\n```js\nconst items = data.map(x => x.val).filter(v => v > 10);\n```\n### Good: Single Pass\n```js\nconst items = data.reduce((acc, x) => {\n  if (x.val > 10) acc.push(x.val);\n  return acc;\n}, []);\n```",
+    "category": "DSA",
+    "author": "Alishba Iqbal"
   }
 ]
