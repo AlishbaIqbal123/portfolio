@@ -163,12 +163,12 @@ export function Chatbot() {
                                             <ReactMarkdown 
                                                 remarkPlugins={[remarkGfm]}
                                                 components={{
-                                                    p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-                                                    ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
-                                                    ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
-                                                    li: ({ children }) => <li className="mb-1">{children}</li>,
-                                                    strong: ({ children }) => <span className="font-bold text-primary">{children}</span>,
-                                                    code: ({ children }) => <code className="bg-primary/10 px-1 rounded text-xs font-mono">{children}</code>
+                                                    p: ({ children }: any) => <p className="mb-2 last:mb-0">{children}</p>,
+                                                    ul: ({ children }: any) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
+                                                    ol: ({ children }: any) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
+                                                    li: ({ children }: any) => <li className="mb-1">{children}</li>,
+                                                    strong: ({ children }: any) => <span className="font-bold text-primary">{children}</span>,
+                                                    code: ({ children }: any) => <code className="bg-primary/10 px-1 rounded text-xs font-mono">{children}</code>
                                                 }}
                                             >
                                                 {msg.content}
