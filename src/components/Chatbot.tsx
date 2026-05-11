@@ -41,7 +41,6 @@ export function Chatbot() {
         setIsLoading(true);
 
         try {
-            // Using Gemini API via Fetch
             const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
             
             if (!apiKey) {
@@ -55,30 +54,57 @@ export function Chatbot() {
                 return;
             }
 
+            // Prepare history for better conversation
+            const history = messages.slice(-5).map(m => ({
+                role: m.role === 'assistant' ? 'model' : 'user',
+                parts: [{ text: m.content }]
+            }));
+
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     system_instruction: {
-                        parts: [{ text: context }]
+                        parts: [{ text: `You are Alishba's professional AI assistant. Use a friendly, expert senior-engineer tone. 
+                        
+                        Context about Alishba:
+                        ${context}
+                        
+                        Rules:
+                        - Be concise but helpful.
+                        - If asked about contact, mention the contact form.
+                        - Highlight her skills in React, TypeScript, and Full-stack development.` }]
                     },
                     contents: [
-                        { parts: [{ text: userMessage }] }
+                        ...history,
+                        { role: 'user', parts: [{ text: userMessage }] }
                     ],
                     generationConfig: {
-                        temperature: 0.7,
-                        maxOutputTokens: 800,
+                        temperature: 0.8,
+                        maxOutputTokens: 1000,
                     }
                 })
             });
 
             const data = await response.json();
-            const botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I'm having trouble thinking right now. Could you try again?";
+
+            if (data.error) {
+                throw new Error(data.error.message || 'API Error');
+            }
+
+            const botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            
+            if (!botResponse) {
+                throw new Error('No response from AI');
+            }
 
             setMessages(prev => [...prev, { role: 'assistant', content: botResponse }]);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Chatbot error:', error);
-            setMessages(prev => [...prev, { role: 'assistant', content: "Oops! My connection to the matrix is a bit unstable. Try again in a second?" }]);
+            const errorMsg = error.message?.includes('API key') 
+                ? "It looks like there's an issue with the API key. Please double check your .env file."
+                : "I'm having a small brain-freeze. Could you try asking that again?";
+            setMessages(prev => [...prev, { role: 'assistant', content: errorMsg }]);
         } finally {
             setIsLoading(false);
         }
