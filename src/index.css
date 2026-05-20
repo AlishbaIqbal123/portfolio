@@ -10,12 +10,12 @@
    =========================================== */
 :root {
   --background: 34 30% 96%;
-  --foreground: 220 40% 13%;
+  --foreground: 220 45% 10%;
   --card: 34 25% 98%;
   --card-foreground: 220 40% 13%;
   --popover: 34 25% 98%;
   --popover-foreground: 220 40% 13%;
-  --primary: 345 80% 28%;
+  --primary: 345 85% 22%;
   --primary-foreground: 34 30% 96%;
   --secondary: 34 15% 88%;
   --secondary-foreground: 220 40% 13%;
