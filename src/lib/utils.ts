@@ -16,9 +16,19 @@ export function calculateTotalExperience(experiences: any[]) {
 
     experiences.forEach((exp) => {
         const duration = exp.duration || "";
-        if (!duration || !duration.includes('-')) return;
+        if (!duration) return;
 
-        const parts = duration.split('-').map((s: string) => s.trim());
+        const dashRegex = /[-–—]/;
+        if (!dashRegex.test(duration)) {
+            // No dash, so it's a single month/date. Count as 1 month.
+            const parsed = parseExperienceDate(duration.trim());
+            if (parsed) {
+                totalMonths += 1;
+            }
+            return;
+        }
+
+        const parts = duration.split(dashRegex).map((s: string) => s.trim());
         const startStr = parts[0];
         const endStr = parts[1];
         
@@ -26,9 +36,9 @@ export function calculateTotalExperience(experiences: any[]) {
         const endDate = endStr?.toLowerCase() === 'present' ? new Date() : parseExperienceDate(endStr);
 
         if (startDate && endDate) {
-            // Calculate difference in months
+            // Calculate difference in months (inclusive of start and end months)
             const diffInMonths = (endDate.getFullYear() - startDate.getFullYear()) * 12 + (endDate.getMonth() - startDate.getMonth());
-            totalMonths += Math.max(1, diffInMonths); // Count at least 1 month
+            totalMonths += Math.max(1, diffInMonths + 1);
         }
     });
 
