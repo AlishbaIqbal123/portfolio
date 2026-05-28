@@ -4,7 +4,7 @@ import { Code2, Cpu, Wrench, Rocket, Atom, Star } from 'lucide-react';
 import {
     SiCplusplus, SiJavascript, SiTypescript, SiDart, SiPhp, SiReact,
     SiFlutter, SiLaravel, SiTailwindcss, SiNodedotjs, SiMysql,
-    SiGit, SiGithub, SiPostman, SiFigma, SiVercel, SiNetlify
+    SiGit, SiGithub, SiPostman, SiFigma, SiVercel, SiNetlify, SiPython
 } from 'react-icons/si';
 import { FaJava, FaDatabase, FaCode, FaDraftingCompass, FaBrain, FaLightbulb, FaLaptopCode } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
@@ -24,13 +24,13 @@ const icons: Record<string, any> = {
 
 const skillIcons: Record<string, any> = {
     'C++': SiCplusplus, 'Java': FaJava, 'Dart': SiDart, 'PHP': SiPhp, 'SQL': FaDatabase,
-    'JavaScript': SiJavascript, 'TypeScript': SiTypescript, 'React': SiReact,
+    'JavaScript': SiJavascript, 'TypeScript': SiTypescript, 'Typescript': SiTypescript, 'React': SiReact,
     'Flutter': SiFlutter, 'Laravel': SiLaravel, 'Tailwind CSS': SiTailwindcss,
     'Node.js': SiNodedotjs, 'MySQL': SiMysql, 'SQL Server': FaDatabase,
     'Git': SiGit, 'GitHub': SiGithub, 'VS Code': FaCode, 'Visual Studio': FaLaptopCode,
     'Postman': SiPostman, 'Figma': SiFigma, 'Vercel': SiVercel, 'Netlify': SiNetlify,
     'Data Structures': SiCplusplus, 'OOP': FaDraftingCompass, 'Problem Solving': FaLightbulb,
-    'System Design': FaBrain,
+    'System Design': FaBrain, 'Python': SiPython,
 };
 
 export function SkillsPage() {
