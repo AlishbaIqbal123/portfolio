@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Send, X, Sparkles, Loader2, User, Bot, Minimize2 } from 'lucide-react';
+import { MessageSquare, Send, X, Sparkles, Loader2, User, Bot, Minimize2, ArrowRight, ArrowDown } from 'lucide-react';
 import { getPortfolioContext } from '@/lib/chatbot-context';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -12,6 +12,7 @@ interface Message {
 
 export function Chatbot() {
     const [isOpen, setIsOpen] = useState(false);
+    const [showPointer, setShowPointer] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
         { role: 'assistant', content: "Hi! I'm Alishba's AI assistant. Want to know about her projects, skills, or how she can help your team?" }
     ]);
@@ -19,6 +20,29 @@ export function Chatbot() {
     const [isLoading, setIsLoading] = useState(false);
     const [context, setContext] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // Show pointer after 1.5 seconds if chatbot is not already open
+    useEffect(() => {
+        const dismissed = sessionStorage.getItem('chatbot_pointer_dismissed');
+        if (!dismissed && !isOpen) {
+            const timer = setTimeout(() => {
+                setShowPointer(true);
+            }, 1500);
+            return () => clearTimeout(timer);
+        }
+    }, [isOpen]);
+
+    const handleOpenChatbot = () => {
+        setIsOpen(true);
+        setShowPointer(false);
+        sessionStorage.setItem('chatbot_pointer_dismissed', 'true');
+    };
+
+    const handleDismissPointer = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setShowPointer(false);
+        sessionStorage.setItem('chatbot_pointer_dismissed', 'true');
+    };
 
     // Fetch portfolio context once on mount
     useEffect(() => {
@@ -217,22 +241,75 @@ export function Chatbot() {
                         </div>
                     </motion.div>
                 ) : (
-                    <motion.button
-                        initial={{ scale: 0, rotate: -45 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => setIsOpen(true)}
-                        className="w-14 h-14 rounded-full bg-primary shadow-[0_10px_30px_rgba(var(--primary-rgb),0.5)] flex items-center justify-center text-primary-foreground relative group overflow-hidden"
-                    >
-                        <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <MessageSquare className="w-6 h-6" />
-                        <motion.div 
-                            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                            className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-background" 
-                        />
-                    </motion.button>
+                    <div className="relative flex items-center justify-end">
+                        {/* Elegant Tooltip Pointer */}
+                        <AnimatePresence>
+                            {showPointer && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 15, scale: 0.9, filter: 'blur(5px)' }}
+                                    animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+                                    exit={{ opacity: 0, y: 15, scale: 0.9, filter: 'blur(5px)' }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                    className="absolute bottom-16 right-0 mb-3 w-[280px] sm:w-72 md:bottom-0 md:right-16 md:mb-0 md:mr-3 bg-background/90 backdrop-blur-xl border border-primary/20 rounded-2xl p-4 shadow-[0_15px_40px_rgba(0,0,0,0.25)] flex flex-col gap-2 z-50 text-foreground select-none pointer-events-auto"
+                                >
+                                    <div className="flex justify-between items-start">
+                                        <div className="flex items-center gap-2">
+                                            <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-primary">AI Portfolio Guide</span>
+                                        </div>
+                                        <button 
+                                            onClick={handleDismissPointer}
+                                            className="p-1 hover:bg-primary/10 rounded-full transition-colors text-muted-foreground hover:text-foreground"
+                                        >
+                                            <X className="w-3.5 h-3.5" />
+                                        </button>
+                                    </div>
+                                    
+                                    <p className="text-xs leading-relaxed text-muted-foreground">
+                                        Hi! Feel free to ask me anything about Alishba's experience, technologies, or education in one go!
+                                    </p>
+                                    
+                                    <div className="flex items-center justify-end gap-1.5 mt-1 text-[11px] font-bold text-primary">
+                                        <span>Ask AI Guide</span>
+                                        {/* Desktop animated arrow pointing right */}
+                                        <motion.div
+                                            animate={{ x: [0, 6, 0] }}
+                                            transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+                                            className="hidden md:block"
+                                        >
+                                            <ArrowRight className="w-3.5 h-3.5" />
+                                        </motion.div>
+                                        {/* Mobile animated arrow pointing down */}
+                                        <motion.div
+                                            animate={{ y: [0, 6, 0] }}
+                                            transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+                                            className="md:hidden"
+                                        >
+                                            <ArrowDown className="w-3.5 h-3.5" />
+                                        </motion.div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Chatbot Button */}
+                        <motion.button
+                            initial={{ scale: 0, rotate: -45 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={handleOpenChatbot}
+                            className="w-14 h-14 rounded-full bg-primary shadow-[0_10px_30px_rgba(var(--primary-rgb),0.5)] flex items-center justify-center text-primary-foreground relative group overflow-hidden"
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <MessageSquare className="w-6 h-6" />
+                            <motion.div 
+                                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                                className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-background" 
+                            />
+                        </motion.button>
+                    </div>
                 )}
             </AnimatePresence>
         </div>
