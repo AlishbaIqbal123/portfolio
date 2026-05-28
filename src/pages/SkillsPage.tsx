@@ -1,12 +1,7 @@
 import { motion, type Variants } from 'framer-motion';
 import { personalData } from '@/data/personal';
-import { Code2, Cpu, Wrench, Rocket, Atom, Star } from 'lucide-react';
-import {
-    SiCplusplus, SiJavascript, SiTypescript, SiDart, SiPhp, SiReact,
-    SiFlutter, SiLaravel, SiTailwindcss, SiNodedotjs, SiMysql,
-    SiGit, SiGithub, SiPostman, SiFigma, SiVercel, SiNetlify, SiPython
-} from 'react-icons/si';
-import { FaJava, FaDatabase, FaCode, FaDraftingCompass, FaBrain, FaLightbulb, FaLaptopCode } from 'react-icons/fa';
+import { Code2, Cpu, Wrench, Rocket, Atom, Star, Database } from 'lucide-react';
+import { getSkillIconByName } from '@/lib/skill-helper';
 import { useState, useEffect } from 'react';
 import { QuickAdmin } from '@/components/QuickAdmin';
 import { getSkillCategories } from '@/lib/api';
@@ -19,18 +14,7 @@ const icons: Record<string, any> = {
     technologies: Cpu,
     tools: Wrench,
     frameworks: Rocket,
-    databases: FaDatabase,
-};
-
-const skillIcons: Record<string, any> = {
-    'C++': SiCplusplus, 'Java': FaJava, 'Dart': SiDart, 'PHP': SiPhp, 'SQL': FaDatabase,
-    'JavaScript': SiJavascript, 'TypeScript': SiTypescript, 'Typescript': SiTypescript, 'React': SiReact,
-    'Flutter': SiFlutter, 'Laravel': SiLaravel, 'Tailwind CSS': SiTailwindcss,
-    'Node.js': SiNodedotjs, 'MySQL': SiMysql, 'SQL Server': FaDatabase,
-    'Git': SiGit, 'GitHub': SiGithub, 'VS Code': FaCode, 'Visual Studio': FaLaptopCode,
-    'Postman': SiPostman, 'Figma': SiFigma, 'Vercel': SiVercel, 'Netlify': SiNetlify,
-    'Data Structures': SiCplusplus, 'OOP': FaDraftingCompass, 'Problem Solving': FaLightbulb,
-    'System Design': FaBrain, 'Python': SiPython,
+    databases: Database,
 };
 
 export function SkillsPage() {
@@ -126,7 +110,7 @@ export function SkillsPage() {
                                       const isObject = typeof item === 'object' && item !== null;
                                       const name = isObject ? item.name : item;
                                       const logoUrl = isObject ? (isDark ? item.logo_url_dark || item.logo_url : item.logo_url) : null;
-                                      const SubIcon = skillIcons[name] || Star;
+                                      const SubIcon = getSkillIconByName(name);
                                       return (
                                         <motion.div
                                           key={name}
@@ -165,7 +149,7 @@ export function SkillsPage() {
                                       const isObject = typeof item === 'object' && item !== null;
                                       const name = isObject ? item.name : item;
                                       const logoUrl = isObject ? (isDark ? item.logo_url_dark || item.logo_url : item.logo_url) : null;
-                                      const SubIcon = skillIcons[name] || Star;
+                                      const SubIcon = getSkillIconByName(name);
                                       return (
                                         <motion.div
                                           key={name}

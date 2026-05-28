@@ -8,6 +8,7 @@ import {
 import { toast } from 'sonner';
 import { useTheme } from '@/hooks/useTheme';
 import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal';
+import { getSkillIconByName } from '@/lib/skill-helper';
 
 interface Skill {
     id?: string;
@@ -212,11 +213,22 @@ export const AdminSkills = () => {
                                 </div>
                             </div>
                             <div className="flex flex-wrap gap-1.5">
-                                {(cat.skills || []).map((skill, i) => (
-                                    <span key={i} className={`px-2 py-0.5 text-[10px] rounded-md font-medium ${
-                                        isDark ? 'bg-primary/5 text-primary/60' : 'bg-primary/5 text-primary/50'
-                                    }`}>{skill.name}</span>
-                                ))}
+                                {(cat.skills || []).map((skill, i) => {
+                                    const IconComponent = getSkillIconByName(skill.name);
+                                    const customLogo = isDark ? skill.logo_url_dark || skill.logo_url : skill.logo_url;
+                                    return (
+                                        <span key={i} className={`inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] rounded-md font-medium ${
+                                            isDark ? 'bg-primary/5 text-primary/60' : 'bg-primary/5 text-primary/50'
+                                        }`}>
+                                            {customLogo ? (
+                                                <img src={customLogo} alt={skill.name} className="w-3 h-3 object-contain shrink-0" />
+                                            ) : (
+                                                <IconComponent className="w-3 h-3 shrink-0" />
+                                            )}
+                                            {skill.name}
+                                        </span>
+                                    );
+                                })}
                                 {(!cat.skills || cat.skills.length === 0) && (
                                     <span className="text-xs text-muted-foreground/40">No skills added</span>
                                 )}
@@ -295,20 +307,33 @@ export const AdminSkills = () => {
                                                         </button>
                                                         
                                                         <div className="grid grid-cols-1 gap-2 pr-6">
-                                                            <input
-                                                                type="text"
-                                                                value={skill.name}
-                                                                onChange={e => {
-                                                                    const newList = [...skillsList];
-                                                                    newList[index].name = e.target.value;
-                                                                    setSkillsList(newList);
-                                                                }}
-                                                                required
-                                                                className={`w-full h-8 rounded-md border px-3 text-xs outline-none transition-colors ${
-                                                                    isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
-                                                                }`}
-                                                                placeholder="Skill Name (e.g. React)"
-                                                            />
+                                                            <div className="flex gap-2 items-center">
+                                                                {/* Icon Preview */}
+                                                                <div className={`w-8 h-8 rounded-md border flex items-center justify-center shrink-0 ${
+                                                                    isDark ? 'bg-background border-border' : 'bg-muted border-border'
+                                                                }`} title="Icon Preview (resolves automatically from name)">
+                                                                    {skill.logo_url ? (
+                                                                        <img src={skill.logo_url} alt={skill.name} className="w-4 h-4 object-contain" />
+                                                                    ) : (() => {
+                                                                        const IconComponent = getSkillIconByName(skill.name);
+                                                                        return <IconComponent className="w-4 h-4 text-primary" />;
+                                                                    })()}
+                                                                </div>
+                                                                <input
+                                                                    type="text"
+                                                                    value={skill.name}
+                                                                    onChange={e => {
+                                                                        const newList = [...skillsList];
+                                                                        newList[index].name = e.target.value;
+                                                                        setSkillsList(newList);
+                                                                    }}
+                                                                    required
+                                                                    className={`w-full h-8 rounded-md border px-3 text-xs outline-none transition-colors ${
+                                                                        isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
+                                                                    }`}
+                                                                    placeholder="Skill Name (e.g. React)"
+                                                                />
+                                                            </div>
                                                             <input
                                                                 type="text"
                                                                 value={skill.logo_url || ''}
