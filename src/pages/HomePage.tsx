@@ -166,14 +166,15 @@ export function HomePage() {
           </section>
 
           {/* ⚡ Dynamic Skills Marquee — Editorial Bold */}
-          <section className="py-2 bg-card/10 backdrop-blur-sm -rotate-1 scale-105 origin-center overflow-hidden">
+          <section className="py-6 border-y border-border/40 bg-card/10 backdrop-blur-sm -rotate-1 scale-105 origin-center overflow-hidden">
             <ScrollVelocity 
               texts={[
-                personal.skills?.technologies?.join("  •  ") || "React  •  Flutter  •  Node  •  AI",
-                personal.skills?.languages?.join("  •  ") || "C++  •  Python  •  Dart  •  JS"
+                personal.skills?.technologies?.join(" · ") || "React · Flutter · Node · AI",
+                personal.skills?.languages?.join(" · ") || "C++ · Python · Dart · JS"
               ]}
               velocity={50}
-              className="text-xl md:text-3xl font-semibold text-primary/80"
+              className="text-4xl md:text-6xl font-black text-primary/80"
+              separator={<>&nbsp;&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;&nbsp;</>}
             />
           </section>
 

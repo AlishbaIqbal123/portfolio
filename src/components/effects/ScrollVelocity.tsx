@@ -28,6 +28,7 @@ interface VelocityTextProps {
   scrollerClassName?: string;
   parallaxStyle?: React.CSSProperties;
   scrollerStyle?: React.CSSProperties;
+  separator?: React.ReactNode;
 }
 
 interface ScrollVelocityProps {
@@ -43,6 +44,8 @@ interface ScrollVelocityProps {
   scrollerClassName?: string;
   parallaxStyle?: React.CSSProperties;
   scrollerStyle?: React.CSSProperties;
+  separator?: React.ReactNode;
+  sectionClassName?: string;
 }
 
 function useElementWidth<T extends HTMLElement>(ref: React.RefObject<T | null>): number {
@@ -74,7 +77,9 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
   parallaxClassName = 'parallax',
   scrollerClassName = 'scroller',
   parallaxStyle,
-  scrollerStyle
+  scrollerStyle,
+  separator,
+  sectionClassName
 }) => {
   function VelocityText({
     children,
@@ -88,7 +93,8 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
     parallaxClassName,
     scrollerClassName,
     parallaxStyle,
-    scrollerStyle
+    scrollerStyle,
+    separator: localSeparator = separator
   }: VelocityTextProps) {
     const baseX = useMotionValue(0);
     const scrollOptions = scrollContainerRef ? { container: scrollContainerRef } : {};
@@ -137,7 +143,7 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
     for (let i = 0; i < (numCopies ?? 8); i++) {
       spans.push(
         <span className={className} key={i} ref={i === 0 ? copyRef : null}>
-          {children}&nbsp;&nbsp;•&nbsp;&nbsp;
+          {children}{localSeparator !== undefined ? localSeparator : <>&nbsp;&nbsp;•&nbsp;&nbsp;</>}
         </span>
       );
     }
@@ -152,7 +158,7 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
   }
 
   return (
-    <section className="scroll-velocity-section overflow-hidden py-2">
+    <section className={`scroll-velocity-section overflow-hidden ${sectionClassName || 'py-10'}`}>
       {texts.map((text, index) => (
         <VelocityText
           key={index}
@@ -167,6 +173,7 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
           scrollerClassName={scrollerClassName}
           parallaxStyle={parallaxStyle}
           scrollerStyle={scrollerStyle}
+          separator={separator}
         >
           {text}
         </VelocityText>
