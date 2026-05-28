@@ -9,10 +9,18 @@ import { toast } from 'sonner';
 import { useTheme } from '@/hooks/useTheme';
 import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal';
 
+interface Skill {
+    id?: string;
+    name: string;
+    logo_url?: string;
+    logo_url_dark?: string;
+    order_index?: number;
+}
+
 interface SkillCategory {
     id: string;
     title: string;
-    skills: string[];
+    skills: Skill[];
 }
 
 export const AdminSkills = () => {
@@ -23,7 +31,7 @@ export const AdminSkills = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [deleteId, setDeleteId] = useState<string | null>(null);
-    const [skillsText, setSkillsText] = useState('');
+    const [skillsList, setSkillsList] = useState<Skill[]>([]);
 
     useEffect(() => { fetchSkills(); }, []);
 
@@ -31,13 +39,31 @@ export const AdminSkills = () => {
         setLoading(true);
         const { data, error } = await supabase
             .from('skill_categories')
-            .select('*')
+            .select(`
+                id,
+                title,
+                skills (
+                    id,
+                    name,
+                    logo_url,
+                    logo_url_dark,
+                    order_index
+                )
+            `)
             .order('title');
 
         if (error) {
             toast.error('Failed to load skills.');
         } else {
-            setCategories(data || []);
+            // Sort nested skills by order_index
+            if (data) {
+                data.forEach((category: any) => {
+                    if (Array.isArray(category.skills)) {
+                        category.skills.sort((a: any, b: any) => (a.order_index || 0) - (b.order_index || 0));
+                    }
+                });
+            }
+            setCategories((data as any) || []);
         }
         setLoading(false);
     };
@@ -49,22 +75,54 @@ export const AdminSkills = () => {
             return;
         }
 
-        const skillsArray = skillsText.split(',').map(s => s.trim()).filter(Boolean);
         setIsSaving(true);
         try {
-            const catToSave = { ...editingCat, skills: skillsArray };
+            let catId = editingCat.id;
 
-            if (editingCat.id) {
-                const { error } = await supabase.from('skill_categories').update(catToSave).eq('id', editingCat.id);
+            // 1. Save or update the category
+            if (catId) {
+                const { error } = await supabase
+                    .from('skill_categories')
+                    .update({ title: editingCat.title })
+                    .eq('id', catId);
                 if (error) throw error;
-                toast.success('Skill category updated.');
             } else {
-                const { error } = await supabase.from('skill_categories').insert([catToSave]);
+                const { data, error } = await supabase
+                    .from('skill_categories')
+                    .insert([{ title: editingCat.title }])
+                    .select();
                 if (error) throw error;
-                toast.success('Skill category added.');
+                catId = data[0].id;
             }
+
+            // 2. Clear old skills for this category
+            const { error: deleteError } = await supabase
+                .from('skills')
+                .delete()
+                .eq('category_id', catId);
+            if (deleteError) throw deleteError;
+
+            // 3. Insert new skills
+            const filteredSkills = skillsList
+                .filter(s => s.name.trim())
+                .map((s, idx) => ({
+                    category_id: catId,
+                    name: s.name.trim(),
+                    logo_url: s.logo_url?.trim() || null,
+                    logo_url_dark: s.logo_url_dark?.trim() || null,
+                    order_index: idx
+                }));
+
+            if (filteredSkills.length > 0) {
+                const { error: insertError } = await supabase
+                    .from('skills')
+                    .insert(filteredSkills);
+                if (insertError) throw insertError;
+            }
+
+            toast.success('Skill category saved successfully.');
             setEditingCat(null);
-            setSkillsText('');
+            setSkillsList([]);
             fetchSkills();
         } catch (error: any) {
             toast.error('Error: ' + error.message);
@@ -113,7 +171,10 @@ export const AdminSkills = () => {
                     </div>
                 </div>
                 <button 
-                    onClick={() => setEditingCat({ title: '', skills: [] })}
+                    onClick={() => {
+                        setEditingCat({ title: '' });
+                        setSkillsList([]);
+                    }}
                     className={`px-5 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors ${
                         isDark ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-primary text-white hover:bg-primary/90'
                     }`}
@@ -139,7 +200,7 @@ export const AdminSkills = () => {
                                 <div className="flex gap-1">
                                     <button onClick={() => {
                                         setEditingCat(cat);
-                                        setSkillsText(cat.skills?.join(', ') || '');
+                                        setSkillsList(cat.skills || []);
                                     }}
                                         className="w-7 h-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors">
                                         <Edit2 className="w-3 h-3" />
@@ -154,7 +215,7 @@ export const AdminSkills = () => {
                                 {(cat.skills || []).map((skill, i) => (
                                     <span key={i} className={`px-2 py-0.5 text-[10px] rounded-md font-medium ${
                                         isDark ? 'bg-primary/5 text-primary/60' : 'bg-primary/5 text-primary/50'
-                                    }`}>{skill}</span>
+                                    }`}>{skill.name}</span>
                                 ))}
                                 {(!cat.skills || cat.skills.length === 0) && (
                                     <span className="text-xs text-muted-foreground/40">No skills added</span>
@@ -208,16 +269,79 @@ export const AdminSkills = () => {
                                                 placeholder="e.g. Frontend, Backend, DevOps"
                                             />
                                         </div>
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-medium text-muted-foreground">Skills (comma-separated)</label>
-                                            <textarea
-                                                rows={3} value={skillsText}
-                                                onChange={e => setSkillsText(e.target.value)}
-                                                className={`w-full rounded-lg border p-4 text-sm outline-none transition-colors ${
-                                                    isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
-                                                }`}
-                                                placeholder="e.g. React, Vue.js, TypeScript, Tailwind CSS"
-                                            />
+                                        
+                                        <div className="space-y-3">
+                                            <div className="flex justify-between items-center">
+                                                <label className="text-xs font-medium text-muted-foreground">Skills List</label>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setSkillsList([...skillsList, { name: '', logo_url: '', logo_url_dark: '' }])}
+                                                    className="px-3 py-1 bg-primary/10 text-primary hover:bg-primary/20 rounded-md text-xs font-bold transition-colors flex items-center gap-1"
+                                                >
+                                                    <Plus className="w-3 h-3" /> Add Skill
+                                                </button>
+                                            </div>
+                                            
+                                            <div className="space-y-3 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
+                                                {skillsList.map((skill, index) => (
+                                                    <div key={index} className="flex flex-col gap-2 p-3 border border-border rounded-lg relative bg-background/30">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setSkillsList(skillsList.filter((_, i) => i !== index))}
+                                                            className="absolute top-2 right-2 text-muted-foreground hover:text-red-500 transition-colors"
+                                                            title="Delete Skill"
+                                                        >
+                                                            <Trash2 className="w-3.5 h-3.5" />
+                                                        </button>
+                                                        
+                                                        <div className="grid grid-cols-1 gap-2 pr-6">
+                                                            <input
+                                                                type="text"
+                                                                value={skill.name}
+                                                                onChange={e => {
+                                                                    const newList = [...skillsList];
+                                                                    newList[index].name = e.target.value;
+                                                                    setSkillsList(newList);
+                                                                }}
+                                                                required
+                                                                className={`w-full h-8 rounded-md border px-3 text-xs outline-none transition-colors ${
+                                                                    isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
+                                                                }`}
+                                                                placeholder="Skill Name (e.g. React)"
+                                                            />
+                                                            <input
+                                                                type="text"
+                                                                value={skill.logo_url || ''}
+                                                                onChange={e => {
+                                                                    const newList = [...skillsList];
+                                                                    newList[index].logo_url = e.target.value;
+                                                                    setSkillsList(newList);
+                                                                }}
+                                                                className={`w-full h-8 rounded-md border px-3 text-xs outline-none transition-colors ${
+                                                                    isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
+                                                                }`}
+                                                                placeholder="Logo URL (Optional)"
+                                                            />
+                                                            <input
+                                                                type="text"
+                                                                value={skill.logo_url_dark || ''}
+                                                                onChange={e => {
+                                                                    const newList = [...skillsList];
+                                                                    newList[index].logo_url_dark = e.target.value;
+                                                                    setSkillsList(newList);
+                                                                }}
+                                                                className={`w-full h-8 rounded-md border px-3 text-xs outline-none transition-colors ${
+                                                                    isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
+                                                                }`}
+                                                                placeholder="Dark Logo URL (Optional)"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                {skillsList.length === 0 && (
+                                                    <p className="text-xs text-muted-foreground/60 text-center py-4">No skills in this category yet. Click "Add Skill" above.</p>
+                                                )}
+                                            </div>
                                         </div>
 
                                         <div className="flex justify-end gap-3 pt-4 border-t border-border">

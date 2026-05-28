@@ -57,8 +57,30 @@ export const getEducation = async () => {
 export const getSkillCategories = async () => {
     const { data, error } = await supabase
         .from('skill_categories')
-        .select('*');
+        .select(`
+            id,
+            title,
+            icon,
+            order_index,
+            skills (
+                id,
+                name,
+                logo_url,
+                logo_url_dark,
+                order_index
+            )
+        `)
+        .order('order_index', { ascending: true });
+    
     if (error) throw error;
+
+    if (data) {
+        data.forEach((category: any) => {
+            if (Array.isArray(category.skills)) {
+                category.skills.sort((a: any, b: any) => (a.order_index || 0) - (b.order_index || 0));
+            }
+        });
+    }
     return data;
 };
 

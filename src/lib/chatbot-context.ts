@@ -25,7 +25,7 @@ export async function getPortfolioContext() {
             ${projects?.map(p => `- ${p.title}: ${p.description}. Tech: ${p.tech_stack?.join(', ')}. Link: ${p.deployed_link || 'N/A'}`).join('\n')}
             
             SKILLS:
-            ${skills?.map(s => `- ${s.category}: ${s.skills?.join(', ')}`).join('\n')}
+            ${skills?.map(s => `- ${s.title}: ${s.skills?.map((sk: any) => typeof sk === 'object' ? sk.name : sk).join(', ')}`).join('\n')}
             
             EXPERIENCE:
             ${experience?.map(e => `- ${e.role} at ${e.company} (${e.duration}). ${e.description}`).join('\n')}

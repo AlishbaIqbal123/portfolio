@@ -122,11 +122,14 @@ export function SkillsPage() {
                                 {/* Skill Items — Light: horizontal wrap */}
                                 {!isDark ? (
                                   <div className="flex flex-wrap gap-3">
-                                    {category.skills.map((item: string, idx: number) => {
-                                      const SubIcon = skillIcons[item] || Star;
+                                    {category.skills.map((item: any, idx: number) => {
+                                      const isObject = typeof item === 'object' && item !== null;
+                                      const name = isObject ? item.name : item;
+                                      const logoUrl = isObject ? (isDark ? item.logo_url_dark || item.logo_url : item.logo_url) : null;
+                                      const SubIcon = skillIcons[name] || Star;
                                       return (
                                         <motion.div
-                                          key={item}
+                                          key={name}
                                           initial={{ opacity: 0, x: -10, filter: 'blur(4px)' }}
                                           whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
                                           viewport={{ once: true }}
@@ -144,8 +147,12 @@ export function SkillsPage() {
                                               whileHover={{ y: -3, scale: 1.05 }}
                                               className="silk-card flex items-center gap-3 px-5 py-3 border-0 bg-transparent shadow-none"
                                             >
-                                              <SubIcon className="w-5 h-5 text-primary" />
-                                              <span className="text-sm font-medium text-foreground">{item}</span>
+                                              {logoUrl ? (
+                                                <img src={logoUrl} alt={name} className="w-5 h-5 object-contain" />
+                                              ) : (
+                                                <SubIcon className="w-5 h-5 text-primary" />
+                                              )}
+                                              <span className="text-sm font-medium text-foreground">{name}</span>
                                             </motion.div>
                                           </BorderGlow>
                                         </motion.div>
@@ -154,11 +161,14 @@ export function SkillsPage() {
                                   </div>
                                 ) : (
                                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                                    {category.skills.map((item: string, idx: number) => {
-                                      const SubIcon = skillIcons[item] || Star;
+                                    {category.skills.map((item: any, idx: number) => {
+                                      const isObject = typeof item === 'object' && item !== null;
+                                      const name = isObject ? item.name : item;
+                                      const logoUrl = isObject ? (isDark ? item.logo_url_dark || item.logo_url : item.logo_url) : null;
+                                      const SubIcon = skillIcons[name] || Star;
                                       return (
                                         <motion.div
-                                          key={item}
+                                          key={name}
                                           initial={{ opacity: 0, scale: 0.8, y: 10 }}
                                           whileInView={{ opacity: 1, scale: 1, y: 0 }}
                                           viewport={{ once: true }}
@@ -184,8 +194,12 @@ export function SkillsPage() {
                                               }}
                                               className="architect-card flex flex-col items-center justify-center text-center gap-3 p-6 border-0 bg-transparent shadow-none h-full"
                                             >
-                                              <SubIcon className="w-6 h-6 text-primary group-hover:rotate-12 transition-transform" />
-                                              <span className="text-xs font-medium text-muted-foreground">{item}</span>
+                                              {logoUrl ? (
+                                                <img src={logoUrl} alt={name} className="w-6 h-6 object-contain group-hover:rotate-12 transition-transform" />
+                                              ) : (
+                                                <SubIcon className="w-6 h-6 text-primary group-hover:rotate-12 transition-transform" />
+                                              )}
+                                              <span className="text-xs font-medium text-muted-foreground">{name}</span>
                                             </motion.div>
                                           </BorderGlow>
                                         </motion.div>
