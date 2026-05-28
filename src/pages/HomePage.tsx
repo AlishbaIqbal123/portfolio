@@ -166,14 +166,14 @@ export function HomePage() {
           </section>
 
           {/* ⚡ Dynamic Skills Marquee — Editorial Bold */}
-          <section className="py-6 border-y border-border/40 bg-card/10 backdrop-blur-sm -rotate-1 scale-105 origin-center overflow-hidden">
+          <section className="py-2 bg-card/10 backdrop-blur-sm -rotate-1 scale-105 origin-center overflow-hidden">
             <ScrollVelocity 
               texts={[
-                personal.skills?.technologies?.join(" · ") || "React · Flutter · Node · AI",
-                personal.skills?.languages?.join(" · ") || "C++ · Python · Dart · JS"
+                personal.skills?.technologies?.join("  •  ") || "React  •  Flutter  •  Node  •  AI",
+                personal.skills?.languages?.join("  •  ") || "C++  •  Python  •  Dart  •  JS"
               ]}
               velocity={50}
-              className="text-4xl md:text-6xl font-black text-primary/80"
+              className="text-xl md:text-3xl font-semibold text-primary/80"
             />
           </section>
 
@@ -317,15 +317,15 @@ export function HomePage() {
           </section>
 
           {/* ⚡ Dynamic Skills Marquee — Architect Grid */}
-          <section className="py-12 bg-card/30 border-y border-white/5 overflow-hidden">
+          <section className="py-2 bg-card/10 overflow-hidden">
             <ScrollVelocity 
               texts={[
-                personal.skills?.technologies?.join(" · ") || "React · Flutter · Node · AI",
-                personal.skills?.languages?.join(" · ") || "C++ · Python · Dart · JS"
+                personal.skills?.technologies?.join("  •  ") || "React  •  Flutter  •  Node  •  AI",
+                personal.skills?.languages?.join("  •  ") || "C++  •  Python  •  Dart  •  JS"
               ]}
               velocity={80}
-              className="text-5xl md:text-8xl font-black text-foreground/5 tracking-tighter"
-              parallaxStyle={{ padding: '20px 0' }}
+              className="text-2xl md:text-4xl font-semibold text-foreground/10 tracking-tight"
+              parallaxStyle={{ padding: '4px 0' }}
             />
           </section>
 

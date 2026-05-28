@@ -137,7 +137,7 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
     for (let i = 0; i < (numCopies ?? 8); i++) {
       spans.push(
         <span className={className} key={i} ref={i === 0 ? copyRef : null}>
-          {children}&nbsp;&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;&nbsp;
+          {children}&nbsp;&nbsp;•&nbsp;&nbsp;
         </span>
       );
     }
@@ -152,7 +152,7 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
   }
 
   return (
-    <section className="scroll-velocity-section overflow-hidden py-10">
+    <section className="scroll-velocity-section overflow-hidden py-2">
       {texts.map((text, index) => (
         <VelocityText
           key={index}
