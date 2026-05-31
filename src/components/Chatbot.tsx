@@ -4,6 +4,7 @@ import { MessageSquare, Send, X, Sparkles, Loader2, User, Bot, Minimize2, ArrowR
 import { getPortfolioContext } from '@/lib/chatbot-context';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { NaqabAvatar } from './NaqabAvatar';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -155,8 +156,8 @@ export function Chatbot() {
                         {/* Header */}
                         <div className="p-4 bg-primary/10 border-b border-primary/10 flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                                    <Sparkles className="w-4 h-4 text-primary" />
+                                <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center overflow-visible">
+                                    <NaqabAvatar size={40} interactive={true} />
                                 </div>
                                 <div>
                                     <h3 className="text-sm font-bold text-foreground">Alishba AI</h3>
@@ -294,19 +295,19 @@ export function Chatbot() {
 
                         {/* Chatbot Button */}
                         <motion.button
-                            initial={{ scale: 0, rotate: -45 }}
-                            animate={{ scale: 1, rotate: 0 }}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
+                            initial={{ scale: 0, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             onClick={handleOpenChatbot}
-                            className="w-14 h-14 rounded-full bg-primary shadow-[0_10px_30px_rgba(var(--primary-rgb),0.5)] flex items-center justify-center text-primary-foreground relative group overflow-hidden"
+                            className="w-16 h-16 rounded-full bg-background border border-primary/20 shadow-[0_10px_30px_rgba(0,0,0,0.15)] flex items-center justify-center relative group overflow-visible cursor-pointer"
                         >
-                            <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                            <MessageSquare className="w-6 h-6" />
+                            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <NaqabAvatar size={60} interactive={true} className="group-hover:scale-105 transition-transform duration-300" />
                             <motion.div 
                                 animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
                                 transition={{ duration: 2, repeat: Infinity }}
-                                className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-background" 
+                                className="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-background z-20" 
                             />
                         </motion.button>
                     </div>
