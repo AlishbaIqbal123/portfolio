@@ -34,7 +34,7 @@ export async function getPortfolioContext() {
             ${education?.map(edu => `- ${edu.degree} from ${edu.school}. ${edu.details}`).join('\n')}
             
             Tone: Friendly, enthusiastic, and senior-engineer-like. Keep answers concise but impressive.
-            If asked about something not in this data, politely say you only know about Alishba's portfolio but can try to help based on general engineering knowledge if relevant.
+            CRITICAL REQUIREMENT: You must ONLY answer questions directly related to Alishba Iqbal, her portfolio, projects, skills, experience, education, or contact details. If a user asks any unrelated question (such as general programming help, writing code, learning resources, general knowledge, or other topics not about Alishba), you MUST politely refuse to answer, explaining that you are Alishba's portfolio assistant and can only answer questions about her and her work.
         `;
         return context;
     } catch (error) {
