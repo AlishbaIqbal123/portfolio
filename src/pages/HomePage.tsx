@@ -136,7 +136,6 @@ export function HomePage() {
                 </div>
               </motion.div>
 
-              {/* Photo side */}
               <motion.div 
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -153,10 +152,10 @@ export function HomePage() {
                     transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                     className="absolute inset-0 bg-primary/5 rounded-3xl" 
                   />
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-xl">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-gradient-to-b from-primary/5 to-primary/10 border border-primary/10 p-4 flex items-center justify-center shadow-lg">
                     <SafeImage 
-                      src="/images/alishba_profile_original.jpg" 
-                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" 
+                      src="/images/alishba_avatar_home.png" 
+                      className="max-h-[95%] max-w-full object-contain transition-transform duration-700 hover:scale-105" 
                       alt={personal.name || "Alishba Iqbal"} 
                     />
                   </div>

@@ -85,12 +85,12 @@ export function AboutPage() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="order-1 lg:order-2"
+                className="order-1 lg:order-2 flex justify-center"
               >
-                <div className="relative aspect-[4/5] overflow-hidden rounded-3xl shadow-xl">
-                  <SafeImage src="/images/alishba_profile_professional.png" className="w-full h-full object-cover" alt="Alishba Iqbal" />
-                  <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-primary/80 to-transparent">
-                    <span className="text-white text-xl font-bold">Alishba Iqbal</span>
+                <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-gradient-to-b from-primary/5 to-primary/10 border border-primary/10 p-6 flex items-center justify-center shadow-lg">
+                  <SafeImage src="/images/alishba_avatar_about.png" className="max-h-[90%] max-w-full object-contain" alt="Alishba Iqbal" />
+                  <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-primary/20 via-transparent to-transparent flex items-end justify-center">
+                    <span className="text-foreground text-xl font-bold bg-background/60 backdrop-blur-md px-4 py-1.5 rounded-full border border-primary/10 shadow-sm">Alishba Iqbal</span>
                   </div>
                 </div>
               </motion.div>
