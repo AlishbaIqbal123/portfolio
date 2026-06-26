@@ -206,9 +206,9 @@ export function Navbar() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-[190] bg-background/98 backdrop-blur-xl p-8 pt-24 flex flex-col"
+            className="fixed inset-0 z-[190] bg-background/98 backdrop-blur-xl p-8 pt-20 flex flex-col overflow-y-auto no-scrollbar"
           >
-            <div className="flex-1 flex flex-col justify-center gap-2">
+            <div className="flex-1 flex flex-col justify-start gap-1 pb-10">
               {visibleNavLinks.map((link, idx) => (
                 <motion.div
                   key={link.name}
@@ -219,7 +219,7 @@ export function Navbar() {
                   <Link
                     to={link.href}
                     onClick={() => handleNavLinkClick(link.href)}
-                    className={`block py-4 text-4xl md:text-5xl font-bold tracking-tight leading-none transition-colors ${
+                    className={`block py-2.5 text-4xl md:text-5xl font-bold tracking-tight leading-none transition-colors ${
                       isActive(link.href) ? 'text-primary' : 'text-foreground/20 hover:text-foreground'
                     }`}
                   >
@@ -256,7 +256,7 @@ export function Navbar() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[190] bg-background/98 backdrop-blur-xl flex flex-col items-center justify-center"
+            className="fixed inset-0 z-[190] bg-background/98 backdrop-blur-xl flex flex-col items-center justify-start overflow-y-auto no-scrollbar py-16"
           >
             <div className="grid grid-cols-2 gap-4 p-6 max-w-sm">
                {visibleNavLinks.map((link, idx) => (
