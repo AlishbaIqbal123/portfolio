@@ -10,9 +10,20 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { ScrollToTop } from '@/components/ScrollToTop';
 import { Toaster } from 'sonner';
 
+// Safe lazy helper to handle chunk loading failures (e.g., when a new version is deployed and old cached assets are requested)
+const safeLazy = (importFn: () => Promise<any>) => {
+  return React.lazy(() => 
+    importFn().catch((err) => {
+      console.warn("Dynamic import failed, forcing reload to fetch latest deployment:", err);
+      window.location.reload();
+      return { default: () => null };
+    })
+  );
+};
+
 // Lazy imports
-const LandingGate = React.lazy(() => import('./pages/LandingGate'));
-const StoryPage   = React.lazy(() => import('./pages/StoryPage'));
+const LandingGate = safeLazy(() => import('./pages/LandingGate'));
+const StoryPage   = safeLazy(() => import('./pages/StoryPage'));
 
 // Pages
 import { HomePage } from '@/pages/HomePage';

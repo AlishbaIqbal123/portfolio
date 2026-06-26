@@ -4,15 +4,26 @@ import StoryNav from '../components/story/StoryNav';
 import AnimeCharacter from '../components/story/AnimeCharacter';
 import { getCertifications } from '@/lib/api';
 
+// Safe lazy helper to handle chunk loading failures (e.g. after a new deployment)
+const safeLazy = (importFn: () => Promise<any>) => {
+  return React.lazy(() => 
+    importFn().catch((err) => {
+      console.warn("Dynamic import failed, forcing reload to fetch latest deployment:", err);
+      window.location.reload();
+      return { default: () => null };
+    })
+  );
+};
+
 // Dynamic lazy imports for all story sections
-const StoryPreloader   = React.lazy(() => import('../sections/story/StoryPreloader'));
-const StoryHero        = React.lazy(() => import('../sections/story/StoryHero'));
-const StoryAbout       = React.lazy(() => import('../sections/story/StoryAbout'));
-const StorySkills      = React.lazy(() => import('../sections/story/StorySkills'));
-const StoryExperience  = React.lazy(() => import('../sections/story/StoryExperience'));
-const StoryProjects    = React.lazy(() => import('../sections/story/StoryProjects'));
-const StoryCertifications = React.lazy(() => import('../sections/story/StoryCertifications'));
-const StoryContact     = React.lazy(() => import('../sections/story/StoryContact'));
+const StoryPreloader   = safeLazy(() => import('../sections/story/StoryPreloader'));
+const StoryHero        = safeLazy(() => import('../sections/story/StoryHero'));
+const StoryAbout       = safeLazy(() => import('../sections/story/StoryAbout'));
+const StorySkills      = safeLazy(() => import('../sections/story/StorySkills'));
+const StoryExperience  = safeLazy(() => import('../sections/story/StoryExperience'));
+const StoryProjects    = safeLazy(() => import('../sections/story/StoryProjects'));
+const StoryCertifications = safeLazy(() => import('../sections/story/StoryCertifications'));
+const StoryContact     = safeLazy(() => import('../sections/story/StoryContact'));
 
 export default function StoryPage() {
   const [loading, setLoading] = useState(true);
