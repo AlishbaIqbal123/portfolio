@@ -18,10 +18,36 @@ export function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    toast.success('Message sent successfully!');
-    setFormData({ name: '', email: '', subject: '', message: '' });
-    setLoading(false);
+
+    try {
+      const response = await fetch('https://formspree.io/f/mjgevqjn', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message
+        })
+      });
+
+      if (response.ok) {
+        toast.success('Message sent successfully!');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        const data = await response.json();
+        const errorMessage = data.error || 'Failed to send message. Please try again.';
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      console.error('Error submitting form to Formspree:', error);
+      toast.error('An error occurred. Please check your internet connection and try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const cleanPhone = personalData.phone.replace(/[^0-9]/g, '');
