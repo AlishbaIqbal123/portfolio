@@ -101,6 +101,8 @@ export const getPersonalInfo = async () => {
         location: settingsObj.location || 'Vehari, Pakistan',
         bio: settingsObj.bio,
         tagline: settingsObj.tagline,
+        github: settingsObj.github || 'https://github.com/AlishbaIqbal123',
+        linkedin: settingsObj.linkedin || 'https://www.linkedin.com/in/alishba-iqbal-a667b6263',
         stats: settingsObj.stats || {
             projects: settingsObj.projects_count || '12',
             internships: settingsObj.internships_count || '02'
@@ -157,4 +159,13 @@ export const getCodingTips = async () => {
     } catch (err) {
         return STATIC_TIPS;
     }
+};
+
+export const getCertifications = async () => {
+    const { data, error } = await supabase
+        .from('certifications')
+        .select('id, name, issuer, issue_date, image_url, credential_id, credential_url, details, accent_color, icon, location, order_index, created_at')
+        .order('order_index', { ascending: true });
+    if (error) throw error;
+    return data;
 };

@@ -24,7 +24,8 @@ import {
     Bell,
     Heart,
     Eye,
-    EyeOff
+    EyeOff,
+    Award
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -35,6 +36,7 @@ import { AdminEducation } from '@/components/admin/AdminEducation';
 import { AdminExperience } from '@/components/admin/AdminExperience';
 import { AdminSkills } from '@/components/admin/AdminSkills';
 import { AdminSettings } from '@/components/admin/AdminSettings';
+import { AdminCertifications } from '@/components/admin/AdminCertifications';
 import { AdminThemeProvider, useAdminTheme } from '@/hooks/useAdminTheme';
 import '@/admin-themes.css';
 
@@ -61,6 +63,7 @@ const AdminContent = () => {
         { id: 'projects', name: 'Projects', icon: Briefcase },
         { id: 'experience', name: 'Experience', icon: Activity },
         { id: 'education', name: 'Education', icon: GraduationCap },
+        { id: 'certifications', name: 'Certifications', icon: Award },
         { id: 'skills', name: 'Skills', icon: Code2 },
         { id: 'settings', name: 'Settings', icon: Settings },
     ];
@@ -301,6 +304,7 @@ const AdminContent = () => {
                                 {activeTab === 'projects' && <AdminProjects />}
                                 {activeTab === 'experience' && <AdminExperience />}
                                 {activeTab === 'education' && <AdminEducation />}
+                                {activeTab === 'certifications' && <AdminCertifications />}
                                 {activeTab === 'skills' && <AdminSkills />}
                                 {activeTab === 'settings' && <AdminSettings />}
                             </motion.div>

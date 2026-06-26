@@ -4,11 +4,13 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Sun, Moon, Star, Download } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 import { personalData } from '@/data/personal';
+import { getCertifications } from '@/lib/api';
 
 const navLinks = [
-  { name: 'HOME', href: '/' },
+  { name: 'HOME', href: '/portfolio' },
   { name: 'ABOUT', href: '/about' },
   { name: 'SKILLS', href: '/skills' },
+  { name: 'CERTIFICATIONS', href: '/certifications' },
   { name: 'PROJECTS', href: '/projects' },
   { name: 'EXPERIENCE', href: '/experience' },
   { name: 'TIPS', href: '/tips' },
@@ -22,6 +24,26 @@ export function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [clickCount, setClickCount] = useState(0);
+  const [hasCerts, setHasCerts] = useState(false);
+
+  useEffect(() => {
+    async function checkCertifications() {
+      try {
+        const certs = await getCertifications();
+        setHasCerts(certs && certs.length > 0);
+      } catch (err) {
+        console.error('Error fetching certifications for navbar:', err);
+      }
+    }
+    checkCertifications();
+  }, []);
+
+  const visibleNavLinks = navLinks.filter(link => {
+    if (link.name === 'CERTIFICATIONS') {
+      return hasCerts;
+    }
+    return true;
+  });
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -43,6 +65,11 @@ export function Navbar() {
     return location.pathname === href || location.pathname.startsWith(href + '/');
   };
 
+  const handleNavLinkClick = (href: string) => {
+    localStorage.setItem('alishba-portfolio-preference', 'multi');
+    setIsMobileMenuOpen(false);
+  };
+
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setClickCount(prev => prev + 1);
@@ -51,8 +78,8 @@ export function Navbar() {
       setClickCount(0);
     }
     setTimeout(() => setClickCount(0), 3000);
-    if (location.pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' });
-    else navigate('/');
+    if (location.pathname === '/portfolio') window.scrollTo({ top: 0, behavior: 'smooth' });
+    else navigate('/portfolio');
   };
 
   return (
@@ -85,10 +112,11 @@ export function Navbar() {
 
           {/* Desktop Nav Links */}
           <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
+            {visibleNavLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.href}
+                onClick={() => handleNavLinkClick(link.href)}
                 className={`
                   px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.12em] 
                   transition-all relative
@@ -165,7 +193,7 @@ export function Navbar() {
             className="fixed inset-0 z-[190] bg-background/98 backdrop-blur-xl p-8 pt-24 flex flex-col"
           >
             <div className="flex-1 flex flex-col justify-center gap-2">
-              {navLinks.map((link, idx) => (
+              {visibleNavLinks.map((link, idx) => (
                 <motion.div
                   key={link.name}
                   initial={{ x: 40, opacity: 0 }}
@@ -174,7 +202,7 @@ export function Navbar() {
                 >
                   <Link
                     to={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={() => handleNavLinkClick(link.href)}
                     className={`block py-4 text-4xl md:text-5xl font-bold tracking-tight leading-none transition-colors ${
                       isActive(link.href) ? 'text-primary' : 'text-foreground/20 hover:text-foreground'
                     }`}
@@ -197,7 +225,7 @@ export function Navbar() {
             className="fixed inset-0 z-[190] bg-background/98 backdrop-blur-xl flex flex-col items-center justify-center"
           >
             <div className="grid grid-cols-2 gap-4 p-6 max-w-sm">
-               {navLinks.map((link, idx) => (
+               {visibleNavLinks.map((link, idx) => (
                  <motion.div
                     key={link.name}
                     initial={{ opacity: 0, y: 20 }}
@@ -206,7 +234,7 @@ export function Navbar() {
                  >
                     <Link
                       to={link.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={() => handleNavLinkClick(link.href)}
                       className={`block p-6 border rounded-xl text-center transition-all ${
                         isActive(link.href) 
                           ? 'bg-primary/10 border-primary text-primary' 

@@ -67,6 +67,15 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  to="/"
+                  onClick={() => localStorage.removeItem('alishba-portfolio-preference')}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Change View Preference
+                </Link>
+              </li>
             </ul>
           </div>
 

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Space+Mono:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -168,20 +169,42 @@
   }
 }
 
-/* Subtle texture overlay */
-body::after {
-  content: "";
+/* Immersive Film Grain Overlay */
+.film-grain {
   position: fixed;
-  inset: 0;
-  background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
-  opacity: 0.02;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  width: 200%;
+  height: 200%;
+  background: transparent url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E') repeat;
+  opacity: 0.045;
   pointer-events: none;
-  z-index: 50;
+  z-index: 9999;
+  animation: grain-animation 8s steps(10) infinite;
 }
 
-.dark body::after {
-  opacity: 0;
+.dark .film-grain {
+  opacity: 0.025;
 }
+
+@keyframes grain-animation {
+  0%, 100% { transform:translate(0, 0); }
+  10% { transform:translate(-5%, -10%); }
+  20% { transform:translate(-15%, 5%); }
+  30% { transform:translate(7%, -25%); }
+  40% { transform:translate(-5%, 25%); }
+  55% { transform:translate(-15%, 10%); }
+  70% { transform:translate(15%, 15%); }
+  90% { transform:translate(10%, -10%); }
+}
+
+.editorial-serif-italic {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+}
+
 
 /* Scrollbar */
 ::-webkit-scrollbar {
@@ -206,3 +229,211 @@ body::after {
 .custom-scrollbar::-webkit-scrollbar-thumb {
   @apply bg-primary/10 rounded-full hover:bg-primary/20 transition-colors;
 }
+
+/* ── Story Module Fonts ───────────────────────── */
+
+/* ── Story Module CSS Variables ───────────────── */
+:root {
+  /* Legacy purple palette (kept for compatibility) */
+  --story-glow-purple: rgba(123, 47, 190, 0.6);
+  --story-glow-gold:   rgba(212, 175, 55, 0.5);
+  --story-glow-rose:   rgba(183, 110, 121, 0.4);
+
+  /* ── LIGHT MODE (Silk Editorial) — Beige + Burgundy ── */
+  --s-bg:          #F5EFEB;   /* Warm cream/beige background */
+  --s-bg2:         #EAE3DA;   /* Lighter cream surface */
+  --s-surface:     #FFFFFF;   /* White card surface */
+  --s-border:      #E4DACF;   /* Subtle beige border */
+  --s-border-mid:  #D5C9BA;   /* Mid-weight border */
+  --s-sand:        #1C100B;   /* Dark charcoal-brown text */
+  --s-sand-dim:    #7E6E65;   /* Dimmed brown text */
+  --s-sand-faint:  #DCD0C4;   /* Faint decorative elements */
+  --s-gold:        #8B1E3F;   /* Burgundy accent */
+  --s-gold-bright: #A52B52;   /* Bright burgundy */
+  --s-gold-dim:    #C8B5AC;   /* Dim border tone */
+}
+
+.dark {
+  /* ── DARK MODE (Midnight Architect) — Navy + Beige ── */
+  --s-bg:          #0C101B;   /* Deep navy background */
+  --s-bg2:         #131929;   /* Lighter navy surface */
+  --s-surface:     #171F33;   /* Navy card surface */
+  --s-border:      #1F2B47;   /* Subtle navy border */
+  --s-border-mid:  #2C3C63;   /* Mid-weight navy border */
+  --s-sand:        #EAE7E0;   /* Sand text */
+  --s-sand-dim:    #8E8B82;   /* Dimmed sand */
+  --s-sand-faint:  #2D3954;   /* Faint navy */
+  --s-gold:        #C5A880;   /* Champagne gold accent */
+  --s-gold-bright: #D4B896;   /* Bright champagne gold */
+  --s-gold-dim:    #7A6A58;   /* Dim gold */
+}
+
+/* ── Story Utility Classes ────────────────────── */
+.font-cinzel    { font-family: 'Cinzel Decorative', serif; }
+.font-cormorant { font-family: 'Cormorant Garamond', serif; }
+.font-mono-story { font-family: 'Space Mono', monospace; }
+.font-space     { font-family: 'Space Grotesk', sans-serif; }
+
+/* Text outline utilities for kinetic massive typography */
+.text-outline-sand {
+  -webkit-text-stroke: 1px #EAE7E0;
+  color: transparent;
+}
+.text-outline-gold {
+  -webkit-text-stroke: 1px #C5A880;
+  color: transparent;
+}
+.text-outline-dim {
+  -webkit-text-stroke: 1px #3D3B37;
+  color: transparent;
+}
+
+/* ── Story Page Animations and Component Styles ── */
+@keyframes flashOverlayEffect {
+  0% { opacity: 0; }
+  40% { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+.animate-flash-overlay {
+  animation: flashOverlayEffect 350ms ease-out forwards;
+}
+
+@keyframes breathAnimation {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+.character-silhouette {
+  animation: breathAnimation 3s infinite ease-in-out;
+}
+.character-silhouette * {
+  transition: stroke 300ms ease;
+}
+
+@keyframes story-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes story-blink {
+  0%, 94%, 100% { opacity: 0; transform: scaleY(0); }
+  96%, 98%      { opacity: 1; transform: scaleY(1); }
+}
+@keyframes story-wave {
+  from { transform: rotate(-15deg); }
+  to   { transform: rotate(15deg); }
+}
+.character-svg-wrapper {
+  animation: story-float 3s ease-in-out infinite;
+  width: 100%;
+  height: 100%;
+}
+.eyelid {
+  animation: story-blink 5s ease-in-out infinite;
+  transform-origin: center top;
+}
+.waving-hand {
+  animation: story-wave 0.5s ease-in-out infinite alternate;
+  transform-origin: 135px 92px;
+}
+
+@keyframes scroll-wheel {
+  0%   { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(10px); opacity: 0; }
+}
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+.blinking-cursor {
+  animation: cursor-blink 0.8s infinite;
+}
+
+.project-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.project-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px var(--card-glow);
+}
+
+.cert-card {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  clip-path: circle(0% at 50% 50%);
+  opacity: 0;
+}
+.cert-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--hover-border-color);
+  box-shadow: 0 10px 40px var(--hover-glow-color);
+}
+
+.orb-1 {
+  position: absolute; width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(123,47,190,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  top: -100px; left: -100px;
+  animation: drift1 12s ease-in-out infinite alternate;
+  z-index: 1;
+  pointer-events: none;
+}
+.orb-2 {
+  position: absolute; width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  bottom: -80px; right: -80px;
+  animation: drift2 15s ease-in-out infinite alternate;
+  z-index: 1;
+  pointer-events: none;
+}
+.orb-3 {
+  position: absolute; width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(183,110,121,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  top: 40%; left: 60%;
+  animation: drift3 10s ease-in-out infinite alternate;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes drift1 { from { transform: translate(0,0);     } to { transform: translate(60px, 40px);  } }
+@keyframes drift2 { from { transform: translate(0,0);     } to { transform: translate(-50px,-30px); } }
+@keyframes drift3 { from { transform: translate(0,0);     } to { transform: translate(30px, -50px); } }
+
+/* Flip card styling */
+.contact-card {
+  perspective: 1000px;
+  width: 200px; 
+  height: 160px;
+}
+.card-inner {
+  position: relative; 
+  width: 100%; 
+  height: 100%;
+  transition: transform 0.5s ease;
+  transform-style: preserve-3d;
+}
+.contact-card:hover .card-inner {
+  transform: rotateY(180deg);
+}
+.card-front, .card-back {
+  position: absolute; 
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  display: flex; 
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center;
+  gap: 0.5rem; 
+  padding: 1.2rem;
+  background: #1E0F3A;
+  border: 1px solid #9D4EDD;
+}
+.card-back {
+  transform: rotateY(180deg);
+  background: #2A0F5A;
+  border-color: #C77DFF;
+}
+
+/* Utilities */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
