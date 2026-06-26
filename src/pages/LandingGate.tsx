@@ -156,7 +156,7 @@ export default function LandingGate() {
 
         {/* The Choice Cards */}
         <div className="flex flex-col md:flex-row gap-[1.5rem]">
-          {/* Card 1 — THE EXPERIENCE */}
+          {/* Card 1 — STORY MODE */}
           <div 
             onClick={() => handleChoice('story', '/story')}
             className="group cursor-pointer w-[260px] rounded-[2px] border p-[2rem_2.2rem] flex flex-col items-center text-center transition-all duration-300 hover:scale-[1.02]"
@@ -182,14 +182,14 @@ export default function LandingGate() {
               }`}
               style={{ color: 'var(--s-sand, #EAE7E0)' }}
             >
-              THE EXPERIENCE
+              STORY MODE
             </h2>
             <p className="font-mono-story text-[0.6rem] tracking-wider leading-relaxed" style={{ color: 'var(--s-sand-dim, #8E8B82)' }}>
               Scroll-driven · Cinematic · Animated
             </p>
           </div>
 
-          {/* Card 2 — FULL PORTFOLIO */}
+          {/* Card 2 — CLASSIC PORTFOLIO */}
           <div 
             onClick={() => handleChoice('multi', '/portfolio')}
             className="group cursor-pointer w-[260px] rounded-[2px] border p-[2rem_2.2rem] flex flex-col items-center text-center transition-all duration-300 hover:scale-[1.02]"
@@ -215,7 +215,7 @@ export default function LandingGate() {
               }`}
               style={{ color: 'var(--s-sand, #EAE7E0)' }}
             >
-              FULL PORTFOLIO
+              CLASSIC PORTFOLIO
             </h2>
             <p className="font-mono-story text-[0.6rem] tracking-wider leading-relaxed" style={{ color: 'var(--s-sand-dim, #8E8B82)' }}>
               All pages · Projects · Admin

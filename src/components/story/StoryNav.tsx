@@ -104,7 +104,7 @@ export default function StoryNav({
           onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = 'var(--s-sand)'}
           onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = 'var(--s-sand-dim)'}
         >
-          ← MULTI-PAGE
+          ← PORTFOLIO
         </a>
 
         {/* Track and chapters */}
