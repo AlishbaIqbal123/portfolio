@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Search, X, SlidersHorizontal } from 'lucide-react';
+import { ArrowRight, Search, X, SlidersHorizontal, ExternalLink } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 import { projectsData as staticProjects } from '@/data/projects';
 import { QuickAdmin } from '@/components/QuickAdmin';
@@ -42,6 +42,7 @@ function getTagColor(tag: string): string {
 /* ── Light Mode Card: horizontal, editorial ── */
 function SilkProjectCard({ project, index, activeTech }: { project: any; index: number; activeTech: string | null }) {
   const navigate = useNavigate();
+  const liveLink = project.deployed_link || project.liveUrl;
   return (
     <motion.div
       layout
@@ -109,12 +110,27 @@ function SilkProjectCard({ project, index, activeTech }: { project: any; index: 
                   </span>
                 ))}
               </div>
-              <motion.div
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <ArrowRight className="w-5 h-5 text-primary" />
-              </motion.div>
+              <div className="flex items-center gap-3">
+                {liveLink && (
+                  <a
+                    href={liveLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+                    title="View Live Website"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                )}
+                <motion.div
+                  className="flex items-center"
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <ArrowRight className="w-5 h-5 text-primary" />
+                </motion.div>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -126,6 +142,7 @@ function SilkProjectCard({ project, index, activeTech }: { project: any; index: 
 /* ── Dark Mode Card: vertical grid, architectural ── */
 function ArchitectProjectCard({ project, index, activeTech }: { project: any; index: number; activeTech: string | null }) {
   const navigate = useNavigate();
+  const liveLink = project.deployed_link || project.liveUrl;
   return (
     <motion.div
       layout
@@ -183,7 +200,21 @@ function ArchitectProjectCard({ project, index, activeTech }: { project: any; in
                   </span>
                 ))}
               </div>
-              <ArrowRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
+              <div className="flex items-center gap-3">
+                {liveLink && (
+                  <a
+                    href={liveLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="p-1 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                    title="View Live Website"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                )}
+                <ArrowRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
+              </div>
             </div>
           </div>
         </div>
