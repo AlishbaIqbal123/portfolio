@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Sun, Moon, Star, Download } from 'lucide-react';
+import { Menu, X, Sun, Moon, Star, Download, Sparkles } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 import { personalData } from '@/data/personal';
 import { getCertifications } from '@/lib/api';
@@ -138,8 +138,24 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* Right: CV Download + Theme toggle + Mobile menu */}
+          {/* Right: Story Mode + CV Download + Theme toggle + Mobile menu */}
           <div className="flex items-center gap-2">
+            <button 
+              onClick={() => {
+                localStorage.setItem('alishba-portfolio-preference', 'story');
+                navigate('/story');
+              }}
+              className={`hidden sm:flex items-center gap-2 h-9 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-300 border
+                ${isDark 
+                  ? 'border-primary/30 bg-primary/5 text-primary hover:bg-primary/15 hover:border-primary/50' 
+                  : 'border-border bg-muted/40 text-foreground hover:bg-muted/70'
+                }
+              `}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Story Mode</span>
+            </button>
+
             <button 
               onClick={() => {
                 const link = document.createElement('a');
@@ -211,6 +227,24 @@ export function Navbar() {
                   </Link>
                 </motion.div>
               ))}
+              <motion.div
+                initial={{ x: 40, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: visibleNavLinks.length * 0.04 }}
+                className="mt-6 pt-6 border-t border-border"
+              >
+                <button
+                  onClick={() => {
+                    localStorage.setItem('alishba-portfolio-preference', 'story');
+                    setIsMobileMenuOpen(false);
+                    navigate('/story');
+                  }}
+                  className="text-xs font-mono uppercase tracking-[0.2em] text-primary hover:underline flex items-center gap-1.5"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Switch to Story Mode →</span>
+                </button>
+              </motion.div>
             </div>
           </motion.div>
         )}
@@ -247,23 +281,39 @@ export function Navbar() {
                ))}
             </div>
 
-            <motion.button
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              onClick={() => {
-                const link = document.createElement('a');
-                link.href = personalData.cvPath;
-                link.download = 'ALISHBA_RESUME.pdf';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                setIsMobileMenuOpen(false);
-              }}
-              className="mt-4 px-8 py-4 bg-primary text-primary-foreground rounded-xl text-sm font-black uppercase tracking-widest flex items-center gap-2"
-            >
-               <Download className="w-4 h-4" /> DOWNLOAD CV
-            </motion.button>
+            <div className="flex flex-col gap-3 mt-6 w-full max-w-[280px]">
+              <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                onClick={() => {
+                  const link = document.createElement('a');
+                  link.href = personalData.cvPath;
+                  link.download = 'ALISHBA_RESUME.pdf';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full py-3.5 bg-primary text-primary-foreground rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
+              >
+                 <Download className="w-4 h-4" /> DOWNLOAD CV
+              </motion.button>
+
+              <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45 }}
+                onClick={() => {
+                  localStorage.setItem('alishba-portfolio-preference', 'story');
+                  setIsMobileMenuOpen(false);
+                  navigate('/story');
+                }}
+                className="w-full py-3.5 border border-primary/30 bg-primary/5 text-primary rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
+              >
+                 <Sparkles className="w-4 h-4" /> STORY MODE
+              </motion.button>
+            </div>
 
             <button 
               onClick={() => setIsMobileMenuOpen(false)}
