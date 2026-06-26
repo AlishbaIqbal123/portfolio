@@ -163,53 +163,24 @@ export const getCodingTips = async () => {
 
 export const getCertifications = async () => {
     try {
+        // We omit the non-existent 'location' column from the select list to prevent browser 400 Bad Request console errors.
         const { data, error } = await supabase
             .from('certifications')
-            .select('id, name, issuer, issue_date, image_url, credential_id, credential_url, details, accent_color, icon, location, order_index, created_at')
+            .select('id, name, issuer, issue_date, image_url, credential_id, credential_url, details, accent_color, icon, order_index, created_at')
             .order('order_index', { ascending: true });
         
         if (error) {
-            // Error code '42703' means an undefined column (e.g. 'location' column is missing)
+            // Silently fall back to a minimal set of columns if a column doesn't exist
             if (error.code === '42703') {
-                console.warn('Supabase certifications column error, retrying query without optional "location" column:', error);
-                const { data: fallbackData, error: fallbackError } = await supabase
+                const { data: minimalData, error: minimalError } = await supabase
                     .from('certifications')
-                    .select('id, name, issuer, issue_date, image_url, credential_id, credential_url, details, accent_color, icon, order_index, created_at')
-                    .order('order_index', { ascending: true });
+                    .select('id, name, issuer, issue_date, image_url, credential_id, credential_url')
+                    .order('id', { ascending: true });
                 
-                if (fallbackError) {
-                    // If it still fails, try a very basic query
-                    if (fallbackError.code === '42703') {
-                        console.warn('Supabase certifications retry column error, retrying with minimal columns:', fallbackError);
-                        const { data: minimalData, error: minimalError } = await supabase
-                            .from('certifications')
-                            .select('id, name, issuer, issue_date, image_url, credential_id, credential_url')
-                            .order('id', { ascending: true });
-                        
-                        if (minimalError) {
-                            console.error('Minimal query also failed:', minimalError);
-                            return [];
-                        }
-                        return (minimalData || []).map((x: any) => ({
-                            id: x.id,
-                            name: x.name,
-                            issuer: x.issuer,
-                            issue_date: x.issue_date,
-                            image_url: x.image_url || '',
-                            credential_id: x.credential_id || null,
-                            credential_url: x.credential_url || null,
-                            details: '',
-                            accent_color: '#C5A880',
-                            icon: '🏆',
-                            location: '',
-                            order_index: 0,
-                            created_at: null,
-                        }));
-                    }
-                    console.error('Certifications query fallback error:', fallbackError);
+                if (minimalError) {
                     return [];
                 }
-                return (fallbackData || []).map((x: any) => ({
+                return (minimalData || []).map((x: any) => ({
                     id: x.id,
                     name: x.name,
                     issuer: x.issuer,
@@ -217,15 +188,14 @@ export const getCertifications = async () => {
                     image_url: x.image_url || '',
                     credential_id: x.credential_id || null,
                     credential_url: x.credential_url || null,
-                    details: x.details || '',
-                    accent_color: x.accent_color || '#C5A880',
-                    icon: x.icon || '🏆',
-                    location: '', // Location is missing, default to empty string
-                    order_index: x.order_index || 0,
-                    created_at: x.created_at || null,
+                    details: '',
+                    accent_color: '#C5A880',
+                    icon: '🏆',
+                    location: '',
+                    order_index: 0,
+                    created_at: null,
                 }));
             }
-            console.warn('Supabase certifications table query error (likely table does not exist):', error);
             return [];
         }
         return (data || []).map((x: any) => ({
@@ -239,12 +209,11 @@ export const getCertifications = async () => {
             details: x.details || '',
             accent_color: x.accent_color || '#C5A880',
             icon: x.icon || '🏆',
-            location: x.location || '',
+            location: '', // default to empty string since the column is missing in the DB
             order_index: x.order_index || 0,
             created_at: x.created_at || null,
         }));
     } catch (err) {
-        console.warn('Failed to fetch certifications, defaulting to empty array:', err);
         return [];
     }
 };
