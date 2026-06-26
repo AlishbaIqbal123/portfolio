@@ -162,10 +162,19 @@ export const getCodingTips = async () => {
 };
 
 export const getCertifications = async () => {
-    const { data, error } = await supabase
-        .from('certifications')
-        .select('id, name, issuer, issue_date, image_url, credential_id, credential_url, details, accent_color, icon, location, order_index, created_at')
-        .order('order_index', { ascending: true });
-    if (error) throw error;
-    return data;
+    try {
+        const { data, error } = await supabase
+            .from('certifications')
+            .select('id, name, issuer, issue_date, image_url, credential_id, credential_url, details, accent_color, icon, location, order_index, created_at')
+            .order('order_index', { ascending: true });
+        
+        if (error) {
+            console.warn('Supabase certifications table query error (likely table does not exist):', error);
+            return [];
+        }
+        return data || [];
+    } catch (err) {
+        console.warn('Failed to fetch certifications, defaulting to empty array:', err);
+        return [];
+    }
 };

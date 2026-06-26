@@ -82,6 +82,23 @@ CREATE TABLE IF NOT EXISTS admin_settings (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- Create Certifications table
+CREATE TABLE IF NOT EXISTS certifications (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name TEXT NOT NULL,
+    issuer TEXT NOT NULL,
+    issue_date TEXT NOT NULL,
+    image_url TEXT,
+    credential_id TEXT,
+    credential_url TEXT,
+    details TEXT,
+    accent_color TEXT DEFAULT '#C5A880',
+    icon TEXT DEFAULT '🏆',
+    location TEXT,
+    order_index INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
 -- Enable Row Level Security (RLS)
 ALTER TABLE coding_tips ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
@@ -90,6 +107,8 @@ ALTER TABLE experience ENABLE ROW LEVEL SECURITY;
 ALTER TABLE skill_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE certifications ENABLE ROW LEVEL SECURITY;
+
 
 -- Create Policies (Allow public READ, but only authenticated WRITE)
 CREATE POLICY "Public Read Access" ON coding_tips FOR SELECT USING (true);
@@ -112,3 +131,6 @@ CREATE POLICY "Auth Full Access" ON articles FOR ALL USING (auth.role() = 'authe
 
 CREATE POLICY "Public Read Access" ON admin_settings FOR SELECT USING (true);
 CREATE POLICY "Auth Full Access" ON admin_settings FOR ALL USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Public Read Access" ON certifications FOR SELECT USING (true);
+CREATE POLICY "Auth Full Access" ON certifications FOR ALL USING (auth.role() = 'authenticated');

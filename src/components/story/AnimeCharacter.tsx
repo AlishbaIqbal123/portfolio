@@ -47,9 +47,9 @@ export default function AnimeCharacter({
     });
   }, []);
 
-  // Detect screen size
+  // Detect screen size (mobile/tablet under 1024px)
   useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth < 768);
+    const onResize = () => setIsMobile(window.innerWidth < 1024);
     onResize();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
@@ -74,7 +74,7 @@ export default function AnimeCharacter({
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [isMobile, dismissed]);
 
-  if (dismissed) return null;
+  if (dismissed || isMobile) return null;
 
   const currentImg = CHARACTER_IMAGES[activeChapter] ?? CHARACTER_IMAGES.hero;
   const desktopPos = POSITIONS[activeChapter] ?? POSITIONS.hero;
