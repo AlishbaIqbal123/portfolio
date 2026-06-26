@@ -34,7 +34,7 @@ export default function AnimeCharacter({
 }: AnimeCharacterProps) {
   const { isDark } = useTheme();
   const [dismissed, setDismissed] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 1024 : false);
   
   // Parallax offset states
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
@@ -74,7 +74,7 @@ export default function AnimeCharacter({
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [isMobile, dismissed]);
 
-  if (dismissed || isMobile) return null;
+  if (dismissed) return null;
 
   const currentImg = CHARACTER_IMAGES[activeChapter] ?? CHARACTER_IMAGES.hero;
   const desktopPos = POSITIONS[activeChapter] ?? POSITIONS.hero;
@@ -84,6 +84,8 @@ export default function AnimeCharacter({
     position: 'fixed',
     right: '12px',
     bottom: '12px',
+    left: 'auto',
+    top: 'auto',
     transform: 'scale(0.55)',
     transformOrigin: 'bottom right',
     zIndex: 100,
@@ -108,10 +110,13 @@ export default function AnimeCharacter({
   return (
     <motion.div
       style={isMobile ? mobileStyle : desktopStyle}
-      // Animate position shifts smoothly on desktop
+      // Animate position shifts smoothly on desktop, reset left/top on mobile
       animate={
         isMobile
-          ? {}
+          ? {
+              left: 'auto',
+              top: 'auto',
+            }
           : {
               left: desktopPos.left,
               top: desktopPos.top,
