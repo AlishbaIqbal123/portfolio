@@ -429,14 +429,22 @@ export const AdminCertifications = () => {
                                             </div>
                                             <div className="space-y-1.5">
                                                 <label className="text-xs font-medium text-muted-foreground">Accent Hex Color</label>
-                                                <input 
-                                                    type="text" value={editingCert.accent_color || ''}
-                                                    onChange={e => setEditingCert({...editingCert, accent_color: e.target.value})}
-                                                    className={`w-full h-10 rounded-lg border px-3 text-sm outline-none transition-colors ${
-                                                        isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
-                                                    }`}
-                                                    placeholder="e.g. #9D4EDD"
-                                                />
+                                                <div className="flex gap-2 items-center">
+                                                    <input 
+                                                        type="text" value={editingCert.accent_color || ''}
+                                                        onChange={e => setEditingCert({...editingCert, accent_color: e.target.value})}
+                                                        className={`flex-1 h-10 rounded-lg border px-3 text-sm outline-none transition-colors ${
+                                                            isDark ? 'bg-background border-border focus:border-primary' : 'bg-white border-border focus:border-primary'
+                                                        }`}
+                                                        placeholder="e.g. #9D4EDD"
+                                                    />
+                                                    <input 
+                                                        type="color" 
+                                                        value={editingCert.accent_color?.startsWith('#') && editingCert.accent_color.length === 7 ? editingCert.accent_color : '#9D4EDD'}
+                                                        onChange={e => setEditingCert({...editingCert, accent_color: e.target.value})}
+                                                        className="w-10 h-10 rounded-lg border border-border cursor-pointer p-0 bg-transparent shrink-0 overflow-hidden"
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
 
