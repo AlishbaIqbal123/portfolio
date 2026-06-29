@@ -48,9 +48,60 @@ export default function CertificationsPage() {
   }
 
   return (
-    <div className="relative min-h-screen bg-background transition-colors duration-500 pb-20 text-left">
+    <div className="relative min-h-screen bg-background transition-colors duration-500 pb-20 text-left overflow-hidden">
+      {/* Background Ambient Glows & Grid */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {/* Grid pattern overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, currentColor 1px, transparent 1px),
+              linear-gradient(to bottom, currentColor 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px',
+            color: isDark ? '#ffffff' : '#7d0d1b'
+          }}
+        />
+        
+        {/* Radial accent glows */}
+        <div 
+          className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full blur-[120px] opacity-[0.08] dark:opacity-[0.12] transition-colors duration-1000"
+          style={{
+            background: isDark 
+              ? 'radial-gradient(circle, #e1bb80 0%, transparent 70%)' 
+              : 'radial-gradient(circle, #7d0d1b 0%, transparent 70%)'
+          }}
+        />
+        <div 
+          className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full blur-[120px] opacity-[0.08] dark:opacity-[0.12] transition-colors duration-1000"
+          style={{
+            background: isDark 
+              ? 'radial-gradient(circle, #e1bb80 0%, transparent 70%)' 
+              : 'radial-gradient(circle, #7d0d1b 0%, transparent 70%)'
+          }}
+        />
+
+        {/* Dynamic diagonal lines / structural elements (architectural vibe) */}
+        {isDark && (
+          <>
+            <div className="absolute top-[20%] left-[5%] w-[30%] h-[1px] bg-primary/10 -rotate-12 transform origin-left" />
+            <div className="absolute bottom-[30%] right-[5%] w-[40%] h-[1px] bg-primary/10 rotate-12 transform origin-right" />
+            <div className="absolute top-[10%] right-[15%] w-[1px] h-[300px] bg-gradient-to-b from-primary/15 to-transparent" />
+          </>
+        )}
+        
+        {/* Editorial borders / grid columns (light mode vibe) */}
+        {!isDark && (
+          <>
+            <div className="absolute top-0 left-[10%] w-[1px] h-full bg-[#7d0d1b]/5" />
+            <div className="absolute top-0 right-[10%] w-[1px] h-full bg-[#7d0d1b]/5" />
+          </>
+        )}
+      </div>
+
       {/* Header */}
-      <section className="pt-24 pb-8 px-6 md:px-16 lg:px-24">
+      <section className="relative z-10 pt-24 pb-8 px-6 md:px-16 lg:px-24">
         <div className="max-w-6xl mx-auto">
           {!isDark ? (
             <div className="space-y-3">
@@ -73,7 +124,7 @@ export default function CertificationsPage() {
       </section>
 
       {/* Grid Section */}
-      <section className="px-6 md:px-16 lg:px-24">
+      <section className="relative z-10 px-6 md:px-16 lg:px-24">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {certifications.map((cert, index) => (
