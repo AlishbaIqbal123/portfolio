@@ -24,6 +24,7 @@ const safeLazy = (importFn: () => Promise<any>) => {
 // Lazy imports
 const LandingGate = safeLazy(() => import('./pages/LandingGate'));
 const StoryPage   = safeLazy(() => import('./pages/StoryPage'));
+const ResumePage  = safeLazy(() => import('./pages/ResumePage'));
 
 // Pages
 import { HomePage } from '@/pages/HomePage';
@@ -50,6 +51,8 @@ function AnimatedRoutes() {
                 { path: '/', element: <React.Suspense fallback={<div style={{background:'var(--s-bg, #0A0A09)', width:'100vw', height:'100vh'}} />}><LandingGate /></React.Suspense> },
                 { path: '/portfolio', element: <HomePage /> },
                 { path: '/story', element: <React.Suspense fallback={<div style={{background:'var(--s-bg, #0A0A09)', width:'100vw', height:'100vh'}} />}><StoryPage /></React.Suspense> },
+                { path: '/resume', element: <React.Suspense fallback={<div style={{background:'var(--s-bg, #0A0A09)', width:'100vw', height:'100vh'}} />}><ResumePage /></React.Suspense> },
+                { path: '/cv', element: <React.Suspense fallback={<div style={{background:'var(--s-bg, #0A0A09)', width:'100vw', height:'100vh'}} />}><ResumePage /></React.Suspense> },
                 { path: '/certifications', element: <CertificationsPage /> },
                 { path: '/login', element: <LoginPage /> },
                 { path: '/tips', element: <TipsPage /> },
@@ -98,13 +101,14 @@ function AppLayout() {
   const location = useLocation();
   const { isDark } = useTheme();
   
-  // No navbar/footer/background for Admin, Project Demo, Story Mode, or Landing Gate
+  // No navbar/footer/background for Admin, Project Demo, Story Mode, Landing Gate, or Resume Page
   const isAdmin = location.pathname.startsWith('/admin');
   const isDemo = location.pathname.includes('/projects/') && location.pathname !== '/projects';
   const isStory = location.pathname === '/story';
   const isLanding = location.pathname === '/';
+  const isResume = location.pathname === '/resume' || location.pathname === '/cv';
 
-  const showMainLayout = !isAdmin && !isDemo && !isStory && !isLanding;
+  const showMainLayout = !isAdmin && !isDemo && !isStory && !isLanding && !isResume;
 
   return (
     <div className={`min-h-screen bg-transparent text-[var(--foreground)] transition-colors duration-1000 relative selection:bg-primary selection:text-primary-foreground ${isAdmin ? 'admin-theme' : ''}`}>

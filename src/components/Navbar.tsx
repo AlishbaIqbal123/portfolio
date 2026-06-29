@@ -158,12 +158,7 @@ export function Navbar() {
 
             <button 
               onClick={() => {
-                const link = document.createElement('a');
-                link.href = personalData.cvPath;
-                link.download = 'ALISHBA_RESUME.pdf';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                window.open('/resume?print=true', '_blank');
               }}
               className={`hidden sm:flex items-center gap-2 h-9 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-300
                 ${isDark 
@@ -287,12 +282,7 @@ export function Navbar() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
                 onClick={() => {
-                  const link = document.createElement('a');
-                  link.href = personalData.cvPath;
-                  link.download = 'ALISHBA_RESUME.pdf';
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
+                  window.open('/resume?print=true', '_blank');
                   setIsMobileMenuOpen(false);
                 }}
                 className="w-full py-3.5 bg-primary text-primary-foreground rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"

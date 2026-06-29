@@ -67,12 +67,7 @@ export function AboutPage() {
                 <div className="pt-6">
                   <button 
                     onClick={() => {
-                        const link = document.createElement('a');
-                        link.href = staticPersonal.cvPath;
-                        link.download = 'ALISHBA_RESUME.pdf';
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
+                        window.open('/resume?print=true', '_blank');
                     }}
                     className="imperial-btn flex items-center gap-2"
                   >
@@ -138,12 +133,7 @@ export function AboutPage() {
                   <div className="mt-8 pt-8 border-t border-primary/10">
                     <button 
                       onClick={() => {
-                          const link = document.createElement('a');
-                          link.href = staticPersonal.cvPath;
-                          link.download = 'ALISHBA_RESUME.pdf';
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
+                          window.open('/resume?print=true', '_blank');
                       }}
                       className="imperial-btn flex items-center gap-2"
                     >

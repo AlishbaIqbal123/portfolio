@@ -98,6 +98,7 @@ export const getPersonalInfo = async () => {
     return {
         name: settingsObj.name || 'Alishba Iqbal',
         email: settingsObj.email || 'i.alishba1342@gmail.com',
+        phone: settingsObj.phone || '+92 3180623294',
         location: settingsObj.location || 'Vehari, Pakistan',
         bio: settingsObj.bio,
         tagline: settingsObj.tagline,

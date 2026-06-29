@@ -44,12 +44,7 @@ export function Hero() {
   }, []);
 
   const downloadCV = () => {
-    const link = document.createElement('a');
-    link.href = personalData.cvPath;
-    link.download = 'ALISHBA_RESUME.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    window.open('/resume?print=true', '_blank');
   };
 
   return (
