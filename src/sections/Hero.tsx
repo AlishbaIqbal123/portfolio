@@ -44,7 +44,7 @@ export function Hero() {
   }, []);
 
   const downloadCV = () => {
-    window.open('/resume?print=true', '_blank');
+    window.open('/resume', '_blank');
   };
 
   return (

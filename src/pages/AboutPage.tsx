@@ -67,7 +67,7 @@ export function AboutPage() {
                 <div className="pt-6">
                   <button 
                     onClick={() => {
-                        window.open('/resume?print=true', '_blank');
+                        window.open('/resume', '_blank');
                     }}
                     className="imperial-btn flex items-center gap-2"
                   >
@@ -133,7 +133,7 @@ export function AboutPage() {
                   <div className="mt-8 pt-8 border-t border-primary/10">
                     <button 
                       onClick={() => {
-                          window.open('/resume?print=true', '_blank');
+                          window.open('/resume', '_blank');
                       }}
                       className="imperial-btn flex items-center gap-2"
                     >

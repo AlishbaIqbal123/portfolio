@@ -158,7 +158,7 @@ export function Navbar() {
 
             <button 
               onClick={() => {
-                window.open('/resume?print=true', '_blank');
+                window.open('/resume', '_blank');
               }}
               className={`hidden sm:flex items-center gap-2 h-9 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-300
                 ${isDark 
@@ -282,7 +282,7 @@ export function Navbar() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
                 onClick={() => {
-                  window.open('/resume?print=true', '_blank');
+                  window.open('/resume', '_blank');
                   setIsMobileMenuOpen(false);
                 }}
                 className="w-full py-3.5 bg-primary text-primary-foreground rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
