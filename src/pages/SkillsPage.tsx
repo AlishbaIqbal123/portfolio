@@ -37,23 +37,62 @@ export function SkillsPage() {
         loadData();
     }, []);
 
-    const techLogos = personalData.skills.technologies.map(tech => ({
-        node: (
-            <span className="flex items-center gap-6 select-none">
-                <span className="opacity-40">•</span>
-                <span>{tech}</span>
-            </span>
-        )
-    }));
+    const getSkillLogo = (item: any) => {
+        const isObject = typeof item === 'object' && item !== null;
+        const name = isObject ? item.name : item;
+        const logoUrl = isObject ? (isDark ? item.logo_url_dark || item.logo_url : item.logo_url) : null;
+        const SubIcon = getSkillIconByName(name);
 
-    const languageLogos = personalData.skills.languages.map(lang => ({
-        node: (
-            <span className="flex items-center gap-6 select-none">
-                <span className="opacity-40">•</span>
-                <span>{lang}</span>
-            </span>
-        )
-    }));
+        return {
+            node: (
+                <div className="flex items-center justify-center p-2 select-none text-[#e1bb80]/20 dark:text-[#e1bb80]/15 hover:text-[#e1bb80] transition-colors duration-300 group/logo">
+                    {logoUrl ? (
+                        <img 
+                            src={logoUrl} 
+                            alt={name} 
+                            className="w-16 h-16 object-contain filter grayscale opacity-40 group-hover/logo:grayscale-0 group-hover/logo:opacity-100 transition-all duration-300" 
+                        />
+                    ) : (
+                        <SubIcon className="w-16 h-16" />
+                    )}
+                </div>
+            )
+        };
+    };
+
+    // Separate languages and other skills dynamically from skillsData
+    const languagesCategory = skillsData.find(cat => cat.title.toLowerCase().includes('lang'));
+    const techCategories = skillsData.filter(cat => !cat.title.toLowerCase().includes('lang'));
+
+    const techSkills = techCategories.flatMap(cat => cat.skills || []);
+    const languageSkills = languagesCategory ? (languagesCategory.skills || []) : [];
+
+    // Map to logo objects
+    const techLogos = techSkills.map(getSkillLogo);
+    const languageLogos = languageSkills.map(getSkillLogo);
+
+    // Fallbacks if data is not yet loaded
+    const finalTechLogos = techLogos.length > 0 ? techLogos : personalData.skills.technologies.map(tech => {
+        const Icon = getSkillIconByName(tech);
+        return {
+            node: (
+                <div className="flex items-center justify-center p-2 select-none text-[#e1bb80]/20 dark:text-[#e1bb80]/15 hover:text-[#e1bb80] transition-colors duration-300">
+                    <Icon className="w-16 h-16" />
+                </div>
+            )
+        };
+    });
+
+    const finalLanguageLogos = languageLogos.length > 0 ? languageLogos : personalData.skills.languages.map(lang => {
+        const Icon = getSkillIconByName(lang);
+        return {
+            node: (
+                <div className="flex items-center justify-center p-2 select-none text-[#e1bb80]/20 dark:text-[#e1bb80]/15 hover:text-[#e1bb80] transition-colors duration-300">
+                    <Icon className="w-16 h-16" />
+                </div>
+            )
+        };
+    });
 
     const cardVariants: Variants = {
         hidden: { opacity: 0, y: 20 },
@@ -84,30 +123,31 @@ export function SkillsPage() {
                   </div>
                 )}
               </div>
-              
-              <div className="mt-16 overflow-hidden flex flex-col gap-6">
-                <LogoLoop
-                  logos={techLogos}
-                  speed={35}
-                  direction="left"
-                  logoHeight={80}
-                  gap={48}
-                  fadeOut={true}
-                  fadeOutColor="hsl(var(--background))"
-                  className={`${isDark ? 'text-foreground/5' : 'text-primary/10'} text-6xl md:text-8xl font-black uppercase tracking-tighter`}
-                />
-                <LogoLoop
-                  logos={languageLogos}
-                  speed={35}
-                  direction="right"
-                  logoHeight={80}
-                  gap={48}
-                  fadeOut={true}
-                  fadeOutColor="hsl(var(--background))"
-                  className={`${isDark ? 'text-foreground/5' : 'text-primary/10'} text-6xl md:text-8xl font-black uppercase tracking-tighter`}
-                />
-              </div>
             </section>
+
+            {/* FULL-WIDTH TICKER (Edge to Edge, No padding) */}
+            <div className="w-full overflow-hidden flex flex-col gap-6 py-8 bg-transparent">
+                <LogoLoop
+                  logos={finalTechLogos}
+                  speed={25}
+                  direction="left"
+                  logoHeight={64}
+                  gap={48}
+                  fadeOut={true}
+                  fadeOutColor="hsl(var(--background))"
+                  scaleOnHover={true}
+                />
+                <LogoLoop
+                  logos={finalLanguageLogos}
+                  speed={25}
+                  direction="right"
+                  logoHeight={64}
+                  gap={48}
+                  fadeOut={true}
+                  fadeOutColor="hsl(var(--background))"
+                  scaleOnHover={true}
+                />
+            </div>
 
             {/* Skills Grid */}
             <section className="py-12 px-6 md:px-16 lg:px-24">
