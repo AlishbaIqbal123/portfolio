@@ -96,20 +96,33 @@ export function AboutPage() {
           <section className="py-16 px-6 md:px-16 lg:px-24 bg-muted/10 backdrop-blur-sm">
             <div className="max-w-6xl mx-auto">
               <h2 className="text-2xl font-bold tracking-tight mb-8 text-foreground text-reveal">What I Focus On</h2>
-              <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
-                {interests.map((interest, i) => (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {interests.map((interest, idx) => (
                   <motion.div 
-                    key={i} 
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
+                    key={idx} 
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className={`silk-card break-inside-avoid group cursor-default floating-delayed`}
+                    transition={{ delay: idx * 0.08, duration: 0.6 }}
                   >
-                    <div className="relative overflow-hidden">
-                      <interest.icon className="w-8 h-8 text-primary mb-4 transition-transform duration-500 group-hover:rotate-[360deg] group-hover:scale-110" />
-                      <h3 className="text-xl font-bold tracking-tight mb-2 text-foreground group-hover:text-primary transition-colors">{interest.title}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{interest.desc}</p>
+                    <div className="relative group overflow-hidden rounded-2xl border border-[#7b6b43]/20 bg-gradient-to-br from-[#fdfbf7] to-[#f4efdf] p-8 h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(125,13,27,0.1)] hover:border-primary/30 flex flex-col justify-between cursor-default">
+                      <div className="absolute right-4 bottom-2 text-7xl font-bold font-['Playfair_Display'] text-primary/5 group-hover:text-primary/10 select-none transition-colors duration-500">
+                        0{idx + 1}
+                      </div>
+                      
+                      <div className="absolute -inset-20 bg-gradient-to-tr from-primary/5 to-transparent rounded-full opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 pointer-events-none" />
+
+                      <div className="relative z-10">
+                        <div className="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-[360deg] transition-all duration-700">
+                          <interest.icon className="w-5 h-5" />
+                        </div>
+                        <h3 className="text-xl font-bold font-['Playfair_Display'] text-foreground mb-3 group-hover:text-primary transition-colors">
+                          {interest.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {interest.desc}
+                        </p>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
@@ -154,25 +167,48 @@ export function AboutPage() {
           <section className="py-16 px-6 md:px-16 lg:px-24">
             <div className="max-w-6xl mx-auto">
               <h2 className="text-2xl font-bold tracking-tight mb-8 text-foreground">Focus Areas</h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {interests.map((interest, idx) => (
                   <motion.div 
                     key={idx} 
-                    initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ 
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 15,
-                      delay: idx * 0.08 
-                    }}
-                    whileHover={{ y: -5 }}
-                    className="architect-card group"
+                    transition={{ delay: idx * 0.08, duration: 0.6 }}
                   >
-                    <interest.icon className="w-6 h-6 text-primary mb-4" />
-                    <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-2">{interest.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{interest.desc}</p>
+                    <div className="relative group overflow-hidden rounded-2xl border border-primary/10 bg-[#0c1524]/40 backdrop-blur-md p-6 h-full transition-all duration-500 hover:border-primary/50 hover:shadow-[0_0_30px_rgba(225,187,128,0.15)] flex flex-col justify-between cursor-default">
+                      {/* Tech grid overlay */}
+                      <div className="absolute inset-0 opacity-[0.02] group-hover:opacity-[0.1] transition-opacity duration-500 pointer-events-none"
+                        style={{
+                          backgroundImage: `radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)`,
+                          backgroundSize: '16px 16px',
+                          color: 'var(--primary)'
+                        }}
+                      />
+                      
+                      {/* Corner bracket decorations */}
+                      <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-primary/20 group-hover:border-primary/60 transition-colors duration-500" />
+                      <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-primary/20 group-hover:border-primary/60 transition-colors duration-500" />
+                      <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-primary/20 group-hover:border-primary/60 transition-colors duration-500" />
+                      <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-primary/20 group-hover:border-primary/60 transition-colors duration-500" />
+                      
+                      <div>
+                        <div className="flex justify-between items-start mb-6">
+                          <div className="p-3 rounded-xl bg-primary/5 text-primary border border-primary/10 group-hover:bg-primary/20 group-hover:text-primary-foreground group-hover:scale-110 transition-all duration-500">
+                            <interest.icon className="w-6 h-6" />
+                          </div>
+                          <span className="text-[10px] font-mono text-primary/30 group-hover:text-primary/70 transition-colors">
+                            // 0{idx + 1}
+                          </span>
+                        </div>
+                        <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors tracking-tight">
+                          {interest.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground/85 leading-relaxed">
+                          {interest.desc}
+                        </p>
+                      </div>
+                    </div>
                   </motion.div>
                 ))}
               </div>

@@ -344,22 +344,65 @@ export function HomePage() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: idx * 0.08 }}
-                    className="group"
+                    transition={{ delay: idx * 0.08, duration: 0.6 }}
                   >
-                    <BorderGlow
-                      borderRadius={16}
-                      glowRadius={30}
-                      glowIntensity={0.8}
-                      glowColor="45 100% 60%"
-                      colors={['#facc15', '#fbbf24', '#f59e0b']}
-                    >
-                      <div className="architect-card border-0 bg-card/20 backdrop-blur-md shadow-none h-full m-0">
-                        <item.icon className="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform" />
-                        <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">{item.title}</h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                    {!isDark ? (
+                      /* Light mode: Editorial paper card */
+                      <div className="relative group overflow-hidden rounded-2xl border border-[#7b6b43]/20 bg-gradient-to-br from-[#fdfbf7] to-[#f4efdf] p-8 h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(125,13,27,0.1)] hover:border-primary/30 flex flex-col justify-between cursor-default">
+                        <div className="absolute right-4 bottom-2 text-7xl font-bold font-['Playfair_Display'] text-primary/5 group-hover:text-primary/10 select-none transition-colors duration-500">
+                          0{idx + 1}
+                        </div>
+                        
+                        <div className="absolute -inset-20 bg-gradient-to-tr from-primary/5 to-transparent rounded-full opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 pointer-events-none" />
+
+                        <div className="relative z-10">
+                          <div className="w-12 h-12 rounded-full bg-primary/5 text-primary flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-[360deg] transition-all duration-700">
+                            <item.icon className="w-5 h-5" />
+                          </div>
+                          <h3 className="text-xl font-bold font-['Playfair_Display'] text-foreground mb-3 group-hover:text-primary transition-colors">
+                            {item.title}
+                          </h3>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            {item.desc}
+                          </p>
+                        </div>
                       </div>
-                    </BorderGlow>
+                    ) : (
+                      /* Dark mode: Architect matrix card */
+                      <div className="relative group overflow-hidden rounded-2xl border border-primary/10 bg-[#0c1524]/40 backdrop-blur-md p-6 h-full transition-all duration-500 hover:border-primary/50 hover:shadow-[0_0_30px_rgba(225,187,128,0.15)] flex flex-col justify-between cursor-default">
+                        {/* Tech grid overlay */}
+                        <div className="absolute inset-0 opacity-[0.02] group-hover:opacity-[0.1] transition-opacity duration-500 pointer-events-none"
+                          style={{
+                            backgroundImage: `radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)`,
+                            backgroundSize: '16px 16px',
+                            color: 'var(--primary)'
+                          }}
+                        />
+                        
+                        {/* Corner bracket decorations */}
+                        <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-primary/20 group-hover:border-primary/60 transition-colors duration-500" />
+                        <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-primary/20 group-hover:border-primary/60 transition-colors duration-500" />
+                        <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-primary/20 group-hover:border-primary/60 transition-colors duration-500" />
+                        <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-primary/20 group-hover:border-primary/60 transition-colors duration-500" />
+                        
+                        <div>
+                          <div className="flex justify-between items-start mb-6">
+                            <div className="p-3 rounded-xl bg-primary/5 text-primary border border-primary/10 group-hover:bg-primary/20 group-hover:text-primary-foreground group-hover:scale-110 transition-all duration-500">
+                              <item.icon className="w-6 h-6" />
+                            </div>
+                            <span className="text-[10px] font-mono text-primary/30 group-hover:text-primary/70 transition-colors">
+                              // 0{idx + 1}
+                            </span>
+                          </div>
+                          <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors tracking-tight">
+                            {item.title}
+                          </h3>
+                          <p className="text-sm text-muted-foreground/85 leading-relaxed">
+                            {item.desc}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </motion.div>
                 ))}
               </div>
