@@ -163,10 +163,9 @@ export const getCodingTips = async () => {
 
 export const getCertifications = async () => {
     try {
-        // We omit the non-existent 'location' column from the select list to prevent browser 400 Bad Request console errors.
         const { data, error } = await supabase
             .from('certifications')
-            .select('id, name, issuer, issue_date, image_url, credential_id, credential_url, details, accent_color, icon, order_index, created_at')
+            .select('id, name, issuer, issue_date, image_url, credential_id, credential_url, details, accent_color, icon, location, order_index, created_at')
             .order('order_index', { ascending: true });
         
         if (error) {
@@ -209,7 +208,7 @@ export const getCertifications = async () => {
             details: x.details || '',
             accent_color: x.accent_color || '#C5A880',
             icon: x.icon || '🏆',
-            location: '', // default to empty string since the column is missing in the DB
+            location: x.location || '',
             order_index: x.order_index || 0,
             created_at: x.created_at || null,
         }));
