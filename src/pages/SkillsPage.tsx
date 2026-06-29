@@ -45,7 +45,7 @@ export function SkillsPage() {
 
         return {
             node: (
-                <div className="flex items-center justify-center p-2 select-none text-[#e1bb80]/20 dark:text-[#e1bb80]/15 hover:text-[#e1bb80] transition-colors duration-300 group/logo">
+                <div className="flex items-center justify-center p-2 select-none text-primary/20 hover:text-primary transition-colors duration-300 group/logo">
                     {logoUrl ? (
                         <img 
                             src={logoUrl} 
@@ -76,7 +76,7 @@ export function SkillsPage() {
         const Icon = getSkillIconByName(tech);
         return {
             node: (
-                <div className="flex items-center justify-center p-2 select-none text-[#e1bb80]/20 dark:text-[#e1bb80]/15 hover:text-[#e1bb80] transition-colors duration-300">
+                <div className="flex items-center justify-center p-2 select-none text-primary/20 hover:text-primary transition-colors duration-300">
                     <Icon className="w-16 h-16" />
                 </div>
             )
@@ -87,7 +87,7 @@ export function SkillsPage() {
         const Icon = getSkillIconByName(lang);
         return {
             node: (
-                <div className="flex items-center justify-center p-2 select-none text-[#e1bb80]/20 dark:text-[#e1bb80]/15 hover:text-[#e1bb80] transition-colors duration-300">
+                <div className="flex items-center justify-center p-2 select-none text-primary/20 hover:text-primary transition-colors duration-300">
                     <Icon className="w-16 h-16" />
                 </div>
             )
