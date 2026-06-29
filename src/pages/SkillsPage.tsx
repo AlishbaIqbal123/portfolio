@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { QuickAdmin } from '@/components/QuickAdmin';
 import { getSkillCategories } from '@/lib/api';
 import { useTheme } from '@/hooks/useTheme';
-import { ScrollVelocity } from '@/components/effects/ScrollVelocity';
+import LogoLoop from '@/components/effects/LogoLoop';
 import { BorderGlow } from '@/components/effects/BorderGlow';
 
 const icons: Record<string, any> = {
@@ -37,6 +37,24 @@ export function SkillsPage() {
         loadData();
     }, []);
 
+    const techLogos = personalData.skills.technologies.map(tech => ({
+        node: (
+            <span className="flex items-center gap-6 select-none">
+                <span className="opacity-40">•</span>
+                <span>{tech}</span>
+            </span>
+        )
+    }));
+
+    const languageLogos = personalData.skills.languages.map(lang => ({
+        node: (
+            <span className="flex items-center gap-6 select-none">
+                <span className="opacity-40">•</span>
+                <span>{lang}</span>
+            </span>
+        )
+    }));
+
     const cardVariants: Variants = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
@@ -50,7 +68,7 @@ export function SkillsPage() {
               <div className="max-w-6xl mx-auto">
                 {!isDark ? (
                   <div className="space-y-3">
-                    <p className="text-xs font-medium tracking-[0.2em] text-primary uppercase">Expertise</p>
+                    <p className="text-xs font-medium tracking-[0.2em] text-primary uppercase">About Me</p>
                     <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">Skills</h1>
                     <p className="text-muted-foreground max-w-lg">
                       A diverse toolkit spanning front-end, back-end, and design systems.
@@ -67,14 +85,26 @@ export function SkillsPage() {
                 )}
               </div>
               
-              <div className="mt-16 overflow-hidden">
-                <ScrollVelocity 
-                  texts={[
-                    personalData.skills.technologies.join(" · "),
-                    personalData.skills.languages.join(" · ")
-                  ]}
-                  velocity={60}
-                  className={`${isDark ? 'text-foreground/5' : 'text-primary/10'} text-6xl md:text-9xl font-black uppercase tracking-tighter`}
+              <div className="mt-16 overflow-hidden flex flex-col gap-6">
+                <LogoLoop
+                  logos={techLogos}
+                  speed={35}
+                  direction="left"
+                  logoHeight={80}
+                  gap={48}
+                  fadeOut={true}
+                  fadeOutColor="hsl(var(--background))"
+                  className={`${isDark ? 'text-foreground/5' : 'text-primary/10'} text-6xl md:text-8xl font-black uppercase tracking-tighter`}
+                />
+                <LogoLoop
+                  logos={languageLogos}
+                  speed={35}
+                  direction="right"
+                  logoHeight={80}
+                  gap={48}
+                  fadeOut={true}
+                  fadeOutColor="hsl(var(--background))"
+                  className={`${isDark ? 'text-foreground/5' : 'text-primary/10'} text-6xl md:text-8xl font-black uppercase tracking-tighter`}
                 />
               </div>
             </section>
