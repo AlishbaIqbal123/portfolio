@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ZoomIn, X, ExternalLink } from 'lucide-react';
 import { getCertifications } from '../../lib/api';
 import { useTheme } from '../../hooks/useTheme';
+import ScrollStack, { ScrollStackItem } from '../../components/ui/ScrollStack';
 
 interface Certification {
   id: string;
@@ -22,10 +20,8 @@ interface Certification {
 }
 
 export default function StoryCertifications() {
-  const navigate = useNavigate();
   const { isDark } = useTheme();
   const sectionRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [loading, setLoading] = useState(true);
   const [zoomImage, setZoomImage] = useState<string | null>(null);
@@ -55,19 +51,6 @@ export default function StoryCertifications() {
     }
     load();
   }, []);
-
-  useEffect(() => {
-    if (loading || certifications.length === 0) return;
-    gsap.registerPlugin(ScrollTrigger);
-    const cards = gridRef.current?.querySelectorAll('.cert-card-item');
-    if (!cards || cards.length === 0) return;
-    const anim = gsap.fromTo(cards,
-      { y: 30, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.75, stagger: 0.1, ease: 'power3.out',
-        scrollTrigger: { trigger: gridRef.current, start: 'top 82%' } }
-    );
-    return () => { anim.scrollTrigger?.kill(); anim.kill(); };
-  }, [loading, certifications]);
 
   if (loading) {
     return (
@@ -107,112 +90,123 @@ export default function StoryCertifications() {
           </h2>
         </div>
 
-        {/* Grid */}
-        <div ref={gridRef} className="grid gap-5 grid-cols-1 md:grid-cols-2 w-full">
-          {certifications.map((cert) => (
-            <div
-              key={cert.id}
-              className="cert-card-item opacity-0 flex flex-col"
-              style={{
-                background: 'var(--s-surface)',
-                border: '1px solid var(--s-border-mid)',
-                borderRadius: '4px',
-                overflow: 'hidden',
-                transition: 'border-color 0.3s, transform 0.3s',
-              }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.borderColor = 'var(--s-gold-dim)';
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.borderColor = 'var(--s-border-mid)';
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-              }}
+        {/* Scroll Stack Container */}
+        <div className="w-full">
+          {certifications.length > 0 ? (
+            <ScrollStack 
+              useWindowScroll={true}
+              className="w-full overflow-visible h-auto"
+              itemDistance={60}
+              itemStackDistance={25}
+              baseScale={0.88}
+              itemScale={0.025}
+              blurAmount={1.5}
             >
-              {/* Top accent */}
-              <div style={{ height: '2px', background: cert.accentColor }} />
-
-              {/* Certificate image */}
-              {cert.image_url && (
-                <div
-                  onClick={() => setZoomImage(cert.image_url)}
-                  className="w-full relative group cursor-zoom-in overflow-hidden"
-                  style={{ aspectRatio: '16/9', background: 'var(--s-bg)' }}
+              {certifications.map((cert) => (
+                <ScrollStackItem 
+                  key={cert.id}
+                  itemClassName="!p-0 !h-auto md:!h-[280px] !rounded-[4px] !my-4 bg-transparent border-0 shadow-none scroll-stack-card overflow-hidden"
                 >
-                  <img
-                    src={cert.image_url}
-                    alt={cert.name}
-                    className="w-full h-full object-cover"
-                    style={{ transition: 'transform 0.5s ease' }}
-                    onMouseEnter={e => (e.currentTarget as HTMLElement).style.transform = 'scale(1.04)'}
-                    onMouseLeave={e => (e.currentTarget as HTMLElement).style.transform = 'scale(1)'}
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center"
-                    style={{ background: 'rgba(10,10,9,0)', transition: 'background 0.3s' }}
-                    onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(10,10,9,0.45)'}
-                    onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'rgba(10,10,9,0)'}>
-                    <div style={{ padding: '0.5rem', border: '1px solid rgba(197,168,128,0.4)', borderRadius: '50%', color: 'var(--s-gold)', opacity: 0, transition: 'opacity 0.3s' }}
-                      className="group-hover:opacity-100">
-                      <ZoomIn size={16} />
+                  <div
+                    className="flex flex-col md:flex-row w-full h-full text-left"
+                    style={{
+                      background: 'var(--s-surface)',
+                      border: '1px solid var(--s-border-mid)',
+                      borderRadius: '4px',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {/* Certificate image */}
+                    {cert.image_url && (
+                      <div
+                        onClick={() => setZoomImage(cert.image_url)}
+                        className="w-full md:w-[40%] relative group cursor-zoom-in overflow-hidden h-48 md:h-full shrink-0"
+                        style={{ background: 'var(--s-bg)' }}
+                      >
+                        <img
+                          src={cert.image_url}
+                          alt={cert.name}
+                          className="w-full h-full object-cover"
+                          style={{ transition: 'transform 0.5s ease' }}
+                          onMouseEnter={e => (e.currentTarget as HTMLElement).style.transform = 'scale(1.04)'}
+                          onMouseLeave={e => (e.currentTarget as HTMLElement).style.transform = 'scale(1)'}
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center"
+                          style={{ background: 'rgba(10,10,9,0)', transition: 'background 0.3s' }}
+                          onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(10,10,9,0.45)'}
+                          onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'rgba(10,10,9,0)'}>
+                          <div style={{ padding: '0.5rem', border: '1px solid rgba(197,168,128,0.4)', borderRadius: '50%', color: 'var(--s-gold)', opacity: 0, transition: 'opacity 0.3s' }}
+                            className="group-hover:opacity-100">
+                            <ZoomIn size={16} />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex-1 flex flex-col justify-between p-6 md:p-8 bg-transparent">
+                      <div>
+                        {/* Icon + Title */}
+                        <div className="flex items-start gap-3 mb-3">
+                          <span style={{ fontSize: '1.2rem', lineHeight: 1, marginTop: '0.1rem' }}>{cert.icon}</span>
+                          <div>
+                            <h4 className={isDark ? "font-space uppercase" : "font-cormorant font-bold italic"}
+                              style={{ fontSize: isDark ? '0.95rem' : '1.1rem', fontWeight: isDark ? 700 : 700, letterSpacing: isDark ? '0.02em' : 'normal', color: 'var(--s-sand)', lineHeight: 1.2, marginBottom: '0.3rem' }}>
+                              {cert.name}
+                            </h4>
+                            <p className="font-mono-story"
+                              style={{ fontSize: '0.58rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--s-sand-dim)' }}>
+                              {cert.issuer}{cert.location ? ` · ${cert.location}` : ''}
+                            </p>
+                          </div>
+                        </div>
+
+                        {cert.credential_id && (
+                          <div className="font-mono-story mb-3"
+                            style={{ fontSize: '0.52rem', color: 'var(--s-sand-dim)', background: 'var(--s-bg)', padding: '0.3rem 0.7rem', borderRadius: '2px', border: '1px solid var(--s-border)', display: 'inline-block' }}>
+                            ID: {cert.credential_id}
+                          </div>
+                        )}
+
+                        {cert.details && (
+                          <p className="font-cormorant italic line-clamp-3 text-sm md:text-base leading-relaxed"
+                            style={{ color: 'var(--s-sand-dim)' }}>
+                            {cert.details}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Footer */}
+                      <div className="flex items-center justify-between pt-3 mt-4"
+                        style={{ borderTop: '1px solid var(--s-border)' }}>
+                        <span className="font-mono-story" style={{ fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--s-gold)' }}>
+                          {cert.issue_date}
+                        </span>
+                        {cert.credential_url && (
+                          <a
+                            href={cert.credential_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 font-mono-story"
+                            style={{ fontSize: '0.58rem', color: 'var(--s-sand-dim)', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', transition: 'color 0.25s' }}
+                            onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = 'var(--s-gold)'}
+                            onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = 'var(--s-sand-dim)'}
+                          >
+                            Verify <ExternalLink size={10} />
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-
-              <div style={{ padding: '1.4rem' }}>
-                {/* Icon + Title */}
-                <div className="flex items-start gap-3 mb-3">
-                  <span style={{ fontSize: '1.2rem', lineHeight: 1, marginTop: '0.1rem' }}>{cert.icon}</span>
-                  <div>
-                    <h4 className={isDark ? "font-space uppercase" : "font-cormorant font-bold italic"}
-                      style={{ fontSize: isDark ? '0.95rem' : '1.1rem', fontWeight: isDark ? 700 : 700, letterSpacing: isDark ? '0.02em' : 'normal', color: 'var(--s-sand)', lineHeight: 1.2, marginBottom: '0.3rem' }}>
-                      {cert.name}
-                    </h4>
-                    <p className="font-mono-story"
-                      style={{ fontSize: '0.58rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--s-sand-dim)' }}>
-                      {cert.issuer}{cert.location ? ` · ${cert.location}` : ''}
-                    </p>
-                  </div>
-                </div>
-
-                {cert.credential_id && (
-                  <div className="font-mono-story mb-3"
-                    style={{ fontSize: '0.52rem', color: 'var(--s-sand-dim)', background: 'var(--s-bg)', padding: '0.3rem 0.7rem', borderRadius: '2px', border: '1px solid var(--s-border)', display: 'inline-block' }}>
-                    ID: {cert.credential_id}
-                  </div>
-                )}
-
-                {cert.details && (
-                  <p className="font-cormorant italic mb-4"
-                    style={{ fontSize: '1rem', color: 'var(--s-sand-dim)', lineHeight: 1.65 }}>
-                    {cert.details}
-                  </p>
-                )}
-
-                {/* Footer */}
-                <div className="flex items-center justify-between pt-3"
-                  style={{ borderTop: '1px solid var(--s-border)' }}>
-                  <span className="font-mono-story" style={{ fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--s-gold)' }}>
-                    {cert.issue_date}
-                  </span>
-                  {cert.credential_url && (
-                    <a
-                      href={cert.credential_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 font-mono-story"
-                      style={{ fontSize: '0.58rem', color: 'var(--s-sand-dim)', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', transition: 'color 0.25s' }}
-                      onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = 'var(--s-gold)'}
-                      onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = 'var(--s-sand-dim)'}
-                    >
-                      Verify <ExternalLink size={10} />
-                    </a>
-                  )}
-                </div>
-              </div>
+                </ScrollStackItem>
+              ))}
+            </ScrollStack>
+          ) : (
+            <div className="text-center py-20 border border-dashed rounded-lg border-border">
+              <span style={{ fontSize: '2rem' }}>🏆</span>
+              <p className="text-sm mt-2" style={{ color: 'var(--s-sand-dim)' }}>No certifications loaded yet.</p>
             </div>
-          ))}
+          )}
         </div>
       </div>
 
