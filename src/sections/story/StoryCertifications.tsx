@@ -101,6 +101,9 @@ export default function StoryCertifications() {
               baseScale={0.88}
               itemScale={0.025}
               blurAmount={1.5}
+              paddingTop="0px"
+              paddingBottom="10rem"
+              paddingHorizontal="0px"
             >
               {certifications.map((cert) => (
                 <ScrollStackItem 

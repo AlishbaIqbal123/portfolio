@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Sun, Moon, Star, Download, Sparkles } from 'lucide-react';
+import { Sun, Moon, Download, Sparkles } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 import { personalData } from '@/data/personal';
 import { getCertifications } from '@/lib/api';
+import { StaggeredMenu } from '@/components/ui/StaggeredMenu';
 
 const navLinks = [
   { name: 'HOME', href: '/portfolio' },
@@ -19,7 +20,6 @@ const navLinks = [
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { toggleTheme, isDark } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -51,15 +51,6 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (isMobileMenuOpen) document.body.style.overflow = 'hidden';
-    else document.body.style.overflow = 'unset';
-  }, [isMobileMenuOpen]);
-
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location]);
-
   const isActive = (href: string) => {
     if (href === '/') return location.pathname === '/';
     return location.pathname === href || location.pathname.startsWith(href + '/');
@@ -67,7 +58,6 @@ export function Navbar() {
 
   const handleNavLinkClick = (href: string) => {
     localStorage.setItem('alishba-portfolio-preference', 'multi');
-    setIsMobileMenuOpen(false);
   };
 
   const handleLogoClick = (e: React.MouseEvent) => {
@@ -82,16 +72,27 @@ export function Navbar() {
     else navigate('/portfolio');
   };
 
+  const menuItems = visibleNavLinks.map(link => ({
+    label: link.name,
+    ariaLabel: `Navigate to ${link.name}`,
+    link: link.href
+  }));
+
+  const socialItems = [
+    { label: 'LinkedIn', link: personalData.linkedin || '#' },
+    { label: 'GitHub', link: personalData.github || '#' }
+  ];
+
   return (
     <>
-      {/* Fixed top navbar — clean, minimal, no extra spacing */}
-      <div className="fixed top-0 left-0 right-0 z-[200] px-4 md:px-8 pt-3 pb-2">
+      {/* Desktop Navbar - visible only on lg screens */}
+      <div className="hidden lg:block fixed top-0 left-0 right-0 z-[200] px-8 pt-3 pb-2">
         <motion.nav
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
           className={`
-            max-w-6xl mx-auto h-14 flex items-center justify-between px-5 md:px-8
+            max-w-6xl mx-auto h-14 flex items-center justify-between px-8
             backdrop-blur-xl border transition-all duration-500
             ${isDark 
               ? `bg-card/80 border-border rounded-xl ${isScrolled ? 'shadow-lg' : ''}` 
@@ -111,7 +112,7 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Nav Links */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="flex items-center gap-1">
             {visibleNavLinks.map((link) => (
               <Link
                 key={link.name}
@@ -138,14 +139,14 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* Right: Story Mode + CV Download + Theme toggle + Mobile menu */}
+          {/* Right: Story Mode + CV Download + Theme toggle */}
           <div className="flex items-center gap-2">
             <button 
               onClick={() => {
                 localStorage.setItem('alishba-portfolio-preference', 'story');
                 navigate('/story');
               }}
-              className={`hidden sm:flex items-center gap-2 h-9 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-300 border
+              className={`flex items-center gap-2 h-9 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-300 border
                 ${isDark 
                   ? 'border-primary/30 bg-primary/5 text-primary hover:bg-primary/15 hover:border-primary/50' 
                   : 'border-border bg-muted/40 text-foreground hover:bg-muted/70'
@@ -160,7 +161,7 @@ export function Navbar() {
               onClick={() => {
                 window.open('/resume', '_blank');
               }}
-              className={`hidden sm:flex items-center gap-2 h-9 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-300
+              className={`flex items-center gap-2 h-9 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-300
                 ${isDark 
                   ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
                   : 'bg-foreground text-background hover:bg-foreground/90'
@@ -182,138 +183,20 @@ export function Navbar() {
             >
               {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
-            
-            <button 
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-              className="lg:hidden w-9 h-9 flex items-center justify-center text-muted-foreground hover:text-foreground rounded-lg"
-            >
-              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
           </div>
         </motion.nav>
       </div>
 
-      {/* Mobile Menu — Light Mode: Slide-in editorial */}
-      <AnimatePresence>
-        {isMobileMenuOpen && !isDark && (
-          <motion.div
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '100%', opacity: 0 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-[190] bg-background/98 backdrop-blur-xl p-8 pt-20 flex flex-col overflow-y-auto no-scrollbar"
-          >
-            <div className="flex-1 flex flex-col justify-start gap-1 pb-10">
-              {visibleNavLinks.map((link, idx) => (
-                <motion.div
-                  key={link.name}
-                  initial={{ x: 40, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: idx * 0.04 }}
-                >
-                  <Link
-                    to={link.href}
-                    onClick={() => handleNavLinkClick(link.href)}
-                    className={`block py-2.5 text-4xl md:text-5xl font-bold tracking-tight leading-none transition-colors ${
-                      isActive(link.href) ? 'text-primary' : 'text-foreground/20 hover:text-foreground'
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
-                </motion.div>
-              ))}
-              <motion.div
-                initial={{ x: 40, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: visibleNavLinks.length * 0.04 }}
-                className="mt-6 pt-6 border-t border-border"
-              >
-                <button
-                  onClick={() => {
-                    localStorage.setItem('alishba-portfolio-preference', 'story');
-                    setIsMobileMenuOpen(false);
-                    navigate('/story');
-                  }}
-                  className="text-xs font-mono uppercase tracking-[0.2em] text-primary hover:underline flex items-center gap-1.5"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Switch to Story Mode →</span>
-                </button>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Mobile Menu — Dark Mode: Grid cards */}
-        {isMobileMenuOpen && isDark && (
-          <motion.div
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[190] bg-background/98 backdrop-blur-xl flex flex-col items-center justify-start overflow-y-auto no-scrollbar py-16"
-          >
-            <div className="grid grid-cols-2 gap-4 p-6 max-w-sm">
-               {visibleNavLinks.map((link, idx) => (
-                 <motion.div
-                    key={link.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.04 }}
-                 >
-                    <Link
-                      to={link.href}
-                      onClick={() => handleNavLinkClick(link.href)}
-                      className={`block p-6 border rounded-xl text-center transition-all ${
-                        isActive(link.href) 
-                          ? 'bg-primary/10 border-primary text-primary' 
-                          : 'bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-foreground'
-                      }`}
-                    >
-                       <span className="text-xs font-semibold tracking-[0.15em] uppercase">{link.name}</span>
-                    </Link>
-                 </motion.div>
-               ))}
-            </div>
-
-            <div className="flex flex-col gap-3 mt-6 w-full max-w-[280px]">
-              <motion.button
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                onClick={() => {
-                  window.open('/resume', '_blank');
-                  setIsMobileMenuOpen(false);
-                }}
-                className="w-full py-3.5 bg-primary text-primary-foreground rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
-              >
-                 <Download className="w-4 h-4" /> DOWNLOAD CV
-              </motion.button>
-
-              <motion.button
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.45 }}
-                onClick={() => {
-                  localStorage.setItem('alishba-portfolio-preference', 'story');
-                  setIsMobileMenuOpen(false);
-                  navigate('/story');
-                }}
-                className="w-full py-3.5 border border-primary/30 bg-primary/5 text-primary rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
-              >
-                 <Sparkles className="w-4 h-4" /> STORY MODE
-              </motion.button>
-            </div>
-
-            <button 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="mt-8 w-12 h-12 rounded-full border border-border text-muted-foreground hover:border-primary hover:text-primary transition-all flex items-center justify-center"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile/Tablet Navbar - visible on < lg screens */}
+      <div className="lg:hidden">
+        <StaggeredMenu
+          isFixed={true}
+          items={menuItems}
+          socialItems={socialItems}
+          displaySocials={true}
+          displayItemNumbering={true}
+        />
+      </div>
     </>
   );
 }

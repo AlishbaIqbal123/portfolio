@@ -33,6 +33,9 @@ interface ScrollStackProps {
   blurAmount?: number;
   useWindowScroll?: boolean;
   onStackComplete?: () => void;
+  paddingTop?: string;
+  paddingBottom?: string;
+  paddingHorizontal?: string;
 }
 
 const ScrollStack: React.FC<ScrollStackProps> = ({
@@ -48,7 +51,10 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
   rotationAmount = 0,
   blurAmount = 0,
   useWindowScroll = false,
-  onStackComplete
+  onStackComplete,
+  paddingTop = '20vh',
+  paddingBottom = '50rem',
+  paddingHorizontal = '5rem'
 }) => {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const stackCompletedRef = useRef(false);
@@ -329,7 +335,15 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         willChange: 'scroll-position'
       }}
     >
-      <div className="scroll-stack-inner pt-[20vh] px-20 pb-[50rem] min-h-screen">
+      <div 
+        className="scroll-stack-inner min-h-screen"
+        style={{
+          paddingTop,
+          paddingBottom,
+          paddingLeft: paddingHorizontal,
+          paddingRight: paddingHorizontal
+        }}
+      >
         {children}
         {/* Spacer so the last pin can release cleanly */}
         <div className="scroll-stack-end w-full h-px" />
