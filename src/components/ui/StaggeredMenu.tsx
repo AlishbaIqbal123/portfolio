@@ -529,6 +529,17 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                       data-index={idx + 1}
                     >
                       <span className="sm-panel-itemLabel inline-block [transform-origin:50%_100%] will-change-transform">
+                        {displayItemNumbering && (
+                          <span 
+                            className="text-xs md:text-sm font-mono mr-4 tracking-widest align-middle" 
+                            style={{ 
+                              color: accentColor, 
+                              opacity: 'var(--sm-num-opacity, 0)' 
+                            }}
+                          >
+                            {String(idx + 1).padStart(2, '0')}
+                          </span>
+                        )}
                         {it.label}
                       </span>
                     </Link>
@@ -637,8 +648,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 .sm-scope .sm-panel-item { position: relative; font-weight: 600; cursor: pointer; line-height: 1; letter-spacing: -2px; text-transform: uppercase; transition: background 0.25s, color 0.25s; display: inline-block; text-decoration: none; padding-right: 1.4em; }
 .sm-scope .sm-panel-itemLabel { display: inline-block; will-change: transform; transform-origin: 50% 100%; }
 .sm-scope .sm-panel-item:hover { color: var(--sm-accent) !important; }
-.sm-scope .sm-panel-list[data-numbering] { counter-reset: smItem; }
-.sm-scope .sm-panel-list[data-numbering] .sm-panel-item::after { counter-increment: smItem; content: counter(smItem, decimal-leading-zero); position: absolute; top: 0.1em; right: 3.2em; font-size: 18px; font-weight: 400; color: var(--sm-accent); letter-spacing: 0; pointer-events: none; user-select: none; opacity: var(--sm-num-opacity, 0); }
+
 @media (max-width: 1024px) { 
   .sm-scope .staggered-menu-panel, .sm-scope .sm-prelayers { width: 100%; left: 0; right: 0; }
   .sm-scope .staggered-menu-panel { padding: 7em 2.5em 2.5em 2.5em; }
