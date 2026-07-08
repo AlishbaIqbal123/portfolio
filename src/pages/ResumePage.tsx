@@ -328,7 +328,7 @@ export default function ResumePage() {
       {/* 📄 THE CV PAGE SHEET */}
       <div 
         id="cv-sheet"
-        className="w-full max-w-[210mm] min-h-[297mm] bg-white border border-slate-200 shadow-2xl p-[0.6in] flex flex-col font-sans text-slate-800 leading-normal print:shadow-none print:border-none print:p-[0.4in]"
+        className="w-full max-w-[210mm] min-h-[297mm] bg-white border border-slate-200 shadow-2xl p-[0.6in] flex flex-col font-sans text-slate-800 leading-normal print:shadow-none print:border-none print:max-w-none print:w-full print:p-[0.2in] print:h-auto print:min-h-0"
       >
         {/* Name and Title Header */}
         <div className="text-center mb-3">
