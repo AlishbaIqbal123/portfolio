@@ -291,7 +291,7 @@ export default function ResumePage() {
     <div className="min-h-screen bg-slate-900/40 text-black py-8 px-4 flex flex-col items-center print:p-0 print:bg-white print:py-0">
       
       {/* 🛠️ CONTROL PANEL (Hidden in print) */}
-      <div className="no-print w-full max-w-[210mm] bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
+      <div className="print:hidden w-full max-w-[210mm] bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
         <div className="flex items-center gap-3">
           <button 
             onClick={() => navigate('/portfolio')}
@@ -316,7 +316,7 @@ export default function ResumePage() {
         </div>
       </div>
 
-      <div className="no-print w-full max-w-[210mm] bg-blue-950/20 border border-blue-900/30 rounded-2xl p-4 mb-6 text-[10px] text-slate-300 font-medium leading-relaxed">
+      <div className="print:hidden w-full max-w-[210mm] bg-blue-950/20 border border-blue-900/30 rounded-2xl p-4 mb-6 text-[10px] text-slate-300 font-medium leading-relaxed">
         <span className="font-bold text-blue-400 uppercase tracking-wider block mb-1">💡 Professional PDF Export Tips:</span>
         1. Click <strong className="text-emerald-400">Save as PDF / Print</strong> above.<br />
         2. Set <strong>Destination</strong> to <strong className="text-white">Save as PDF</strong>.<br />
@@ -328,7 +328,7 @@ export default function ResumePage() {
       {/* 📄 THE CV PAGE SHEET */}
       <div 
         id="cv-sheet"
-        className="w-full max-w-[210mm] min-h-[297mm] bg-white border border-slate-200 shadow-2xl p-[0.6in] flex flex-col font-sans text-slate-800 leading-normal print:shadow-none print:border-none print:p-[0.4in] print:w-[210mm] print:h-[297mm] print:min-h-0 print:overflow-hidden print:max-h-[297mm]"
+        className="w-full max-w-[210mm] min-h-[297mm] bg-white border border-slate-200 shadow-2xl p-[0.6in] flex flex-col font-sans text-slate-800 leading-normal print:shadow-none print:border-none print:p-[0.4in] print:w-full print:min-h-0"
       >
         {/* Name and Title Header */}
         <div className="text-center mb-3">
