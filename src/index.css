@@ -437,3 +437,4 @@
 /* Utilities */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+@media print { html, body, #root, .dark { background: white !important; background-color: white !important; color: black !important; } }
