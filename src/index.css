@@ -437,4 +437,4 @@
 /* Utilities */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-@media print { html, body, #root, .dark { background: white !important; background-color: white !important; color: black !important; } }
+@media print { html, body, #root, .dark { background: white !important; background-color: white !important; color: black !important; } @page { margin: 0; size: A4 portrait; } #cv-sheet { transform: scale(0.85); transform-origin: top center; width: 247mm !important; max-height: 349mm !important; overflow: hidden !important; } }
