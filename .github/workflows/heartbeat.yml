@@ -14,19 +14,3 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Script Dependencies
-        working-directory: scripts
-        run: npm install
-
-      - name: Run Heartbeat
-        working-directory: scripts
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: node heartbeat.js
-
