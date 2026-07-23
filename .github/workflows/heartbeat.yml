@@ -2,12 +2,14 @@ name: Daily Coding Tip
 
 on:
   schedule:
-    # Run 4x per day. The heartbeat script prevents duplicate insertions (once per UTC day).
-    - cron: '0 0 * * *'   # Midnight UTC (primary)
-    - cron: '0 6 * * *'   # 6AM UTC
-    - cron: '0 12 * * *'  # Noon UTC
-    - cron: '0 18 * * *'  # 6PM UTC
-  workflow_dispatch: # Manual trigger from GitHub UI
+    - cron: '0 0 * * *'
+    - cron: '0 6 * * *'
+    - cron: '0 12 * * *'
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   heartbeat:
@@ -19,7 +21,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
 
       - name: Install Script Dependencies
         working-directory: scripts
