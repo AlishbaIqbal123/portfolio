@@ -1,38 +1,11 @@
 name: Daily Coding Tip
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
-    - cron: '0 6 * * *'
-    - cron: '0 12 * * *'
-    - cron: '0 18 * * *'
   workflow_dispatch:
-
-permissions:
-  contents: read
 
 jobs:
   heartbeat:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - run: echo "Hello World"
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Script Dependencies
-        working-directory: scripts
-        run: npm install
-
-      - name: Run Heartbeat
-        working-directory: scripts
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: node heartbeat.js
-
-      - name: Report Status
-        if: always()
-        run: echo "Heartbeat attempt completed at $(date -u)"
